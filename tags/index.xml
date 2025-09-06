@@ -6,6 +6,28 @@
     <description>Recent content in Tags on 念念的博客</description>
     <generator>Hugo -- 0.149.1</generator>
     <language>zh-cn</language>
+    <lastBuildDate>Thu, 04 Sep 2025 22:20:12 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux</title>
+      <link>https://blog.nuonian.top/tags/linux/</link>
+      <pubDate>Thu, 04 Sep 2025 22:20:12 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/linux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>WSL</title>
+      <link>https://blog.nuonian.top/tags/wsl/</link>
+      <pubDate>Thu, 04 Sep 2025 22:20:12 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/wsl/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>环境配置</title>
+      <link>https://blog.nuonian.top/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 04 Sep 2025 22:20:12 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
