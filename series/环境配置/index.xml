@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>环境配置 on 念念的博客</title>
-    <link>https://blog.nuonian.top/columns/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link>
+    <link>https://blog.nuonian.top/series/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</link>
     <description>Recent content in 环境配置 on 念念的博客</description>
     <generator>Hugo -- 0.149.1</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 04 Sep 2025 22:20:12 +0800</lastBuildDate>
-    <atom:link href="https://blog.nuonian.top/columns/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.nuonian.top/series/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WSL自用配置</title>
       <link>https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/</link>
