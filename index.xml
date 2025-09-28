@@ -6,7 +6,7 @@
     <description>Recent content on 念念的博客</description>
     <generator>Hugo -- 0.150.1</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 04 Sep 2025 22:20:12 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 28 Sep 2025 14:42:31 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WSL自用配置</title>
@@ -64,9 +64,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp -r .oh-my-zsh /home/spike
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp .zshrc /home/spike
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp .p10k.zsh /home/spike
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo chown -R spike:spike /home/spike/.oh-my-zsh/
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo chown -R spike:spike /home/spike/.zshrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo chown -R spike:spike /home/spike/.p10k.zsh
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vim /etc/wsl.conf
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
