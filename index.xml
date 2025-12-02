@@ -6,8 +6,46 @@
     <description>Recent content on 念念的博客</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Nov 2025 11:32:35 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 02 Dec 2025 11:54:34 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>自用.gitignore</title>
+      <link>https://blog.nuonian.top/2025/12/gitignore/</link>
+      <pubDate>Tue, 02 Dec 2025 11:33:51 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2025/12/gitignore/</guid>
+      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-gitignore&#34; data-lang=&#34;gitignore&#34;&gt;# ide
+.idea/
+.vscode/
+
+# 构建 / 打包
+.Python
+build/
+develop-eggs/
+dist/
+lib/
+lib64/
+wheels/
+
+# 二进制文件 / DLL 文件
+__pycache__/
+
+# 环境文件
+.venv/
+node_modules/
+
+# 包管理器
+uv.lock
+
+# 日志文件
+*.log
+
+# hugo 框架
+/public/
+/resources/_gen/
+/hugo_stats.json
+.hugo_build.lock
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
     <item>
       <title>WSL自用配置</title>
       <link>https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/</link>
