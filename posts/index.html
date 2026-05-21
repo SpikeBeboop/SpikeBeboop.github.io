@@ -158,6 +158,23 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Hugo 自定义分类，专栏汇总页面样式
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>前言 最近又重新拾起来了个人博客，然后老毛病又犯了，开始鼓捣美化。
+由于 Papermod 的分类页面只有 标签云 类型的分类页，单纯标签页用这种词云还不错，但是分类和专栏还是这个样子就有点怪了。
+后续发了 LoveIt 主题，感觉这个里面的分类页面挺符合我的审美，于是直接开始施工
+分类页面 分类自定义模板 layouts/categories/terms.html 内容如下：
+{{- define &#34;main&#34; }} &lt;header class=&#34;page-header categories-summary-header&#34;&gt; &lt;h1&gt;{{ .Title }}&lt;span class=&#34;categories-total&#34;&gt;{{ len .Data.Terms }}&lt;/span&gt;&lt;/h1&gt; {{- with .Description }} &lt;div class=&#34;post-description&#34;&gt;{{ . }}&lt;/div&gt; {{- end }} &lt;/header&gt; &lt;section class=&#34;categories-summary-list&#34;&gt; {{- range .Data.Terms.ByCount}} {{- $termPage := .Page }} {{- $pages := .Pages.ByDate.Reverse }} &lt;section class=&#34;category-summary-block&#34;&gt; &lt;h2 class=&#34;category-summary-title&#34;&gt; &lt;a href=&#34;{{ $termPage.RelPermalink }}&#34; aria-label=&#34;查看 {{ $termPage.Title }} 分类&#34;&gt; &lt;span class=&#34;category-summary-icon&#34; aria-hidden=&#34;true&#34;&gt;📁&lt;/span&gt; &lt;span class=&#34;category-summary-name&#34;&gt;{{ $termPage.Title }}&lt;/span&gt; &lt;span class=&#34;category-summary-count&#34;&gt;{{ len $pages }}&lt;/span&gt; &lt;/a&gt; &lt;/h2&gt; &lt;div class=&#34;category-summary-posts&#34;&gt; {{- range first 5 $pages }} &lt;article class=&#34;category-summary-post&#34;&gt; &lt;a href=&#34;{{ .RelPermalink }}&#34;&gt;{{ .Title }}&lt;/a&gt; &lt;/article&gt; {{- end }} &lt;/div&gt; {{- if gt (len $pages) 5 }} &lt;a class=&#34;category-summary-more&#34; href=&#34;{{ $termPage.RelPermalink }}&#34;&gt;更多 &amp;gt;&amp;gt;&lt;/a&gt; {{- end }} &lt;/section&gt; {{- end }} &lt;/section&gt; {{- end }} 分类样式 assets/css/extended/20-categories.css 内容如下：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-21 14:29:51 +0800 +0800'>2026-05-21</span>&nbsp;·&nbsp;<span title='2026-05-21 16:25:12 +0800 +0800'>Updated:&nbsp;2026-05-21</span>&nbsp;·&nbsp;2 分钟&nbsp;·&nbsp;835 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/%E5%89%8D%E7%AB%AF/">前端</a>&nbsp;<a href="https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/">博客</a>&nbsp;·&nbsp;<a href="https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2/">Hugo 博客</a></footer>
+  <a class="entry-link" aria-label="post link to Hugo 自定义分类，专栏汇总页面样式" href="https://blog.nuonian.top/2026/05/hugo-custom-categories-series-summary-page/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Hugo 增加防剧透遮罩功能
     </h2>
   </header>
