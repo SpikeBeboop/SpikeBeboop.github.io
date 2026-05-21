@@ -6,8 +6,27 @@
     <description>Recent content on 念念的博客</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 May 2026 10:48:54 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 21 May 2026 12:22:08 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo 增加防剧透遮罩功能</title>
+      <link>https://blog.nuonian.top/2026/05/hugo-spoiler-mask/</link>
+      <pubDate>Thu, 21 May 2026 11:23:00 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/05/hugo-spoiler-mask/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;效果&#34;&gt;效果&lt;/h2&gt;
+&lt;p&gt;这是一段普通的文字。&lt;/p&gt;
+&lt;div class=&#34;spoiler spoiler-block&#34; tabindex=&#34;0&#34;&gt;这里是被遮住的剧透内容&lt;/div&gt;
+
+&lt;p&gt;继续写普通内容&lt;/p&gt;
+&lt;p&gt;页面显示时，剧透内容默认被遮住。&lt;/p&gt;
+&lt;p&gt;讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。&lt;/p&gt;
+&lt;h2 id=&#34;实现思路&#34;&gt;实现思路&lt;/h2&gt;
+&lt;p&gt;Hugo 本身不自带相关语法。&lt;/p&gt;
+&lt;p&gt;但是 Hugo 支持 Shortcode，可以自己自定义一段可复用的 Markdown 语法。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Vercel部署NotionNext</title>
       <link>https://blog.nuonian.top/2026/05/notion-next-blog-setup/</link>
