@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>博客 on 念念的博客</title>
+    <link>https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/</link>
+    <description>Recent content in 博客 on 念念的博客</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 21 May 2026 10:16:25 +0800</lastBuildDate>
+    <atom:link href="https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vercel部署NotionNext</title>
+      <link>https://blog.nuonian.top/2026/05/notion-next-blog-setup/</link>
+      <pubDate>Thu, 21 May 2026 09:06:33 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/05/notion-next-blog-setup/</guid>
+      <description>&lt;h2 id=&#34;一创建-notion-页面&#34;&gt;一、创建 Notion 页面&lt;/h2&gt;
+&lt;h3 id=&#34;复制模版&#34;&gt;复制模版&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;注册并登录 Notion 账号&lt;/li&gt;
+&lt;li&gt;点击链接，打开模版
+&lt;a href=&#34;https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5?v=b7eb215720224ca5827bfaa5ef82cf2d&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Notion Blog&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;点击复制模版，将模版数据复制到笔记空间中
+&lt;img alt=&#34;image-20260521091719782&#34; loading=&#34;lazy&#34; src=&#34;https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521091719934.png&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;获取页面id&#34;&gt;获取页面ID&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;在 Notion 笔记中：在页面右上角菜单栏中，依次点击 &lt;code&gt;共享&lt;/code&gt;→&lt;code&gt;发布&lt;/code&gt;→&lt;code&gt;发布&lt;/code&gt;，开启页面分享，获取&lt;strong&gt;共享链接&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;image-20260521093911276&#34; loading=&#34;lazy&#34; src=&#34;https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521093911337.png&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;复制&lt;strong&gt;页面ID&lt;/strong&gt;
+页面ID在您的共享连接中，域名中间的一串32位字母与数字&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;image-20260521094058203&#34; loading=&#34;lazy&#34; src=&#34;https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094058249.png&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;二复制源代码&#34;&gt;二、复制源代码&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;请先注册并登录Github&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点击下方链接，一键Fork项目&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
