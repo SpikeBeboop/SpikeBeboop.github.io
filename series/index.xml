@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Series on 念念的博客</title>
+    <title>专栏 on 念念的博客</title>
     <link>https://blog.nuonian.top/series/</link>
-    <description>Recent content in Series on 念念的博客</description>
+    <description>Recent content in 专栏 on 念念的博客</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 May 2026 12:22:08 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/series/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hugo 博客</title>
       <link>https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2/</link>
       <pubDate>Thu, 21 May 2026 11:23:00 +0800</pubDate>
       <guid>https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>博客搭建</title>
-      <link>https://blog.nuonian.top/series/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link>
-      <pubDate>Thu, 21 May 2026 09:06:33 +0800</pubDate>
-      <guid>https://blog.nuonian.top/series/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid>
       <description></description>
     </item>
     <item>
