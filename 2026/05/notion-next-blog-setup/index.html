@@ -110,7 +110,10 @@ Notion Blog
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
@@ -131,15 +134,15 @@ Notion Blog
     <meta property="article:tag" content="Notion">
     <meta property="article:tag" content="Next.js">
     <meta property="article:tag" content="Vercel">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
   <meta name="twitter:title" content="Vercel部署NotionNext">
   <meta name="twitter:description" content="一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接
 复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字
 二、复制源代码 请先注册并登录Github
 点击下方链接，一键Fork项目">
-
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -147,50 +150,63 @@ Notion Blog
   "itemListElement": [
     {
       "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://blog.nuonian.top/posts/"
-    }, 
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
     {
       "@type": "ListItem",
-      "position":  2 ,
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
       "name": "Vercel部署NotionNext",
-      "item": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/"
+      "position": 3
     }
   ]
 }
-</script>
-<script type="application/ld+json">
+</script><script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Vercel部署NotionNext",
-  "name": "Vercel部署NotionNext",
-  "description": "一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog\r点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接\n复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字\n二、复制源代码 请先注册并登录Github\n点击下方链接，一键Fork项目\n",
-  "keywords": [
-    "NotionNext", "Notion", "Next.js", "Vercel"
-  ],
   "articleBody": "一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog\r点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接\n复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字\n二、复制源代码 请先注册并登录Github\n点击下方链接，一键Fork项目\n复刻项目\r三、Vercel 部署 准备账号 注册登录Vercel\r，推荐使用Github账号登录\n导入代码 点击下方创建新项目\n创建新项目\r在代码仓库列表中选择导入 NotionNext\n配置页面ID并部署 点击 Environment Variables(环境变量), 并添加一个属性名称为 NOTION_PAGE_ID,值为步骤一获取的页面ID\n点击Deploy按钮，等待部署完成\n四、完成 在部署完成页面，点击 Continue to Dashboard 访问控制台\n在控制台右上角的 Visit按钮访问站点。或在 DOMAINS中获取网站地址\n",
-  "wordCount" : "382",
-  "inLanguage": "zh",
-  "datePublished": "2026-05-21T09:06:33+08:00",
-  "dateModified": "2026-05-21T16:09:34+08:00",
-  "author":{
+  "author": {
     "@type": "Person",
     "name": "念念"
   },
+  "dateModified": "2026-05-21T16:09:34+08:00",
+  "datePublished": "2026-05-21T09:06:33+08:00",
+  "description": "一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog\r点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接\n复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字\n二、复制源代 …",
+  "headline": "Vercel部署NotionNext",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "NotionNext",
+    "Notion",
+    "Next.js",
+    "Vercel"
+  ],
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/"
+    "@id": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
+    "@type": "WebPage"
   },
+  "name": "Vercel部署NotionNext",
   "publisher": {
-    "@type": "Organization",
-    "name": "念念的博客",
+    "@type": "Person",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://blog.nuonian.top/favicon.ico"
-    }
-  }
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
+  "wordCount": 382
 }
 </script>
 </head>
@@ -255,7 +271,18 @@ Notion Blog
 
 <article class="post-single">
   <header class="post-header">
-    
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
     <h1 class="post-title entry-hint-parent">
       Vercel部署NotionNext
     </h1>

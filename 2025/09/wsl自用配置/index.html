@@ -172,7 +172,10 @@ conda init
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
@@ -189,12 +192,12 @@ conda init
     <meta property="article:tag" content="WSL">
     <meta property="article:tag" content="环境配置">
     <meta property="article:tag" content="Linux">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
   <meta name="twitter:title" content="WSL自用配置">
   <meta name="twitter:description" content="RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\Downloads\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl https://chsrc.run/posix | sudo bash chsrc set rocky epel 配置 dnf install epel-release -y sed -e &#39;s!^metalink=!#metalink=!g&#39; \ -e &#39;s!^#baseurl=!baseurl=!g&#39; \ -e &#39;s!https\?://download\.fedoraproject\.org/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g&#39; \ -e &#39;s!https\?://download\.example/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g&#39; \ -i /etc/yum.repos.d/epel{,-testing}.repo dnf update oh my zsh 环境配置 # 安装依赖 dnf install git zsh -y # 安装 oh my zsh git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git cd ohmyzsh/tools REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git sh install.sh git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git &#34;${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k&#34; powerlevel10k/powerlevel10k vim .zshrc plugins=( git zsh-autosuggestions extract z zsh-syntax-highlighting ) git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting source .zshrc 创建用户 useradd -m -s /bin/zsh spike cp -r .oh-my-zsh /home/spike cp .zshrc /home/spike cp .p10k.zsh /home/spike sudo chown -R spike:spike /home/spike/.oh-my-zsh/ sudo chown -R spike:spike /home/spike/.zshrc sudo chown -R spike:spike /home/spike/.p10k.zsh vim /etc/wsl.conf [user] default=usernname Linuxbrew dnf group install &#39;Development Tools&#39; export HOMEBREW_BREW_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git&#34; export HOMEBREW_CORE_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git&#34; export HOMEBREW_INSTALL_FROM_API=1 export HOMEBREW_API_DOMAIN=&#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api&#34; export HOMEBREW_BOTTLE_DOMAIN=&#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles&#34; export HOMEBREW_PIP_INDEX_URL=&#34;https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple&#34; git clone --depth=1 https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/install.git brew-install /bin/bash brew-install/install.sh rm -rf brew-install echo &gt;&gt; /home/spike/.zshrc echo &#39;eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34;&#39; &gt;&gt; /home/spike/.zshrc eval &#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)&#34; echo &#39;# Set non-default Git remotes for Homebrew/brew and Homebrew/homebrew-core.&#39; &gt;&gt; /home/spike/.zshrc echo &#39;export HOMEBREW_BREW_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git&#34;&#39; &gt;&gt; /home/spike/.zshrc echo &#39;export HOMEBREW_CORE_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git&#34;&#39; &gt;&gt; /home/spike/.zshrc export HOMEBREW_BREW_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git&#34; export HOMEBREW_CORE_GIT_REMOTE=&#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git&#34; 安装 nvim brew install nvim sudo ln -s /home/linuxbrew/.linuxbrew/bin/nvim /usr/bin/vim 安装 yazi brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide resvg imagemagick function y() { local tmp=&#34;$(mktemp -t &#34;yazi-cwd.XXXXXX&#34;)&#34; cwd yazi &#34;$@&#34; --cwd-file=&#34;$tmp&#34; IFS= read -r -d &#39;&#39; cwd &lt; &#34;$tmp&#34; [ -n &#34;$cwd&#34; ] &amp;&amp; [ &#34;$cwd&#34; != &#34;$PWD&#34; ] &amp;&amp; builtin cd -- &#34;$cwd&#34; rm -f -- &#34;$tmp&#34; } 安装 x-cmd eval &#34;$(curl https://get.x-cmd.com)&#34; 安装 miniconda # 下载脚本 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py313_25.9.1-1-Linux-x86_64.sh sh Miniconda3-py313_25.9.1-1-Linux-x86_64.sh eval &#34;$(/home/spike/miniconda3/bin/conda shell.YOUR_SHELL_NAME hook)&#34; conda init">
-
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -202,50 +205,62 @@ conda init
   "itemListElement": [
     {
       "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://blog.nuonian.top/posts/"
-    }, 
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
     {
       "@type": "ListItem",
-      "position":  2 ,
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/",
       "name": "WSL自用配置",
-      "item": "https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/"
+      "position": 3
     }
   ]
 }
-</script>
-<script type="application/ld+json">
+</script><script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "WSL自用配置",
-  "name": "WSL自用配置",
-  "description": "RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\\Downloads\\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl https://chsrc.run/posix | sudo bash chsrc set rocky epel 配置 dnf install epel-release -y sed -e \u0026#39;s!^metalink=!#metalink=!g\u0026#39; \\ -e \u0026#39;s!^#baseurl=!baseurl=!g\u0026#39; \\ -e \u0026#39;s!https\\?://download\\.fedoraproject\\.org/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g\u0026#39; \\ -e \u0026#39;s!https\\?://download\\.example/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g\u0026#39; \\ -i /etc/yum.repos.d/epel{,-testing}.repo dnf update oh my zsh 环境配置 # 安装依赖 dnf install git zsh -y # 安装 oh my zsh git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git cd ohmyzsh/tools REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git sh install.sh git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git \u0026#34;${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k\u0026#34; powerlevel10k/powerlevel10k vim .zshrc plugins=( git zsh-autosuggestions extract z zsh-syntax-highlighting ) git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting source .zshrc 创建用户 useradd -m -s /bin/zsh spike cp -r .oh-my-zsh /home/spike cp .zshrc /home/spike cp .p10k.zsh /home/spike sudo chown -R spike:spike /home/spike/.oh-my-zsh/ sudo chown -R spike:spike /home/spike/.zshrc sudo chown -R spike:spike /home/spike/.p10k.zsh vim /etc/wsl.conf [user] default=usernname Linuxbrew dnf group install \u0026#39;Development Tools\u0026#39; export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34; export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34; export HOMEBREW_INSTALL_FROM_API=1 export HOMEBREW_API_DOMAIN=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api\u0026#34; export HOMEBREW_BOTTLE_DOMAIN=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles\u0026#34; export HOMEBREW_PIP_INDEX_URL=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple\u0026#34; git clone --depth=1 https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/install.git brew-install /bin/bash brew-install/install.sh rm -rf brew-install echo \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;eval \u0026#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc eval \u0026#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\u0026#34; echo \u0026#39;# Set non-default Git remotes for Homebrew/brew and Homebrew/homebrew-core.\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34; export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34; 安装 nvim brew install nvim sudo ln -s /home/linuxbrew/.linuxbrew/bin/nvim /usr/bin/vim 安装 yazi brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide resvg imagemagick function y() { local tmp=\u0026#34;$(mktemp -t \u0026#34;yazi-cwd.XXXXXX\u0026#34;)\u0026#34; cwd yazi \u0026#34;$@\u0026#34; --cwd-file=\u0026#34;$tmp\u0026#34; IFS= read -r -d \u0026#39;\u0026#39; cwd \u0026lt; \u0026#34;$tmp\u0026#34; [ -n \u0026#34;$cwd\u0026#34; ] \u0026amp;\u0026amp; [ \u0026#34;$cwd\u0026#34; != \u0026#34;$PWD\u0026#34; ] \u0026amp;\u0026amp; builtin cd -- \u0026#34;$cwd\u0026#34; rm -f -- \u0026#34;$tmp\u0026#34; } 安装 x-cmd eval \u0026#34;$(curl https://get.x-cmd.com)\u0026#34; 安装 miniconda # 下载脚本 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py313_25.9.1-1-Linux-x86_64.sh sh Miniconda3-py313_25.9.1-1-Linux-x86_64.sh eval \u0026#34;$(/home/spike/miniconda3/bin/conda shell.YOUR_SHELL_NAME hook)\u0026#34; conda init ",
-  "keywords": [
-    "WSL", "环境配置", "Linux"
-  ],
-  "articleBody": "RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\\Downloads\\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl https://chsrc.run/posix | sudo bash chsrc set rocky epel 配置 dnf install epel-release -y sed -e 's!^metalink=!#metalink=!g' \\ -e 's!^#baseurl=!baseurl=!g' \\ -e 's!https\\?://download\\.fedoraproject\\.org/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g' \\ -e 's!https\\?://download\\.example/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g' \\ -i /etc/yum.repos.d/epel{,-testing}.repo dnf update oh my zsh 环境配置 # 安装依赖 dnf install git zsh -y # 安装 oh my zsh git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git cd ohmyzsh/tools REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git sh install.sh git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git \"${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k\" powerlevel10k/powerlevel10k vim .zshrc plugins=( git zsh-autosuggestions extract z zsh-syntax-highlighting ) git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting source .zshrc 创建用户 useradd -m -s /bin/zsh spike cp -r .oh-my-zsh /home/spike cp .zshrc /home/spike cp .p10k.zsh /home/spike sudo chown -R spike:spike /home/spike/.oh-my-zsh/ sudo chown -R spike:spike /home/spike/.zshrc sudo chown -R spike:spike /home/spike/.p10k.zsh vim /etc/wsl.conf [user] default=usernname Linuxbrew dnf group install 'Development Tools' export HOMEBREW_BREW_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\" export HOMEBREW_CORE_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\" export HOMEBREW_INSTALL_FROM_API=1 export HOMEBREW_API_DOMAIN=\"https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api\" export HOMEBREW_BOTTLE_DOMAIN=\"https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles\" export HOMEBREW_PIP_INDEX_URL=\"https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple\" git clone --depth=1 https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/install.git brew-install /bin/bash brew-install/install.sh rm -rf brew-install echo \u003e\u003e /home/spike/.zshrc echo 'eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"' \u003e\u003e /home/spike/.zshrc eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" echo '# Set non-default Git remotes for Homebrew/brew and Homebrew/homebrew-core.' \u003e\u003e /home/spike/.zshrc echo 'export HOMEBREW_BREW_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\"' \u003e\u003e /home/spike/.zshrc echo 'export HOMEBREW_CORE_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\"' \u003e\u003e /home/spike/.zshrc export HOMEBREW_BREW_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\" export HOMEBREW_CORE_GIT_REMOTE=\"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\" 安装 nvim brew install nvim sudo ln -s /home/linuxbrew/.linuxbrew/bin/nvim /usr/bin/vim 安装 yazi brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide resvg imagemagick function y() { local tmp=\"$(mktemp -t \"yazi-cwd.XXXXXX\")\" cwd yazi \"$@\" --cwd-file=\"$tmp\" IFS= read -r -d '' cwd \u003c \"$tmp\" [ -n \"$cwd\" ] \u0026\u0026 [ \"$cwd\" != \"$PWD\" ] \u0026\u0026 builtin cd -- \"$cwd\" rm -f -- \"$tmp\" } 安装 x-cmd eval \"$(curl https://get.x-cmd.com)\" 安装 miniconda # 下载脚本 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py313_25.9.1-1-Linux-x86_64.sh sh Miniconda3-py313_25.9.1-1-Linux-x86_64.sh eval \"$(/home/spike/miniconda3/bin/conda shell.YOUR_SHELL_NAME hook)\" conda init ",
-  "wordCount" : "301",
-  "inLanguage": "zh",
-  "datePublished": "2025-09-04T22:20:12+08:00",
-  "dateModified": "2026-05-20T17:19:12+08:00",
-  "author":{
+  "articleBody": "RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\\Downloads\\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl https://chsrc.run/posix | sudo bash chsrc set rocky epel 配置 dnf install epel-release -y sed -e \u0026#39;s!^metalink=!#metalink=!g\u0026#39; \\ -e \u0026#39;s!^#baseurl=!baseurl=!g\u0026#39; \\ -e \u0026#39;s!https\\?://download\\.fedoraproject\\.org/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g\u0026#39; \\ -e \u0026#39;s!https\\?://download\\.example/pub/epel!https://mirrors.tuna.tsinghua.edu.cn/epel!g\u0026#39; \\ -i /etc/yum.repos.d/epel{,-testing}.repo dnf update oh my zsh 环境配置 # 安装依赖 dnf install git zsh -y # 安装 oh my zsh git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git cd ohmyzsh/tools REMOTE=https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git sh install.sh git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git \u0026#34;${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k\u0026#34; powerlevel10k/powerlevel10k vim .zshrc plugins=( git zsh-autosuggestions extract z zsh-syntax-highlighting ) git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting source .zshrc 创建用户 useradd -m -s /bin/zsh spike cp -r .oh-my-zsh /home/spike cp .zshrc /home/spike cp .p10k.zsh /home/spike sudo chown -R spike:spike /home/spike/.oh-my-zsh/ sudo chown -R spike:spike /home/spike/.zshrc sudo chown -R spike:spike /home/spike/.p10k.zsh vim /etc/wsl.conf [user] default=usernname Linuxbrew dnf group install \u0026#39;Development Tools\u0026#39; export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34; export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34; export HOMEBREW_INSTALL_FROM_API=1 export HOMEBREW_API_DOMAIN=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api\u0026#34; export HOMEBREW_BOTTLE_DOMAIN=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles\u0026#34; export HOMEBREW_PIP_INDEX_URL=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple\u0026#34; git clone --depth=1 https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/install.git brew-install /bin/bash brew-install/install.sh rm -rf brew-install echo \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;eval \u0026#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc eval \u0026#34;$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\u0026#34; echo \u0026#39;# Set non-default Git remotes for Homebrew/brew and Homebrew/homebrew-core.\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc echo \u0026#39;export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34;\u0026#39; \u0026gt;\u0026gt; /home/spike/.zshrc export HOMEBREW_BREW_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git\u0026#34; export HOMEBREW_CORE_GIT_REMOTE=\u0026#34;https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git\u0026#34; 安装 nvim brew install nvim sudo ln -s /home/linuxbrew/.linuxbrew/bin/nvim /usr/bin/vim 安装 yazi brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide resvg imagemagick function y() { local tmp=\u0026#34;$(mktemp -t \u0026#34;yazi-cwd.XXXXXX\u0026#34;)\u0026#34; cwd yazi \u0026#34;$@\u0026#34; --cwd-file=\u0026#34;$tmp\u0026#34; IFS= read -r -d \u0026#39;\u0026#39; cwd \u0026lt; \u0026#34;$tmp\u0026#34; [ -n \u0026#34;$cwd\u0026#34; ] \u0026amp;\u0026amp; [ \u0026#34;$cwd\u0026#34; != \u0026#34;$PWD\u0026#34; ] \u0026amp;\u0026amp; builtin cd -- \u0026#34;$cwd\u0026#34; rm -f -- \u0026#34;$tmp\u0026#34; } 安装 x-cmd eval \u0026#34;$(curl https://get.x-cmd.com)\u0026#34; 安装 miniconda # 下载脚本 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py313_25.9.1-1-Linux-x86_64.sh sh Miniconda3-py313_25.9.1-1-Linux-x86_64.sh eval \u0026#34;$(/home/spike/miniconda3/bin/conda shell.YOUR_SHELL_NAME hook)\u0026#34; conda init ",
+  "author": {
     "@type": "Person",
     "name": "念念"
   },
+  "dateModified": "2026-05-20T17:19:12+08:00",
+  "datePublished": "2025-09-04T22:20:12+08:00",
+  "description": "RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\\Downloads\\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl https://chsrc.run/posix | sudo bash …",
+  "headline": "WSL自用配置",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "WSL",
+    "环境配置",
+    "Linux"
+  ],
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/"
+    "@id": "https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/",
+    "@type": "WebPage"
   },
+  "name": "WSL自用配置",
   "publisher": {
-    "@type": "Organization",
-    "name": "念念的博客",
+    "@type": "Person",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://blog.nuonian.top/favicon.ico"
-    }
-  }
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/",
+  "wordCount": 301
 }
 </script>
 </head>
@@ -310,7 +325,18 @@ conda init
 
 <article class="post-single">
   <header class="post-header">
-    
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
     <h1 class="post-title entry-hint-parent">
       WSL自用配置
     </h1>

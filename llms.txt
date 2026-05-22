@@ -1,0 +1,29 @@
+# 念念的博客
+
+> 念念的个人技术博客，记录前端、后端、数据库、Linux、Git、游戏开发与个人效率工具实践。
+
+站点地址: https://blog.nuonian.top/
+
+## 主要入口
+
+- 首页: https://blog.nuonian.top/
+- 文章归档: https://blog.nuonian.top/archives/
+- 分类: https://blog.nuonian.top/categories/
+- 标签: https://blog.nuonian.top/tags/
+- 专栏: https://blog.nuonian.top/series/
+- RSS: https://blog.nuonian.top/index.xml
+- Sitemap: https://blog.nuonian.top/sitemap.xml
+
+## 内容主题
+
+- Hugo、PaperMod 与个人博客搭建
+- 前端开发、应用开发与项目脚手架
+- Python、Rust、Golang 等语言学习笔记
+- PostgreSQL、MySQL、Oracle 等数据库学习笔记
+- Linux、WSL、Git 与开发环境配置
+- 游戏开发与模组实践
+
+## 作者
+
+作者: 念念
+GitHub: https://github.com/SpikeBeboop

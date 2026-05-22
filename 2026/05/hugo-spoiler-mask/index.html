@@ -76,7 +76,10 @@ Hugo 本身不自带相关语法。
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
@@ -100,9 +103,11 @@ Hugo 本身不自带相关语法。
     <meta property="article:tag" content="PaperMod">
     <meta property="article:tag" content="Shortcode">
     <meta property="article:tag" content="CSS">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
       <meta property="og:see_also" content="https://blog.nuonian.top/2026/05/hugo-custom-categories-series-summary-page/">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
   <meta name="twitter:title" content="Hugo 增加防剧透遮罩功能">
   <meta name="twitter:description" content="有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可
 效果 这是一段普通的文字。
@@ -111,8 +116,6 @@ Hugo 本身不自带相关语法。
 讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。
 实现思路 Hugo 本身不自带相关语法。
 但是 Hugo 支持 Shortcode，可以自己自定义一段可复用的 Markdown 语法。">
-
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -120,50 +123,63 @@ Hugo 本身不自带相关语法。
   "itemListElement": [
     {
       "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://blog.nuonian.top/posts/"
-    }, 
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
     {
       "@type": "ListItem",
-      "position":  2 ,
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2026/05/hugo-spoiler-mask/",
       "name": "Hugo 增加防剧透遮罩功能",
-      "item": "https://blog.nuonian.top/2026/05/hugo-spoiler-mask/"
+      "position": 3
     }
   ]
 }
-</script>
-<script type="application/ld+json">
+</script><script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Hugo 增加防剧透遮罩功能",
-  "name": "Hugo 增加防剧透遮罩功能",
-  "description": " 有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可\n效果 这是一段普通的文字。\n这里是被遮住的剧透内容 继续写普通内容\n页面显示时，剧透内容默认被遮住。\n讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。\n实现思路 Hugo 本身不自带相关语法。\n但是 Hugo 支持 Shortcode，可以自己自定义一段可复用的 Markdown 语法。\n",
-  "keywords": [
-    "Hugo", "PaperMod", "Shortcode", "CSS"
-  ],
-  "articleBody": " 有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可\n效果 这是一段普通的文字。\n这里是被遮住的剧透内容 继续写普通内容\n页面显示时，剧透内容默认被遮住。\n讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。\n实现思路 Hugo 本身不自带相关语法。\n但是 Hugo 支持 Shortcode，可以自己自定义一段可复用的 Markdown 语法。\n实现方式很简单：\n1. 新增 spoiler shortcode 2. 在 Markdown 中用 shortcode 包住想要隐藏的内容 3. 用 CSS 将内容默认遮盖 4. hover / active / focus 时显示内容 具体实现 新增 Shortcode 在 Hugo 项目中增加文件：\nlayouts/shortcodes/spoiler.html 内容如下：\n\u003cdiv class=\"spoiler spoiler-block\" tabindex=\"0\"\u003e{{ .Inner | markdownify }}\u003c/div\u003e 这个 shortcode 用于多行内容，会把被包住的内容渲染成块级 HTML：\n\u003cdiv class=\"spoiler spoiler-block\" tabindex=\"0\"\u003e内容\u003c/div\u003e 如果需要行内遮罩，额外新增：\nlayouts/shortcodes/spoiler-inline.html 内容如下：\n\u003cspan class=\"spoiler-inline\" tabindex=\"0\"\u003e{{ .Inner | plainify }}\u003c/span\u003e 修改样式 我们可以通过CSS控制显示效果\n因为我使用的是 PaperMod 主题，修改下面文件，不存在就手动创建\nassets/css/extended/blank.css .spoiler, .spoiler-inline { position: relative; cursor: pointer; border-radius: 4px; user-select: none; } .spoiler-block { display: block; padding: 0.6em 0.8em; overflow: hidden; } .md-content .spoiler-block:not(:last-child) { margin-bottom: var(--content-gap); } .md-content .spoiler-block \u003e :first-child { margin-top: 0; } .md-content .spoiler-block \u003e :last-child { margin-bottom: 0; } .spoiler-inline { display: inline-block; padding: 0 4px; } .spoiler::after, .spoiler-inline::after { content: \"\"; position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: var(--primary); transition: opacity 0.2s ease; } .spoiler:hover::after, .spoiler:active::after, .spoiler:focus::after, .spoiler-inline:hover::after, .spoiler-inline:active::after, .spoiler-inline:focus::after { opacity: 0; } .spoiler:hover, .spoiler:active, .spoiler:focus, .spoiler-inline:hover, .spoiler-inline:active, .spoiler-inline:focus { user-select: auto; } 此时我们已经实现了如下效果：\n隐藏内容 如何使用 多行内容 这是一段普通内容。 {{\u003c spoiler \u003e}} 这里是被遮住的内容。 可以写多行文字。 {{\u003c /spoiler \u003e}} 继续普通内容。 这是一段普通内容。\n这里是被遮住的内容。\n可以写多行文字。\n继续普通内容。\n行内内容 这部电影最后 {{\u003c spoiler-inline \u003e}}主角其实没有死{{\u003c /spoiler-inline \u003e}}。 这部电影最后 主角其实没有死 。\nMarkdown 渲染 内部还可以正常写Markdown\n例如：\n{{\u003c spoiler \u003e}} **加粗内容** - 列表 1 - 列表 2 {{\u003c /spoiler \u003e}} 加粗内容\n列表 1\n列表 2\n",
-  "wordCount" : "708",
-  "inLanguage": "zh",
-  "datePublished": "2026-05-21T11:23:00+08:00",
-  "dateModified": "2026-05-21T12:22:08+08:00",
-  "author":{
+  "articleBody": " 有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可\n效果 这是一段普通的文字。\n这里是被遮住的剧透内容 继续写普通内容\n页面显示时，剧透内容默认被遮住。\n讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。\n实现思路 Hugo 本身不自带相关语法。\n但是 Hugo 支持 Shortcode，可以自己自定义一段可复用的 Markdown 语法。\n实现方式很简单：\n1. 新增 spoiler shortcode 2. 在 Markdown 中用 shortcode 包住想要隐藏的内容 3. 用 CSS 将内容默认遮盖 4. hover / active / focus 时显示内容 具体实现 新增 Shortcode 在 Hugo 项目中增加文件：\nlayouts/shortcodes/spoiler.html 内容如下：\n\u0026lt;div class=\u0026#34;spoiler spoiler-block\u0026#34; tabindex=\u0026#34;0\u0026#34;\u0026gt;{{ .Inner | markdownify }}\u0026lt;/div\u0026gt; 这个 shortcode 用于多行内容，会把被包住的内容渲染成块级 HTML：\n\u0026lt;div class=\u0026#34;spoiler spoiler-block\u0026#34; tabindex=\u0026#34;0\u0026#34;\u0026gt;内容\u0026lt;/div\u0026gt; 如果需要行内遮罩，额外新增：\nlayouts/shortcodes/spoiler-inline.html 内容如下：\n\u0026lt;span class=\u0026#34;spoiler-inline\u0026#34; tabindex=\u0026#34;0\u0026#34;\u0026gt;{{ .Inner | plainify }}\u0026lt;/span\u0026gt; 修改样式 我们可以通过CSS控制显示效果\n因为我使用的是 PaperMod 主题，修改下面文件，不存在就手动创建\nassets/css/extended/blank.css .spoiler, .spoiler-inline { position: relative; cursor: pointer; border-radius: 4px; user-select: none; } .spoiler-block { display: block; padding: 0.6em 0.8em; overflow: hidden; } .md-content .spoiler-block:not(:last-child) { margin-bottom: var(--content-gap); } .md-content .spoiler-block \u0026gt; :first-child { margin-top: 0; } .md-content .spoiler-block \u0026gt; :last-child { margin-bottom: 0; } .spoiler-inline { display: inline-block; padding: 0 4px; } .spoiler::after, .spoiler-inline::after { content: \u0026#34;\u0026#34;; position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: var(--primary); transition: opacity 0.2s ease; } .spoiler:hover::after, .spoiler:active::after, .spoiler:focus::after, .spoiler-inline:hover::after, .spoiler-inline:active::after, .spoiler-inline:focus::after { opacity: 0; } .spoiler:hover, .spoiler:active, .spoiler:focus, .spoiler-inline:hover, .spoiler-inline:active, .spoiler-inline:focus { user-select: auto; } 此时我们已经实现了如下效果：\n隐藏内容 如何使用 多行内容 这是一段普通内容。 {{\u0026lt; spoiler \u0026gt;}} 这里是被遮住的内容。 可以写多行文字。 {{\u0026lt; /spoiler \u0026gt;}} 继续普通内容。 这是一段普通内容。\n这里是被遮住的内容。\n可以写多行文字。\n继续普通内容。\n行内内容 这部电影最后 {{\u0026lt; spoiler-inline \u0026gt;}}主角其实没有死{{\u0026lt; /spoiler-inline \u0026gt;}}。 这部电影最后 主角其实没有死 。\nMarkdown 渲染 内部还可以正常写Markdown\n例如：\n{{\u0026lt; spoiler \u0026gt;}} **加粗内容** - 列表 1 - 列表 2 {{\u0026lt; /spoiler \u0026gt;}} 加粗内容\n列表 1\n列表 2\n",
+  "author": {
     "@type": "Person",
     "name": "念念"
   },
+  "dateModified": "2026-05-21T12:22:08+08:00",
+  "datePublished": "2026-05-21T11:23:00+08:00",
+  "description": " 有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可\n效果 这是一段普通的文字。\n这里是被遮住的剧透内容 继续写普通内容\n页面显示时，剧透内容默认被遮住。\n讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内容会显示出来。\n实现思路 Hugo 本身不自带相关语法。\n但是 Hugo 支持 …",
+  "headline": "Hugo 增加防剧透遮罩功能",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "Hugo",
+    "PaperMod",
+    "Shortcode",
+    "CSS"
+  ],
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://blog.nuonian.top/2026/05/hugo-spoiler-mask/"
+    "@id": "https://blog.nuonian.top/2026/05/hugo-spoiler-mask/",
+    "@type": "WebPage"
   },
+  "name": "Hugo 增加防剧透遮罩功能",
   "publisher": {
-    "@type": "Organization",
-    "name": "念念的博客",
+    "@type": "Person",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://blog.nuonian.top/favicon.ico"
-    }
-  }
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2026/05/hugo-spoiler-mask/",
+  "wordCount": 708
 }
 </script>
 </head>
@@ -228,7 +244,18 @@ Hugo 本身不自带相关语法。
 
 <article class="post-single">
   <header class="post-header">
-    
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
     <h1 class="post-title entry-hint-parent">
       Hugo 增加防剧透遮罩功能
     </h1>

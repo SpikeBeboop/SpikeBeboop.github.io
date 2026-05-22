@@ -95,7 +95,10 @@ uv.lock
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
@@ -111,12 +114,12 @@ uv.lock
     <meta property="article:modified_time" content="2026-05-20T17:19:12+08:00">
     <meta property="article:tag" content="Git">
     <meta property="article:tag" content="配置文件">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
   <meta name="twitter:title" content="自用.gitignore">
   <meta name="twitter:description" content="# ide .idea/ .vscode/ # 构建 / 打包 .Python build/ develop-eggs/ dist/ lib/ lib64/ wheels/ # 二进制文件 / DLL 文件 __pycache__/ # 环境文件 .venv/ node_modules/ # 包管理器 uv.lock # 日志文件 *.log # hugo 框架 /public/ /resources/_gen/ /hugo_stats.json .hugo_build.lock">
-
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -124,50 +127,61 @@ uv.lock
   "itemListElement": [
     {
       "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://blog.nuonian.top/posts/"
-    }, 
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
     {
       "@type": "ListItem",
-      "position":  2 ,
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2025/12/gitignore/",
       "name": "自用.gitignore",
-      "item": "https://blog.nuonian.top/2025/12/gitignore/"
+      "position": 3
     }
   ]
 }
-</script>
-<script type="application/ld+json">
+</script><script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "自用.gitignore",
-  "name": "自用.gitignore",
-  "description": "# ide .idea/ .vscode/ # 构建 / 打包 .Python build/ develop-eggs/ dist/ lib/ lib64/ wheels/ # 二进制文件 / DLL 文件 __pycache__/ # 环境文件 .venv/ node_modules/ # 包管理器 uv.lock # 日志文件 *.log # hugo 框架 /public/ /resources/_gen/ /hugo_stats.json .hugo_build.lock ",
-  "keywords": [
-    "Git", "配置文件"
-  ],
   "articleBody": "# ide .idea/ .vscode/ # 构建 / 打包 .Python build/ develop-eggs/ dist/ lib/ lib64/ wheels/ # 二进制文件 / DLL 文件 __pycache__/ # 环境文件 .venv/ node_modules/ # 包管理器 uv.lock # 日志文件 *.log # hugo 框架 /public/ /resources/_gen/ /hugo_stats.json .hugo_build.lock ",
-  "wordCount" : "55",
-  "inLanguage": "zh",
-  "datePublished": "2025-12-02T11:33:51+08:00",
-  "dateModified": "2026-05-20T17:19:12+08:00",
-  "author":{
+  "author": {
     "@type": "Person",
     "name": "念念"
   },
+  "dateModified": "2026-05-20T17:19:12+08:00",
+  "datePublished": "2025-12-02T11:33:51+08:00",
+  "description": "# ide .idea/ .vscode/ # 构建 / 打包 .Python build/ develop-eggs/ dist/ lib/ lib64/ wheels/ # 二进制文件 / DLL 文件 __pycache__/ # 环境文件 .venv/ node_modules/ # 包管理器 uv.lock # 日志文件 *.log # hugo …",
+  "headline": "自用.gitignore",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "Git",
+    "配置文件"
+  ],
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://blog.nuonian.top/2025/12/gitignore/"
+    "@id": "https://blog.nuonian.top/2025/12/gitignore/",
+    "@type": "WebPage"
   },
+  "name": "自用.gitignore",
   "publisher": {
-    "@type": "Organization",
-    "name": "念念的博客",
+    "@type": "Person",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://blog.nuonian.top/favicon.ico"
-    }
-  }
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2025/12/gitignore/",
+  "wordCount": 55
 }
 </script>
 </head>
@@ -232,7 +246,18 @@ uv.lock
 
 <article class="post-single">
   <header class="post-header">
-    
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
     <h1 class="post-title entry-hint-parent">
       自用.gitignore
     </h1>

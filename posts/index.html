@@ -65,7 +65,10 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
@@ -73,15 +76,15 @@
 <meta property="og:url" content="https://blog.nuonian.top/posts/">
   <meta property="og:site_name" content="念念的博客">
   <meta property="og:title" content="Posts">
-  <meta property="og:description" content="个人博客，记录和分享">
+  <meta property="og:description" content="念念的个人技术博客，记录前端、后端、数据库、Linux、Git、游戏开发与个人效率工具实践。">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="website">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
   <meta name="twitter:title" content="Posts">
-  <meta name="twitter:description" content="个人博客，记录和分享">
-
-
+  <meta name="twitter:description" content="念念的个人技术博客，记录前端、后端、数据库、Linux、Git、游戏开发与个人效率工具实践。">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -89,9 +92,15 @@
   "itemListElement": [
     {
       "@type": "ListItem",
-      "position":  1 ,
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/posts/",
       "name": "Posts",
-      "item": "https://blog.nuonian.top/posts/"
+      "position": 2
     }
   ]
 }
@@ -155,7 +164,13 @@
     </nav>
 </header>
 <main class="main"> 
-<header class="page-header">
+<header class="page-header"><nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
   <h1>
     Posts
   </h1>
