@@ -13,31 +13,17 @@
     <language>zh-cn</language>
     <atom:link href="https://blog.nuonian.top/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>博客</title>
-      <link>https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/</link>
-      <pubDate>Thu, 21 May 2026 14:29:51 +0800</pubDate>
-      <guid>https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/</guid>
+      <title>开发技术</title>
+      <link>https://blog.nuonian.top/categories/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Fri, 22 May 2026 16:56:44 +0800</pubDate>
+      <guid>https://blog.nuonian.top/categories/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/</guid>
       <description></description>
     </item>
     <item>
-      <title>前端</title>
-      <link>https://blog.nuonian.top/categories/%E5%89%8D%E7%AB%AF/</link>
-      <pubDate>Thu, 21 May 2026 14:29:51 +0800</pubDate>
-      <guid>https://blog.nuonian.top/categories/%E5%89%8D%E7%AB%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Git</title>
-      <link>https://blog.nuonian.top/categories/git/</link>
-      <pubDate>Tue, 02 Dec 2025 11:33:51 +0800</pubDate>
-      <guid>https://blog.nuonian.top/categories/git/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Linux</title>
-      <link>https://blog.nuonian.top/categories/linux/</link>
-      <pubDate>Thu, 04 Sep 2025 22:20:12 +0800</pubDate>
-      <guid>https://blog.nuonian.top/categories/linux/</guid>
+      <title>系统教程</title>
+      <link>https://blog.nuonian.top/categories/%E7%B3%BB%E7%BB%9F%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Thu, 21 May 2026 09:06:33 +0800</pubDate>
+      <guid>https://blog.nuonian.top/categories/%E7%B3%BB%E7%BB%9F%E6%95%99%E7%A8%8B/</guid>
       <description></description>
     </item>
   </channel>

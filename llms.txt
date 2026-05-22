@@ -27,6 +27,9 @@
 - 技术博客
 
 ## 最新文章
+- [Hugo 增加折叠展开功能](https://blog.nuonian.top/2026/05/hugo-details/)
+  效果展示 默认折叠 查看详情 需要折叠的内容
+print(&#39;hello world&#39;) {{&lt; details summary=&#34;查看详情&#34; &gt;}} 需要折叠的内容 ```python print(&#39;hello …
 - [Hugo 自定义分类，专栏汇总页面样式](https://blog.nuonian.top/2026/05/hugo-custom-categories-series-summary-page/)
   前言 最近又重新拾起来了个人博客，然后老毛病又犯了，开始鼓捣美化。
 由于 Papermod 的分类页面只有 标签云 类型的分类页，单纯标签页用这种词云还不错，但是分类和专栏还是这个样子就有点怪了。
@@ -46,30 +49,29 @@
   RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\Downloads\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl …
 
 ## 分类
-- [前端](https://blog.nuonian.top/categories/%E5%89%8D%E7%AB%AF/)：3 篇
-- [博客](https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/)：3 篇
-- [Git](https://blog.nuonian.top/categories/git/)：1 篇
-- [Linux](https://blog.nuonian.top/categories/linux/)：1 篇
+- [开发技术](https://blog.nuonian.top/categories/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/)：4 篇
+- [系统教程](https://blog.nuonian.top/categories/%E7%B3%BB%E7%BB%9F%E6%95%99%E7%A8%8B/)：2 篇
 
 ## 专栏
-- [Hugo 博客](https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2/)：2 篇
+- [Hugo 博客搭建笔记](https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0/)：3 篇
 - [常用配置文件](https://blog.nuonian.top/series/%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)：1 篇
 - [环境配置](https://blog.nuonian.top/series/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/)：1 篇
 
 ## 标签
-- [CSS](https://blog.nuonian.top/tags/css/)：2 篇
-- [Hugo](https://blog.nuonian.top/tags/hugo/)：2 篇
-- [PaperMod](https://blog.nuonian.top/tags/papermod/)：2 篇
+- [CSS](https://blog.nuonian.top/tags/css/)：3 篇
+- [Hugo](https://blog.nuonian.top/tags/hugo/)：3 篇
+- [PaperMod](https://blog.nuonian.top/tags/papermod/)：3 篇
+- [主题定制](https://blog.nuonian.top/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/)：3 篇
+- [博客美化](https://blog.nuonian.top/tags/%E5%8D%9A%E5%AE%A2%E7%BE%8E%E5%8C%96/)：3 篇
 - [Git](https://blog.nuonian.top/tags/git/)：1 篇
-- [Hugo 模板](https://blog.nuonian.top/tags/hugo-%E6%A8%A1%E6%9D%BF/)：1 篇
 - [Linux](https://blog.nuonian.top/tags/linux/)：1 篇
 - [Next.js](https://blog.nuonian.top/tags/next.js/)：1 篇
 - [Notion](https://blog.nuonian.top/tags/notion/)：1 篇
 - [NotionNext](https://blog.nuonian.top/tags/notionnext/)：1 篇
-- [Shortcode](https://blog.nuonian.top/tags/shortcode/)：1 篇
 - [Vercel](https://blog.nuonian.top/tags/vercel/)：1 篇
 - [WSL](https://blog.nuonian.top/tags/wsl/)：1 篇
 - [环境配置](https://blog.nuonian.top/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/)：1 篇
+- [部署流程](https://blog.nuonian.top/tags/%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B/)：1 篇
 - [配置文件](https://blog.nuonian.top/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)：1 篇
 
 ## 作者与站点身份
