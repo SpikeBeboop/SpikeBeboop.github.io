@@ -11,19 +11,71 @@
 - 分类: https://blog.nuonian.top/categories/
 - 标签: https://blog.nuonian.top/tags/
 - 专栏: https://blog.nuonian.top/series/
+- 站内搜索: https://blog.nuonian.top/search/
 - RSS: https://blog.nuonian.top/index.xml
 - Sitemap: https://blog.nuonian.top/sitemap.xml
 
 ## 内容主题
+- Hugo
+- PaperMod
+- 前端开发
+- 后端开发
+- 数据库
+- Linux
+- Git
+- 游戏开发
+- 技术博客
 
-- Hugo、PaperMod 与个人博客搭建
-- 前端开发、应用开发与项目脚手架
-- Python、Rust、Golang 等语言学习笔记
-- PostgreSQL、MySQL、Oracle 等数据库学习笔记
-- Linux、WSL、Git 与开发环境配置
-- 游戏开发与模组实践
+## 最新文章
+- [Hugo 自定义分类，专栏汇总页面样式](https://blog.nuonian.top/2026/05/hugo-custom-categories-series-summary-page/)
+  前言 最近又重新拾起来了个人博客，然后老毛病又犯了，开始鼓捣美化。
+由于 Papermod 的分类页面只有 标签云 类型的分类页，单纯标签页用这种词云还不错，但是分类和专栏还是这个样子就有点怪了。
+后续发了 LoveIt 主题，感觉这个里面的分类页面挺符合我的审美，于是直接开始施 …
+- [Hugo 增加防剧透遮罩功能](https://blog.nuonian.top/2026/05/hugo-spoiler-mask/)
+   有些内容不合适直接展示出来，比如影视结局，游戏剧情，小说反转，答案提示等。这类内容只需要默认遮住，读者主动悬停或点击后再显示即可
+效果 这是一段普通的文字。
+这里是被遮住的剧透内容 继续写普通内容
+页面显示时，剧透内容默认被遮住。
+讲鼠标移动到遮罩上，或者再移动端点击遮罩后，内 …
+- [Vercel部署NotionNext](https://blog.nuonian.top/2026/05/notion-next-blog-setup/)
+  一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接
+复制 …
+- [自用.gitignore](https://blog.nuonian.top/2025/12/gitignore/)
+  # ide .idea/ .vscode/ # 构建 / 打包 .Python build/ develop-eggs/ dist/ lib/ lib64/ wheels/ # 二进制文件 / DLL 文件 __pycache__/ # 环境文件 .venv/ …
+- [WSL自用配置](https://blog.nuonian.top/2025/09/wsl%E8%87%AA%E7%94%A8%E9%85%8D%E7%BD%AE/)
+  RokcyLinux 10 安装 wsl --import RockyLinux-10 ./RockyLinux-10 F:\Downloads\Rocky-10-WSL-Base.latest.x86_64.wsl --version 2 软件包配置 chsrc 安装 curl …
 
-## 作者
+## 分类
+- [前端](https://blog.nuonian.top/categories/%E5%89%8D%E7%AB%AF/)：3 篇
+- [博客](https://blog.nuonian.top/categories/%E5%8D%9A%E5%AE%A2/)：3 篇
+- [Git](https://blog.nuonian.top/categories/git/)：1 篇
+- [Linux](https://blog.nuonian.top/categories/linux/)：1 篇
+
+## 专栏
+- [Hugo 博客](https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2/)：2 篇
+- [常用配置文件](https://blog.nuonian.top/series/%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)：1 篇
+- [环境配置](https://blog.nuonian.top/series/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/)：1 篇
+
+## 标签
+- [CSS](https://blog.nuonian.top/tags/css/)：2 篇
+- [Hugo](https://blog.nuonian.top/tags/hugo/)：2 篇
+- [PaperMod](https://blog.nuonian.top/tags/papermod/)：2 篇
+- [Git](https://blog.nuonian.top/tags/git/)：1 篇
+- [Hugo 模板](https://blog.nuonian.top/tags/hugo-%E6%A8%A1%E6%9D%BF/)：1 篇
+- [Linux](https://blog.nuonian.top/tags/linux/)：1 篇
+- [Next.js](https://blog.nuonian.top/tags/next.js/)：1 篇
+- [Notion](https://blog.nuonian.top/tags/notion/)：1 篇
+- [NotionNext](https://blog.nuonian.top/tags/notionnext/)：1 篇
+- [Shortcode](https://blog.nuonian.top/tags/shortcode/)：1 篇
+- [Vercel](https://blog.nuonian.top/tags/vercel/)：1 篇
+- [WSL](https://blog.nuonian.top/tags/wsl/)：1 篇
+- [环境配置](https://blog.nuonian.top/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/)：1 篇
+- [配置文件](https://blog.nuonian.top/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)：1 篇
+
+## 作者与站点身份
 
 作者: 念念
-GitHub: https://github.com/SpikeBeboop
+
+相关链接:
+- https://github.com/SpikeBeboop
+- https://steamcommunity.com/id/xxnn521/
