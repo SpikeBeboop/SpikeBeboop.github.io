@@ -10,7 +10,7 @@
 <meta name="description" content="念念的个人技术博客，记录前端、后端、数据库、Linux、Git、游戏开发与个人效率工具实践。">
 <meta name="author" content="念念">
 <link rel="canonical" href="https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.c33722d5a3df037b1830692880f5d37233ff7d8cddffa18058362da40182d5d2.css" integrity="sha256-wzci1aPfA3sYMGkogPXTcjP/fYzd/6GAWDYtpAGC1dI=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d9aaa8612eece03864ad262f96ef59e994f1c94586b18f19cdb42c1bccada91a.css" integrity="sha256-2aqoYS7s4DhkrSYvlu9Z6ZTxyUWGsY8ZzbQsG8ytqRo=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://blog.nuonian.top/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://blog.nuonian.top/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://blog.nuonian.top/favicon-32x32.png">
@@ -186,6 +186,20 @@
     Hugo 博客搭建笔记
   </h1>
 </header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Hugo Marginnote 功能
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>示例 示例实例文本
+实现 layouts/shortcodes/sidenote.html &lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;{{ .Inner | markdownify }}&lt;/small&gt;&lt;/span&gt; assets/css/extended/40-marginnote.css .sidenote { float: right; position: relative; margin-right: -18vw; width: 40%; max-width: 200px; } body { counter-reset: sidenote-counter; } .sidenote-number { counter-increment: sidenote-counter; } .sidenote::before { content: &#34;# &#34;; position: relative; font-size: 0.9em; font-weight: 700; color: red; } .sidenote-number::after { content: &#34;#&#34;; vertical-align: super; font-size: 0.8em; font-weight: 700; color: #409dff; } .sidenote-number:hover .sidenote { background-color: var(--sidenote-bg); } 使用方式 示例{{&lt; sidenote &gt;}} 实例文本 {{&lt; /sidenote &gt;}} 示例实例文本
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-29 16:58:59 +0800 +0800'>2026-05-29</span>&nbsp;·&nbsp;<span title='2026-05-29 17:21:57 +0800 +0800'>Updated:&nbsp;2026-05-29</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;102 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a>&nbsp;·&nbsp;<a href="https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0/">Hugo 博客搭建笔记</a></footer>
+  <a class="entry-link" aria-label="post link to Hugo Marginnote 功能" href="https://blog.nuonian.top/2026/05/hugo-marginnote/"></a>
+</article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">

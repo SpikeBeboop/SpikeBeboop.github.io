@@ -11,8 +11,63 @@
     </image>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 22 May 2026 17:38:38 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 29 May 2026 17:21:57 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/tags/papermod/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo Marginnote 功能</title>
+      <link>https://blog.nuonian.top/2026/05/hugo-marginnote/</link>
+      <pubDate>Fri, 29 May 2026 16:58:59 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/05/hugo-marginnote/</guid>
+      <description>&lt;h3 id=&#34;示例&#34;&gt;示例&lt;/h3&gt;
+&lt;p&gt;示例&lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;实例文本&lt;/small&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&#34;实现&#34;&gt;实现&lt;/h3&gt;
+&lt;details class=&#34;post-details shortcode-details&#34; open&gt;
+        &lt;summary class=&#34;post-details-summary&#34;&gt;layouts/shortcodes/sidenote.html&lt;/summary&gt;
+        &lt;div class=&#34;post-details-content&#34;&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;span&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sidenote-number&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;small&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sidenote&amp;#34;&lt;/span&gt;&amp;gt;{{ .Inner | markdownify }}&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;small&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;span&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;/details&gt;
+&lt;details class=&#34;post-details shortcode-details&#34; open&gt;
+        &lt;summary class=&#34;post-details-summary&#34;&gt;assets/css/extended/40-marginnote.css&lt;/summary&gt;
+        &lt;div class=&#34;post-details-content&#34;&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;right&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;position&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;relative&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;margin-right&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;-18&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;vw&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;width&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;max-width&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;counter-reset&lt;/span&gt;: sidenote-counter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote-number&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;counter-increment&lt;/span&gt;: sidenote-counter;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote&lt;/span&gt;::&lt;span style=&#34;color:#a6e22e&#34;&gt;before&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;content&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;# &amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;position&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;relative&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.9&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;em&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;font-weight&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;700&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;red&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote-number&lt;/span&gt;::&lt;span style=&#34;color:#a6e22e&#34;&gt;after&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;content&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;vertical-align&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;super&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;em&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;font-weight&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;700&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;#409dff&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote-number&lt;/span&gt;:&lt;span style=&#34;color:#a6e22e&#34;&gt;hover&lt;/span&gt; .&lt;span style=&#34;color:#a6e22e&#34;&gt;sidenote&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;background-color&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidenote&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;bg);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;/details&gt;
+&lt;h3 id=&#34;使用方式&#34;&gt;使用方式&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;示例{{&amp;lt; &lt;span style=&#34;color:#f92672&#34;&gt;sidenote&lt;/span&gt; &amp;gt;}}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;实例文本
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{{&amp;lt; /&lt;span style=&#34;color:#f92672&#34;&gt;sidenote&lt;/span&gt; &amp;gt;}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;示例&lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;实例文本&lt;/small&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Hugo 增加折叠展开功能</title>
       <link>https://blog.nuonian.top/2026/05/hugo-details/</link>

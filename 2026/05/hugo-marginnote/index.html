@@ -5,57 +5,59 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Vercel部署NotionNext | 念念的博客</title>
-<meta name="keywords" content="NotionNext, Notion, Next.js, Vercel, 部署流程">
-<meta name="description" content="一、创建 Notion 页面
-复制模版
+<title>Hugo Marginnote 功能 | 念念的博客</title>
+<meta name="keywords" content="Hugo, PaperMod, 博客美化, CSS, 主题定制">
+<meta name="description" content="示例
+示例实例文本
+实现
 
-注册并登录 Notion 账号
-点击链接，打开模版
-Notion Blog
+        layouts/shortcodes/sidenote.html
+        &lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;{{ .Inner | markdownify }}&lt;/small&gt;&lt;/span&gt;
 
-点击复制模版，将模版数据复制到笔记空间中
+    
 
+        assets/css/extended/40-marginnote.css
+        .sidenote {
+  float: right;
+  position: relative;
+  margin-right: -18vw;
+  width: 40%;
+  max-width: 200px;
+}
+body {
+  counter-reset: sidenote-counter;
+}
+.sidenote-number {
+  counter-increment: sidenote-counter;
+}
+.sidenote::before {
+  content: &#34;# &#34;;
+  position: relative;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: red;
+}
+.sidenote-number::after {
+  content: &#34;#&#34;;
+  vertical-align: super;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #409dff;
+}
+.sidenote-number:hover .sidenote {
+  background-color: var(--sidenote-bg);
+}
 
+    
+使用方式
+示例{{&lt; sidenote &gt;}}
 
+实例文本
 
-
-
-
-
-获取页面ID
-
-
-在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接
-
-
-
-
-
-
-
-
-
-复制页面ID
-页面ID在您的共享连接中，域名中间的一串32位字母与数字
-
-
-
-
-
-
-
-
-
-二、复制源代码
-
-
-请先注册并登录Github
-
-
-点击下方链接，一键Fork项目">
+{{&lt; /sidenote &gt;}}
+示例实例文本">
 <meta name="author" content="念念">
-<link rel="canonical" href="https://blog.nuonian.top/2026/05/notion-next-blog-setup/">
+<link rel="canonical" href="https://blog.nuonian.top/2026/05/hugo-marginnote/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.d9aaa8612eece03864ad262f96ef59e994f1c94586b18f19cdb42c1bccada91a.css" integrity="sha256-2aqoYS7s4DhkrSYvlu9Z6ZTxyUWGsY8ZzbQsG8ytqRo=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://blog.nuonian.top/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://blog.nuonian.top/favicon-16x16.png">
@@ -64,7 +66,7 @@ Notion Blog
 <link rel="mask-icon" href="https://blog.nuonian.top/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://blog.nuonian.top/2026/05/notion-next-blog-setup/">
+<link rel="alternate" hreflang="zh" href="https://blog.nuonian.top/2026/05/hugo-marginnote/">
 <noscript>
     <style>
         #theme-toggle,
@@ -118,32 +120,31 @@ Notion Blog
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-BoldItalic/result.css">
-<meta property="og:url" content="https://blog.nuonian.top/2026/05/notion-next-blog-setup/">
+<meta property="og:url" content="https://blog.nuonian.top/2026/05/hugo-marginnote/">
   <meta property="og:site_name" content="念念的博客">
-  <meta property="og:title" content="Vercel部署NotionNext">
-  <meta property="og:description" content="一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接
-复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字
-二、复制源代码 请先注册并登录Github
-点击下方链接，一键Fork项目">
+  <meta property="og:title" content="Hugo Marginnote 功能">
+  <meta property="og:description" content="示例 示例实例文本
+实现 layouts/shortcodes/sidenote.html &lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;{{ .Inner | markdownify }}&lt;/small&gt;&lt;/span&gt; assets/css/extended/40-marginnote.css .sidenote { float: right; position: relative; margin-right: -18vw; width: 40%; max-width: 200px; } body { counter-reset: sidenote-counter; } .sidenote-number { counter-increment: sidenote-counter; } .sidenote::before { content: &#34;# &#34;; position: relative; font-size: 0.9em; font-weight: 700; color: red; } .sidenote-number::after { content: &#34;#&#34;; vertical-align: super; font-size: 0.8em; font-weight: 700; color: #409dff; } .sidenote-number:hover .sidenote { background-color: var(--sidenote-bg); } 使用方式 示例{{&lt; sidenote &gt;}} 实例文本 {{&lt; /sidenote &gt;}} 示例实例文本">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-05-21T09:06:33+08:00">
-    <meta property="article:modified_time" content="2026-05-22T17:38:38+08:00">
-    <meta property="article:tag" content="NotionNext">
-    <meta property="article:tag" content="Notion">
-    <meta property="article:tag" content="Next.js">
-    <meta property="article:tag" content="Vercel">
-    <meta property="article:tag" content="部署流程">
+    <meta property="article:published_time" content="2026-05-29T16:58:59+08:00">
+    <meta property="article:modified_time" content="2026-05-29T17:21:57+08:00">
+    <meta property="article:tag" content="Hugo">
+    <meta property="article:tag" content="PaperMod">
+    <meta property="article:tag" content="博客美化">
+    <meta property="article:tag" content="CSS">
+    <meta property="article:tag" content="主题定制">
       <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/05/hugo-details/">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/05/hugo-custom-categories-series-summary-page/">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/05/hugo-spoiler-mask/">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
-  <meta name="twitter:title" content="Vercel部署NotionNext">
-  <meta name="twitter:description" content="一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接
-复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字
-二、复制源代码 请先注册并登录Github
-点击下方链接，一键Fork项目">
+  <meta name="twitter:title" content="Hugo Marginnote 功能">
+  <meta name="twitter:description" content="示例 示例实例文本
+实现 layouts/shortcodes/sidenote.html &lt;span class=&#34;sidenote-number&#34;&gt;&lt;small class=&#34;sidenote&#34;&gt;{{ .Inner | markdownify }}&lt;/small&gt;&lt;/span&gt; assets/css/extended/40-marginnote.css .sidenote { float: right; position: relative; margin-right: -18vw; width: 40%; max-width: 200px; } body { counter-reset: sidenote-counter; } .sidenote-number { counter-increment: sidenote-counter; } .sidenote::before { content: &#34;# &#34;; position: relative; font-size: 0.9em; font-weight: 700; color: red; } .sidenote-number::after { content: &#34;#&#34;; vertical-align: super; font-size: 0.8em; font-weight: 700; color: #409dff; } .sidenote-number:hover .sidenote { background-color: var(--sidenote-bg); } 使用方式 示例{{&lt; sidenote &gt;}} 实例文本 {{&lt; /sidenote &gt;}} 示例实例文本">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -163,8 +164,8 @@ Notion Blog
     },
     {
       "@type": "ListItem",
-      "item": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
-      "name": "Vercel部署NotionNext",
+      "item": "https://blog.nuonian.top/2026/05/hugo-marginnote/",
+      "name": "Hugo Marginnote 功能",
       "position": 3
     }
   ]
@@ -173,31 +174,31 @@ Notion Blog
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "articleBody": "一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog\r点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接\n复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字\n二、复制源代码 请先注册并登录Github\n点击下方链接，一键Fork项目\n复刻项目\r三、Vercel 部署 准备账号 注册登录Vercel\r，推荐使用Github账号登录\n导入代码 点击下方创建新项目\n创建新项目\r在代码仓库列表中选择导入 NotionNext\n配置页面ID并部署 点击 Environment Variables(环境变量), 并添加一个属性名称为 NOTION_PAGE_ID,值为步骤一获取的页面ID\n点击Deploy按钮，等待部署完成\n四、完成 在部署完成页面，点击 Continue to Dashboard 访问控制台\n在控制台右上角的 Visit按钮访问站点。或在 DOMAINS中获取网站地址\n",
+  "articleBody": "示例 示例实例文本\n实现 layouts/shortcodes/sidenote.html \u0026lt;span class=\u0026#34;sidenote-number\u0026#34;\u0026gt;\u0026lt;small class=\u0026#34;sidenote\u0026#34;\u0026gt;{{ .Inner | markdownify }}\u0026lt;/small\u0026gt;\u0026lt;/span\u0026gt; assets/css/extended/40-marginnote.css .sidenote { float: right; position: relative; margin-right: -18vw; width: 40%; max-width: 200px; } body { counter-reset: sidenote-counter; } .sidenote-number { counter-increment: sidenote-counter; } .sidenote::before { content: \u0026#34;# \u0026#34;; position: relative; font-size: 0.9em; font-weight: 700; color: red; } .sidenote-number::after { content: \u0026#34;#\u0026#34;; vertical-align: super; font-size: 0.8em; font-weight: 700; color: #409dff; } .sidenote-number:hover .sidenote { background-color: var(--sidenote-bg); } 使用方式 示例{{\u0026lt; sidenote \u0026gt;}} 实例文本 {{\u0026lt; /sidenote \u0026gt;}} 示例实例文本\n",
   "author": {
     "@type": "Person",
     "name": "念念"
   },
-  "dateModified": "2026-05-22T17:38:38+08:00",
-  "datePublished": "2026-05-21T09:06:33+08:00",
-  "description": "一、创建 Notion 页面 复制模版 注册并登录 Notion 账号 点击链接，打开模版 Notion Blog\r点击复制模版，将模版数据复制到笔记空间中 获取页面ID 在 Notion 笔记中：在页面右上角菜单栏中，依次点击 共享→发布→发布，开启页面分享，获取共享链接\n复制页面ID 页面ID在您的共享连接中，域名中间的一串32位字母与数字\n二、复制源代 …",
-  "headline": "Vercel部署NotionNext",
+  "dateModified": "2026-05-29T17:21:57+08:00",
+  "datePublished": "2026-05-29T16:58:59+08:00",
+  "description": "示例 示例实例文本\n实现 layouts/shortcodes/sidenote.html \u0026lt;span class=\u0026#34;sidenote-number\u0026#34;\u0026gt;\u0026lt;small class=\u0026#34;sidenote\u0026#34;\u0026gt;{{ .Inner | markdownify …",
+  "headline": "Hugo Marginnote 功能",
   "image": [
     "https://blog.nuonian.top/images/author.jpg"
   ],
   "inLanguage": "zh",
   "keywords": [
-    "NotionNext",
-    "Notion",
-    "Next.js",
-    "Vercel",
-    "部署流程"
+    "Hugo",
+    "PaperMod",
+    "博客美化",
+    "CSS",
+    "主题定制"
   ],
   "mainEntityOfPage": {
-    "@id": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
+    "@id": "https://blog.nuonian.top/2026/05/hugo-marginnote/",
     "@type": "WebPage"
   },
-  "name": "Vercel部署NotionNext",
+  "name": "Hugo Marginnote 功能",
   "publisher": {
     "@type": "Person",
     "logo": {
@@ -207,8 +208,8 @@ Notion Blog
     "name": "念念的博客",
     "url": "https://blog.nuonian.top/"
   },
-  "url": "https://blog.nuonian.top/2026/05/notion-next-blog-setup/",
-  "wordCount": 382
+  "url": "https://blog.nuonian.top/2026/05/hugo-marginnote/",
+  "wordCount": 102
 }
 </script>
 </head>
@@ -286,9 +287,9 @@ Notion Blog
     </svg>
 </nav>
     <h1 class="post-title entry-hint-parent">
-      Vercel部署NotionNext
+      Hugo Marginnote 功能
     </h1>
-    <div class="post-meta"><span title='2026-05-21 09:06:33 +0800 +0800'>2026-05-21</span>&nbsp;·&nbsp;<span title='2026-05-22 17:38:38 +0800 +0800'>Updated:&nbsp;2026-05-22</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;382 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/%E7%B3%BB%E7%BB%9F%E6%95%99%E7%A8%8B/">系统教程</a>
+    <div class="post-meta"><span title='2026-05-29 16:58:59 +0800 +0800'>2026-05-29</span>&nbsp;·&nbsp;<span title='2026-05-29 17:21:57 +0800 +0800'>Updated:&nbsp;2026-05-29</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;102 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a>&nbsp;·&nbsp;<a href="https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0/">Hugo 博客搭建笔记</a>
 
 </div>
   </header> <aside id="toc-container" class="toc-container wide">
@@ -300,27 +301,11 @@ Notion Blog
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e4%b8%80%e5%88%9b%e5%bb%ba-notion-%e9%a1%b5%e9%9d%a2" aria-label="一、创建 Notion 页面">一、创建 Notion 页面</a><ul>
-                        
+                    <a href="#%e7%a4%ba%e4%be%8b" aria-label="示例">示例</a></li>
                 <li>
-                    <a href="#%e5%a4%8d%e5%88%b6%e6%a8%a1%e7%89%88" aria-label="复制模版">复制模版</a></li>
+                    <a href="#%e5%ae%9e%e7%8e%b0" aria-label="实现">实现</a></li>
                 <li>
-                    <a href="#%e8%8e%b7%e5%8f%96%e9%a1%b5%e9%9d%a2id" aria-label="获取页面ID">获取页面ID</a></li></ul>
-                </li>
-                <li>
-                    <a href="#%e4%ba%8c%e5%a4%8d%e5%88%b6%e6%ba%90%e4%bb%a3%e7%a0%81" aria-label="二、复制源代码">二、复制源代码</a></li>
-                <li>
-                    <a href="#%e4%b8%89vercel-%e9%83%a8%e7%bd%b2" aria-label="三、Vercel 部署">三、Vercel 部署</a><ul>
-                        
-                <li>
-                    <a href="#%e5%87%86%e5%a4%87%e8%b4%a6%e5%8f%b7" aria-label="准备账号">准备账号</a></li>
-                <li>
-                    <a href="#%e5%af%bc%e5%85%a5%e4%bb%a3%e7%a0%81" aria-label="导入代码">导入代码</a></li>
-                <li>
-                    <a href="#%e9%85%8d%e7%bd%ae%e9%a1%b5%e9%9d%a2id%e5%b9%b6%e9%83%a8%e7%bd%b2" aria-label="配置页面ID并部署">配置页面ID并部署</a></li></ul>
-                </li>
-                <li>
-                    <a href="#%e5%9b%9b%e5%ae%8c%e6%88%90" aria-label="四、完成">四、完成</a>
+                    <a href="#%e4%bd%bf%e7%94%a8%e6%96%b9%e5%bc%8f" aria-label="使用方式">使用方式</a>
                 </li>
             </ul>
         </div>
@@ -425,158 +410,77 @@ Notion Blog
 
 </script>
 
-  <div class="post-content md-content"><h2 id="一创建-notion-页面">一、创建 Notion 页面<a hidden class="anchor" aria-hidden="true" href="#一创建-notion-页面">#</a></h2>
-<h3 id="复制模版">复制模版<a hidden class="anchor" aria-hidden="true" href="#复制模版">#</a></h3>
-<ol>
-<li>注册并登录 Notion 账号</li>
-<li>点击链接，打开模版
-<a href="https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5?v=b7eb215720224ca5827bfaa5ef82cf2d" target="_blank" rel="noopener">Notion Blog</a>
-</li>
-<li>点击复制模版，将模版数据复制到笔记空间中
-
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521091719934.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521091719934.png" alt="image-20260521091719782"  />
-</a>
-</div>
-</li>
-</ol>
-<h3 id="获取页面id">获取页面ID<a hidden class="anchor" aria-hidden="true" href="#获取页面id">#</a></h3>
-<ol>
-<li>
-<p>在 Notion 笔记中：在页面右上角菜单栏中，依次点击 <code>共享</code>→<code>发布</code>→<code>发布</code>，开启页面分享，获取<strong>共享链接</strong></p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521093911337.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521093911337.png" alt="image-20260521093911276"  />
-</a>
-</div>
-</p>
-</li>
-<li>
-<p>复制<strong>页面ID</strong>
-页面ID在您的共享连接中，域名中间的一串32位字母与数字</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094058249.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094058249.png" alt="image-20260521094058203"  />
-</a>
-</div>
-</p>
-</li>
-</ol>
-<h2 id="二复制源代码">二、复制源代码<a hidden class="anchor" aria-hidden="true" href="#二复制源代码">#</a></h2>
-<ol>
-<li>
-<p>请先注册并登录Github</p>
-</li>
-<li>
-<p>点击下方链接，一键Fork项目</p>
-<p><a href="https://github.com/notionnext-org/NotionNext/fork" target="_blank" rel="noopener">复刻项目</a>
-</p>
-</li>
-</ol>
-<h2 id="三vercel-部署">三、Vercel 部署<a hidden class="anchor" aria-hidden="true" href="#三vercel-部署">#</a></h2>
-<h3 id="准备账号">准备账号<a hidden class="anchor" aria-hidden="true" href="#准备账号">#</a></h3>
-<p>注册登录<a href="https://vercel.com/" target="_blank" rel="noopener">Vercel</a>
-，推荐使用Github账号登录</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094633811.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094633811.png" alt="image-20260521094633737"  />
-</a>
-</div>
-</p>
-<h3 id="导入代码">导入代码<a hidden class="anchor" aria-hidden="true" href="#导入代码">#</a></h3>
-<ol>
-<li>
-<p>点击下方创建新项目</p>
-<p><a href="https://vercel.com/new" target="_blank" rel="noopener">创建新项目</a>
-</p>
-</li>
-<li>
-<p>在代码仓库列表中选择导入 <strong>NotionNext</strong></p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094838324.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521094838324.png" alt="image-20260521094838248"  />
-</a>
-</div>
-</p>
-</li>
-</ol>
-<h3 id="配置页面id并部署">配置页面ID并部署<a hidden class="anchor" aria-hidden="true" href="#配置页面id并部署">#</a></h3>
-<ol>
-<li>
-<p>点击 <strong>Environment Variables</strong>(环境变量), 并添加一个属性名称为 <code>NOTION_PAGE_ID</code>,值为步骤一获取的页面ID</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095045436.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095045436.png" alt="image-20260521095045360"  />
-</a>
-</div>
-</p>
-</li>
-<li>
-<p>点击<code>Deploy</code>按钮，等待部署完成</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095210738.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095210738.png" alt="image-20260521095210672"  />
-</a>
-</div>
-</p>
-</li>
-</ol>
-<h2 id="四完成">四、完成<a hidden class="anchor" aria-hidden="true" href="#四完成">#</a></h2>
-<ol>
-<li>
-<p>在部署完成页面，点击 <code>Continue to Dashboard</code> 访问控制台</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095726739.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095726739.png" alt="image-20260521095726658"  />
-</a>
-</div>
-</p>
-</li>
-<li>
-<p>在控制台右上角的 <code>Visit</code>按钮访问站点。或在 <code>DOMAINS</code>中获取网站地址</p>
-<p>
-<div class="post-img-view">
-<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095934551.png">
-<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260521095934551.png" alt=""  />
-</a>
-</div>
-</p>
-</li>
-</ol>
+  <div class="post-content md-content"><h3 id="示例">示例<a hidden class="anchor" aria-hidden="true" href="#示例">#</a></h3>
+<p>示例<span class="sidenote-number"><small class="sidenote">实例文本</small></span></p>
+<h3 id="实现">实现<a hidden class="anchor" aria-hidden="true" href="#实现">#</a></h3>
+<details class="post-details shortcode-details" open>
+        <summary class="post-details-summary">layouts/shortcodes/sidenote.html</summary>
+        <div class="post-details-content"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sidenote-number&#34;</span>&gt;&lt;<span style="color:#f92672">small</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sidenote&#34;</span>&gt;{{ .Inner | markdownify }}&lt;/<span style="color:#f92672">small</span>&gt;&lt;/<span style="color:#f92672">span</span>&gt;
+</span></span></code></pre></div></div>
+    </details>
+<details class="post-details shortcode-details" open>
+        <summary class="post-details-summary">assets/css/extended/40-marginnote.css</summary>
+        <div class="post-details-content"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-css" data-lang="css"><span style="display:flex;"><span>.<span style="color:#a6e22e">sidenote</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">float</span>: <span style="color:#66d9ef">right</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">margin-right</span>: <span style="color:#ae81ff">-18</span><span style="color:#66d9ef">vw</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">40</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">max-width</span>: <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">body</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">counter-reset</span>: sidenote-counter;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">sidenote-number</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">counter-increment</span>: sidenote-counter;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">sidenote</span>::<span style="color:#a6e22e">before</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">content</span>: <span style="color:#e6db74">&#34;# &#34;</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.9</span><span style="color:#66d9ef">em</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">font-weight</span>: <span style="color:#ae81ff">700</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">red</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">sidenote-number</span>::<span style="color:#a6e22e">after</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">content</span>: <span style="color:#e6db74">&#34;#&#34;</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">vertical-align</span>: <span style="color:#66d9ef">super</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.8</span><span style="color:#66d9ef">em</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">font-weight</span>: <span style="color:#ae81ff">700</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#409dff</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">sidenote-number</span>:<span style="color:#a6e22e">hover</span> .<span style="color:#a6e22e">sidenote</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">background-color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidenote<span style="color:#f92672">-</span>bg);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></div>
+    </details>
+<h3 id="使用方式">使用方式<a hidden class="anchor" aria-hidden="true" href="#使用方式">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>示例{{&lt; <span style="color:#f92672">sidenote</span> &gt;}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>实例文本
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{{&lt; /<span style="color:#f92672">sidenote</span> &gt;}}
+</span></span></code></pre></div><p>示例<span class="sidenote-number"><small class="sidenote">实例文本</small></span></p>
 
 
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://blog.nuonian.top/tags/notionnext/">NotionNext</a></li>
-      <li><a href="https://blog.nuonian.top/tags/notion/">Notion</a></li>
-      <li><a href="https://blog.nuonian.top/tags/next.js/">Next.js</a></li>
-      <li><a href="https://blog.nuonian.top/tags/vercel/">Vercel</a></li>
-      <li><a href="https://blog.nuonian.top/tags/%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B/">部署流程</a></li>
+      <li><a href="https://blog.nuonian.top/tags/hugo/">Hugo</a></li>
+      <li><a href="https://blog.nuonian.top/tags/papermod/">PaperMod</a></li>
+      <li><a href="https://blog.nuonian.top/tags/%E5%8D%9A%E5%AE%A2%E7%BE%8E%E5%8C%96/">博客美化</a></li>
+      <li><a href="https://blog.nuonian.top/tags/css/">CSS</a></li>
+      <li><a href="https://blog.nuonian.top/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/">主题定制</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="https://blog.nuonian.top/2026/05/hugo-spoiler-mask/">
-    <span class="title">« 上一页</span>
-    <span>Hugo 增加防剧透遮罩功能</span>
-  </a>
-  <a class="next" href="https://blog.nuonian.top/2025/12/gitignore/">
+  <a class="next" href="https://blog.nuonian.top/2026/05/hugo-details/">
     <span class="title">下一页 »</span>
-    <span>自用.gitignore</span>
+    <span>Hugo 增加折叠展开功能</span>
   </a>
 </nav>
 
   </footer>
 
-<div class="waline-container" data-path="/2026/05/notion-next-blog-setup/"></div>
+<div class="waline-container" data-path="/2026/05/hugo-marginnote/"></div>
 <link href="https://unpkg.com/@waline/client@v3/dist/waline.css" rel="stylesheet" />
 
 
