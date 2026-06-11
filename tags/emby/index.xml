@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Emby on 念念的博客</title>
+    <link>https://blog.nuonian.top/tags/emby/</link>
+    <description>Recent content in Emby on 念念的博客</description>
+    <image>
+      <title>念念的博客</title>
+      <url>https://blog.nuonian.top/images/author.jpg</url>
+      <link>https://blog.nuonian.top/images/author.jpg</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 11 Jun 2026 16:11:12 +0800</lastBuildDate>
+    <atom:link href="https://blog.nuonian.top/tags/emby/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用 Cloudflare 反代 Emby 的完整教程</title>
+      <link>https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/</link>
+      <pubDate>Thu, 11 Jun 2026 11:06:12 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/</guid>
+      <description>通过使用 cloudflare 反向代理emby服务器，改善国内使用情况</description>
+    </item>
+  </channel>
+</rss>

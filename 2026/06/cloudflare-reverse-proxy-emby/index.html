@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>利用 Cloudflare 反代 Emby 的完整教程 | 念念的博客</title>
+<meta name="keywords" content="Cloudflare, Emby, 反向代理, CDN, 家庭影音">
+<meta name="description" content="通过使用 cloudflare 反向代理emby服务器，改善国内使用情况">
+<meta name="author" content="念念">
+<link rel="canonical" href="https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d9aaa8612eece03864ad262f96ef59e994f1c94586b18f19cdb42c1bccada91a.css" integrity="sha256-2aqoYS7s4DhkrSYvlu9Z6ZTxyUWGsY8ZzbQsG8ytqRo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.nuonian.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.nuonian.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.nuonian.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.nuonian.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.nuonian.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-BoldItalic/result.css">
+<meta property="og:url" content="https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/">
+  <meta property="og:site_name" content="念念的博客">
+  <meta property="og:title" content="利用 Cloudflare 反代 Emby 的完整教程">
+  <meta property="og:description" content="通过使用 cloudflare 反向代理emby服务器，改善国内使用情况">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-06-11T11:06:12+08:00">
+    <meta property="article:modified_time" content="2026-06-11T16:11:12+08:00">
+    <meta property="article:tag" content="Cloudflare">
+    <meta property="article:tag" content="Emby">
+    <meta property="article:tag" content="反向代理">
+    <meta property="article:tag" content="CDN">
+    <meta property="article:tag" content="家庭影音">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
+  <meta name="twitter:title" content="利用 Cloudflare 反代 Emby 的完整教程">
+  <meta name="twitter:description" content="通过使用 cloudflare 反向代理emby服务器，改善国内使用情况">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/",
+      "name": "利用 Cloudflare 反代 Emby 的完整教程",
+      "position": 3
+    }
+  ]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "articleBody": "一、 前置准备 Cloudflare 账号 (免费即可) 一个已接入 Cloudflare 的域名 完整 Worker 代码 Github仓库\rCloudflare DNS Token (需要有改 DNS 权限) 需求权限如下： 二、创建 D1 数据库 进入 https://dash.cloudflare.com\r选择 存储和数据库-D1 SQLite 数据库\n依次执行这四段代码，创建表\nCREATE TABLE IF NOT EXISTS proxy_kv ( k TEXT PRIMARY KEY, v TEXT NOT NULL, updated_at INTEGER NOT NULL ); CREATE TABLE IF NOT EXISTS play_stats ( day TEXT NOT NULL, node TEXT NOT NULL, client TEXT NOT NULL, plays INTEGER NOT NULL DEFAULT 0, bytes INTEGER NOT NULL DEFAULT 0, sessions INTEGER NOT NULL DEFAULT 0, errors INTEGER NOT NULL DEFAULT 0, updated_at INTEGER NOT NULL, PRIMARY KEY (day, node, client) ); CREATE TABLE IF NOT EXISTS play_sessions ( k TEXT PRIMARY KEY, day TEXT NOT NULL, last_ts INTEGER NOT NULL ); CREATE TABLE IF NOT EXISTS keepalive_state ( node TEXT PRIMARY KEY, anchor_ts INTEGER NOT NULL, last_play_ts INTEGER NOT NULL DEFAULT 0, last_notify_day TEXT, notify_count_day TEXT, notify_count INTEGER NOT NULL DEFAULT 0 ); 三、创建并部署 Worker 将 work.js 内容替换为 github 中的 work.js 内容\n四、配置 绑定数据库 配置环境变量 配置 DNS 路由 关闭 workers.dev 解析\n配置 DNS 解析 五、添加反代节点与登录 登录反代面板 添加节点 ",
+  "author": {
+    "@type": "Person",
+    "name": "念念"
+  },
+  "dateModified": "2026-06-11T16:11:12+08:00",
+  "datePublished": "2026-06-11T11:06:12+08:00",
+  "description": "通过使用 cloudflare 反向代理emby服务器，改善国内使用情况",
+  "headline": "利用 Cloudflare 反代 Emby 的完整教程",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "Cloudflare",
+    "Emby",
+    "反向代理",
+    "CDN",
+    "家庭影音"
+  ],
+  "mainEntityOfPage": {
+    "@id": "https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/",
+    "@type": "WebPage"
+  },
+  "name": "利用 Cloudflare 反代 Emby 的完整教程",
+  "publisher": {
+    "@type": "Person",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/",
+  "wordCount": 292
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://blog.nuonian.top/" accesskey="h" title="念念的博客 (Alt + H)">念念的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://blog.nuonian.top/archives" title="存档">
+                    <span>存档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/categories" title="分类">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/tags" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/series" title="专栏">
+                    <span>专栏</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/search" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      利用 Cloudflare 反代 Emby 的完整教程
+    </h1>
+    <div class="post-description">
+      通过使用 cloudflare 反向代理emby服务器，改善国内使用情况
+    </div>
+    <div class="post-meta"><span title='2026-06-11 11:06:12 +0800 +0800'>2026-06-11</span>&nbsp;·&nbsp;<span title='2026-06-11 16:11:12 +0800 +0800'>Updated:&nbsp;2026-06-11</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;292 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/devops/">DevOps</a>
+
+</div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80-%e5%89%8d%e7%bd%ae%e5%87%86%e5%a4%87" aria-label="一、 前置准备">一、 前置准备</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%88%9b%e5%bb%ba-d1-%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="二、创建 D1 数据库">二、创建 D1 数据库</a></li>
+                <li>
+                    <a href="#%e4%b8%89%e5%88%9b%e5%bb%ba%e5%b9%b6%e9%83%a8%e7%bd%b2-worker" aria-label="三、创建并部署 Worker">三、创建并部署 Worker</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e9%85%8d%e7%bd%ae" aria-label="四、配置">四、配置</a><ul>
+                        
+                <li>
+                    <a href="#%e7%bb%91%e5%ae%9a%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="绑定数据库">绑定数据库</a></li>
+                <li>
+                    <a href="#%e9%85%8d%e7%bd%ae%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f" aria-label="配置环境变量">配置环境变量</a></li>
+                <li>
+                    <a href="#%e9%85%8d%e7%bd%ae-dns-%e8%b7%af%e7%94%b1" aria-label="配置 DNS 路由">配置 DNS 路由</a></li>
+                <li>
+                    <a href="#%e9%85%8d%e7%bd%ae-dns-%e8%a7%a3%e6%9e%90" aria-label="配置 DNS 解析">配置 DNS 解析</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%94%e6%b7%bb%e5%8a%a0%e5%8f%8d%e4%bb%a3%e8%8a%82%e7%82%b9%e4%b8%8e%e7%99%bb%e5%bd%95" aria-label="五、添加反代节点与登录">五、添加反代节点与登录</a><ul>
+                        
+                <li>
+                    <a href="#%e7%99%bb%e5%bd%95%e5%8f%8d%e4%bb%a3%e9%9d%a2%e6%9d%bf" aria-label="登录反代面板">登录反代面板</a></li>
+                <li>
+                    <a href="#%e6%b7%bb%e5%8a%a0%e8%8a%82%e7%82%b9" aria-label="添加节点">添加节点</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 &&
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+
+</script>
+
+  <div class="post-content md-content"><h2 id="一-前置准备">一、 前置准备<a hidden class="anchor" aria-hidden="true" href="#一-前置准备">#</a></h2>
+<ol>
+<li>Cloudflare 账号 (免费即可)</li>
+<li>一个已接入 Cloudflare 的域名</li>
+<li>完整 Worker 代码 <a href="https://github.com/chenhr454/emby---worker" target="_blank" rel="noopener">Github仓库</a>
+</li>
+<li>Cloudflare DNS Token (需要有改 DNS 权限) 需求权限如下：</li>
+</ol>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155319161.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155319161.png" alt="image-20260611155319125"  />
+</a>
+</div>
+</p>
+<h2 id="二创建-d1-数据库">二、创建 D1 数据库<a hidden class="anchor" aria-hidden="true" href="#二创建-d1-数据库">#</a></h2>
+<p>进入 <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">https://dash.cloudflare.com</a>
+ 选择 <code>存储和数据库</code>-<code>D1 SQLite 数据库</code></p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140131606.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140131606.png" alt="image-20260611140131537"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140301318.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140301318.png" alt="image-20260611140301284"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140429531.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140429531.png" alt="image-20260611140429470"  />
+</a>
+</div>
+</p>
+<p>依次执行这四段代码，创建表</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140735350.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611140735350.png" alt="image-20260611140726706"  />
+</a>
+</div>
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> proxy_kv (
+</span></span><span style="display:flex;"><span>k TEXT <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
+</span></span><span style="display:flex;"><span>v TEXT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>updated_at INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> play_stats (
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">day</span> TEXT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>node TEXT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>client TEXT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>plays INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>bytes INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>sessions INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>errors INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>updated_at INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#66d9ef">day</span>, node, client)
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> play_sessions (
+</span></span><span style="display:flex;"><span>k TEXT <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">day</span> TEXT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>last_ts INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> keepalive_state (
+</span></span><span style="display:flex;"><span>node TEXT <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
+</span></span><span style="display:flex;"><span>anchor_ts INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>last_play_ts INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>last_notify_day TEXT,
+</span></span><span style="display:flex;"><span>notify_count_day TEXT,
+</span></span><span style="display:flex;"><span>notify_count INTEGER <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><h2 id="三创建并部署-worker">三、创建并部署 Worker<a hidden class="anchor" aria-hidden="true" href="#三创建并部署-worker">#</a></h2>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611142701534.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611142701534.png" alt="image-20260611142701452"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611142740665.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611142740665.png" alt="image-20260611142740599"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611143951390.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611143951390.png" alt="image-20260611143951315"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144113921.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144113921.png" alt="image-20260611144113855"  />
+</a>
+</div>
+</p>
+<p>将 work.js 内容替换为 github 中的 work.js 内容</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144336179.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144336179.png" alt="image-20260611144336111"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144925770.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611144925770.png" alt="image-20260611144925701"  />
+</a>
+</div>
+</p>
+<h2 id="四配置">四、配置<a hidden class="anchor" aria-hidden="true" href="#四配置">#</a></h2>
+<h3 id="绑定数据库">绑定数据库<a hidden class="anchor" aria-hidden="true" href="#绑定数据库">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145306935.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145306935.png" alt="image-20260611145306882"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145325466.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145325466.png" alt="image-20260611145325419"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145559614.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611145559614.png" alt="image-20260611145559558"  />
+</a>
+</div>
+</p>
+<h3 id="配置环境变量">配置环境变量<a hidden class="anchor" aria-hidden="true" href="#配置环境变量">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155750322.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155750322.png" alt="image-20260611155750250"  />
+</a>
+</div>
+</p>
+<h3 id="配置-dns-路由">配置 DNS 路由<a hidden class="anchor" aria-hidden="true" href="#配置-dns-路由">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155950814.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611155950814.png" alt="image-20260611155950766"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160026239.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160026239.png" alt="image-20260611160026202"  />
+</a>
+</div>
+</p>
+<p>关闭 workers.dev 解析</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160113607.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160113607.png" alt="image-20260611160113571"  />
+</a>
+</div>
+</p>
+<h3 id="配置-dns-解析">配置 DNS 解析<a hidden class="anchor" aria-hidden="true" href="#配置-dns-解析">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160239651.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160239651.png" alt="image-20260611160239582"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160322202.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160322202.png" alt="image-20260611160322141"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160413769.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160413769.png" alt="image-20260611160413727"  />
+</a>
+</div>
+</p>
+<h2 id="五添加反代节点与登录">五、添加反代节点与登录<a hidden class="anchor" aria-hidden="true" href="#五添加反代节点与登录">#</a></h2>
+<h3 id="登录反代面板">登录反代面板<a hidden class="anchor" aria-hidden="true" href="#登录反代面板">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160517538.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160517538.png" alt="image-20260611160517469"  />
+</a>
+</div>
+</p>
+<h3 id="添加节点">添加节点<a hidden class="anchor" aria-hidden="true" href="#添加节点">#</a></h3>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160752557.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160752557.png" alt="image-20260611160752515"  />
+</a>
+</div>
+</p>
+<p>
+<div class="post-img-view">
+<a data-fancybox="gallery" href="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160846957.png">
+<img src="https://spikehugoblog.oss-cn-qingdao.aliyuncs.com/blogimg/20260611160846957.png" alt="image-20260611160846923"  />
+</a>
+</div>
+</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://blog.nuonian.top/tags/cloudflare/">Cloudflare</a></li>
+      <li><a href="https://blog.nuonian.top/tags/emby/">Emby</a></li>
+      <li><a href="https://blog.nuonian.top/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">反向代理</a></li>
+      <li><a href="https://blog.nuonian.top/tags/cdn/">CDN</a></li>
+      <li><a href="https://blog.nuonian.top/tags/%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%9F%B3/">家庭影音</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://blog.nuonian.top/2026/05/hugo-marginnote/">
+    <span class="title">下一页 »</span>
+    <span>Hugo Marginnote 功能</span>
+  </a>
+</nav>
+
+  </footer>
+
+<div class="waline-container" data-path="/2026/06/cloudflare-reverse-proxy-emby/"></div>
+<link href="https://unpkg.com/@waline/client@v3/dist/waline.css" rel="stylesheet" />
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        
+        const walineInit = () => {
+            import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
+                const walineContainers = document.querySelectorAll('.waline-container[data-path]');
+                walineContainers.forEach(container => {
+                    if (!container.__waline__) {
+                        const path = container.getAttribute('data-path');
+                        container.__waline__ = init({
+                            el: container,
+                            serverURL: 'https:\/\/waline.nuonian.top\/',
+                            lang: 'zh-cn',
+                            visitor: '匿名者',
+                            emoji: [
+                        'https:\/\/cdn.jsdelivr.net\/gh\/walinejs\/emojis\/weibo',
+                    ],
+                        requiredMeta: [
+                        'nick',
+                    ],
+                        locale: {
+                            admin: '作者本人',
+                                placeholder: '🍗所以我配有一条评论吗！',
+                        },
+                        path: path,
+                            dark: 'body.dark',
+
+                            
+                            commentSorting: 'hottest',  
+                            wordLimit: 500,             
+                            search: false,              
+                            reaction: false,            
+                            imageUploader: false,       
+                    });
+                    }
+                });
+            }).catch(error => {
+                console.error("Waline 初始化失败：", error);
+            });
+        };
+
+        walineInit();
+    });
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://blog.nuonian.top/">念念的博客</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
