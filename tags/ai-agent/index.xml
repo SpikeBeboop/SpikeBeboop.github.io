@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>AI Agent on 念念的博客</title>
+    <link>https://blog.nuonian.top/tags/ai-agent/</link>
+    <description>Recent content in AI Agent on 念念的博客</description>
+    <image>
+      <title>念念的博客</title>
+      <url>https://blog.nuonian.top/images/author.jpg</url>
+      <link>https://blog.nuonian.top/images/author.jpg</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 18 Jun 2026 10:05:49 +0800</lastBuildDate>
+    <atom:link href="https://blog.nuonian.top/tags/ai-agent/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ai Agent Development Roadmap</title>
+      <link>https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;此文章由 hermes 配合 gpt-5.5 模型 生成&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;总目标&#34;&gt;总目标&lt;/h2&gt;
+&lt;p&gt;最终形成四类能力：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;AI 应用开发&lt;/strong&gt;：LLM API、Prompt、结构化输出、流式输出、RAG、多模态与产品集成。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Agent 开发&lt;/strong&gt;：工具调用、任务规划、记忆、状态管理、执行循环、错误恢复。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Agent 工程化&lt;/strong&gt;：权限、沙箱、队列、文件系统、MCP、可观测性、评估、安全边界。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多 Agent / 平台化&lt;/strong&gt;：Orchestrator、Worker、Reviewer、多 Agent 协作与生产级 Agent Development Platform。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;推荐学习节奏&#34;&gt;推荐学习节奏&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;快节奏&lt;/strong&gt;：3 个月，能做出可演示项目。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;正常节奏&lt;/strong&gt;：6 个月，形成系统工程能力。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;深入路线&lt;/strong&gt;：12 个月，达到 Agent 工程 / 平台开发水平。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;phase-0开发基础&#34;&gt;Phase 0：开发基础&lt;/h2&gt;
+&lt;p&gt;时间：2-4 周&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>AI Agent 开发学习路线：从 LLM API 到 Harness 工程</title>
+      <link>https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/</link>
+      <pubDate>Wed, 17 Jun 2026 11:01:37 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;此文章由 hermes 配合 gpt-5.5 模型 生成&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。&lt;/p&gt;
+&lt;p&gt;一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

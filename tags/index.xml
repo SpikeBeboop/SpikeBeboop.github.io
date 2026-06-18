@@ -13,6 +13,48 @@
     <language>zh-cn</language>
     <atom:link href="https://blog.nuonian.top/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Agent Engineering</title>
+      <link>https://blog.nuonian.top/tags/agent-engineering/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/agent-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Agent</title>
+      <link>https://blog.nuonian.top/tags/ai-agent/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/ai-agent/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Harness</title>
+      <link>https://blog.nuonian.top/tags/harness/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/harness/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LLM</title>
+      <link>https://blog.nuonian.top/tags/llm/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RAG</title>
+      <link>https://blog.nuonian.top/tags/rag/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/rag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tool Calling</title>
+      <link>https://blog.nuonian.top/tags/tool-calling/</link>
+      <pubDate>Thu, 18 Jun 2026 10:03:20 +0800</pubDate>
+      <guid>https://blog.nuonian.top/tags/tool-calling/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>CDN</title>
       <link>https://blog.nuonian.top/tags/cdn/</link>
       <pubDate>Thu, 11 Jun 2026 11:06:12 +0800</pubDate>

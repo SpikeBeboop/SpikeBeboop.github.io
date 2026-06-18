@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>AI Agent 开发学习路线：从 LLM API 到 Harness 工程 | 念念的博客</title>
+<meta name="keywords" content="AI Agent, LLM, Tool Calling, Harness, RAG, Agent Engineering">
+<meta name="description" content="
+此文章由 hermes 配合 gpt-5.5 模型 生成
+
+过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。
+一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？">
+<meta name="author" content="念念">
+<link rel="canonical" href="https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d9aaa8612eece03864ad262f96ef59e994f1c94586b18f19cdb42c1bccada91a.css" integrity="sha256-2aqoYS7s4DhkrSYvlu9Z6ZTxyUWGsY8ZzbQsG8ytqRo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.nuonian.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.nuonian.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.nuonian.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.nuonian.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.nuonian.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-BoldItalic/result.css">
+<meta property="og:url" content="https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/">
+  <meta property="og:site_name" content="念念的博客">
+  <meta property="og:title" content="AI Agent 开发学习路线：从 LLM API 到 Harness 工程">
+  <meta property="og:description" content="此文章由 hermes 配合 gpt-5.5 模型 生成
+过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。
+一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-06-17T11:01:37+08:00">
+    <meta property="article:modified_time" content="2026-06-18T10:05:49+08:00">
+    <meta property="article:tag" content="AI Agent">
+    <meta property="article:tag" content="LLM">
+    <meta property="article:tag" content="Tool Calling">
+    <meta property="article:tag" content="Harness">
+    <meta property="article:tag" content="RAG">
+    <meta property="article:tag" content="Agent Engineering">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
+  <meta name="twitter:title" content="AI Agent 开发学习路线：从 LLM API 到 Harness 工程">
+  <meta name="twitter:description" content="此文章由 hermes 配合 gpt-5.5 模型 生成
+过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。
+一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/",
+      "name": "AI Agent 开发学习路线：从 LLM API 到 Harness 工程",
+      "position": 3
+    }
+  ]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "articleBody": " 此文章由 hermes 配合 gpt-5.5 模型 生成\n过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。\n一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？\n如果这些问题没有答案，所谓 Agent 很可能只是一个演示视频里跑通的玩具。它可能偶尔表现惊艳，但很难被交给真实用户、真实业务和真实生产环境。\n这篇文章整理一条完整的 AI Agent 开发学习路线。它的目标不是教你“用某个框架快速做 Demo”，而是帮助你建立从 LLM API 到 Harness 工程的系统能力：先学会稳定调用模型，再把模型包进一套可执行、可评估、可观测、可恢复、可部署的运行框架里。这里的 Harness，可以理解为围绕 LLM 的工程外骨骼：它负责接入模型、构建上下文、注册工具、保存状态、驱动循环、记录 trace、运行 eval、控制权限和承载部署。\n1. 先建立正确地图：AI Agent 不是单点技术 AI Agent 开发不是一个单独技能，而是一组能力的组合。标题里说“从 LLM API 到 Harness 工程”，重点就在这里：LLM API 只是能力入口，Harness 才是把模型能力变成稳定软件系统的工程层。\n可以把它拆成十层：\nAI Agent Developer ├── LLM API 基础能力 ├── AI 应用产品能力 ├── LLM 应用工程能力 ├── RAG / 知识 / 上下文能力 ├── Memory 能力 ├── Tool Calling / MCP 能力 ├── Harness / Agent Runtime 能力 ├── Subagent / Multi-Agent 编排能力 ├── 评估 / 观测 / 安全 / 部署能力 └── 源码学习与架构抽象能力 其中 Harness / Agent Runtime 是中枢层。它不是某个单一框架，而是一组工程职责的集合：\nHarness ├── Model Adapter / LLM Gateway ├── Prompt \u0026amp; Context Builder ├── Tool Registry / MCP Adapter ├── Permission Policy ├── Agent Loop / State Machine ├── Planner / Executor / Verifier ├── Memory Manager ├── Event Log / Trace Store ├── Artifact Store ├── Eval Runner ├── Sandbox / Runtime Isolation └── Deployment \u0026amp; Ops 其中最容易被忽略的是：AI Agent 首先是软件系统，其次才是模型应用。模型负责不确定性推理，系统负责边界、状态、权限、恢复、追踪和验证。\n所以学习顺序不应该是“先找最火的 Agent 框架”，而应该是：\nLLM API 基础 -\u0026gt; 工程基础 -\u0026gt; AI 应用开发 -\u0026gt; LLM Gateway -\u0026gt; RAG / Memory / Context -\u0026gt; Tool Runtime / MCP -\u0026gt; Harness 核心：Agent Loop / State / Trace -\u0026gt; Planning / Verification / Reliability -\u0026gt; Subagent / Multi-Agent -\u0026gt; Production Harness Runtime -\u0026gt; Evaluation / Observability / Safety / Deployment -\u0026gt; Source Study 这个顺序的核心逻辑是：先把一个小系统做稳，再增加自主性；先让 Agent 会安全执行，再让它多步规划；先让单 Agent 可追踪，再做多 Agent 并行。\n2. 第一阶段：工程基础不是可选项 很多 AI 应用失败，不是因为模型不够强，而是因为工程底座太弱。\n一个 Agent 系统会频繁遇到这些基础问题：\n读写文件。 调用 HTTP API。 运行命令。 处理 stdout / stderr / exit code。 持久化任务状态。 管理后台 worker。 记录结构化日志。 做错误分类和重试。 写测试和评测样例。 因此，在接触复杂 Agent 之前，至少要能做出一个基础任务系统：\nCLI / API -\u0026gt; SQLite / Postgres -\u0026gt; task table -\u0026gt; worker -\u0026gt; logs -\u0026gt; tests 一个很好的入门练习是实现命令行任务管理器：\nagent-task add \u0026#34;read paper\u0026#34; agent-task list agent-task done \u0026lt;id\u0026gt; agent-task log \u0026lt;id\u0026gt; \u0026#34;note\u0026#34; 然后把它封装成 HTTP API：\nPOST /tasks GET /tasks PATCH /tasks/:id POST /tasks/:id/logs 再加一个后台 worker，从数据库读取 pending 任务，执行、记录结果、失败重试。\n这个练习看起来和 AI 无关，但它会直接迁移到 Agent Runtime：用户目标是 task，Planner 会生成 task，Executor 会消费 task，工具执行会写 logs，失败恢复会依赖状态机。\n如果你不能稳定实现这些基础设施，就不要急着做多 Agent。\n3. 第二阶段：LLM API 基础，先把模型调用吃透 在谈 Agent 之前，先把 LLM API 当成一个不稳定但强大的外部依赖来处理。很多 Agent 系统的问题，本质上是最底层模型调用没有工程化：没有 timeout，没有 retry，没有 token 统计，没有 raw response，没有结构化输出校验，也没有 provider 差异抽象。\n这一阶段要掌握的不是“如何发一个请求”，而是如何把模型请求变成可控的系统能力。\n最小学习范围包括：\nHTTP request / response authentication chat completions / responses API messages / input schema system / user / assistant roles streaming / SSE JSON mode / structured output tool call format usage / token accounting rate limit / retry / timeout error normalization 一个最小 LLM API 实验应该包括：\n调用一个模型完成普通问答。 调用一个模型输出固定 JSON schema。 开启 streaming，并把 chunk 合并成完整输出。 记录 latency、token usage、status、error type。 故意触发超时、限流、JSON 解析失败，并做错误分类。 建议从第一天就保存调用记录：\nLLMCall - id - provider - model - request_hash - prompt_version - input_tokens - output_tokens - latency_ms - status - error_type - raw_request_path - raw_response_path 这样后续你才有能力回答：哪个 prompt 变贵了？哪个模型变慢了？哪个 provider 出错最多？结构化输出失败率是多少？\n这一阶段的目标是：不要把 LLM 当魔法函数，而要把它当成一个需要封装、观察、降级和评估的远程服务。\n4. 第三阶段：AI 应用开发，不要把一切做成聊天框 AI 应用不等于聊天机器人。\n真实 AI 应用至少有三种形态：\n3.1 Copilot 型应用 用户仍是主操作者，AI 做辅助：总结、补全、建议、检索、草稿。\n典型例子：编程助手、写作助手、客服坐席助手、数据分析助手。\n关键是低延迟、可编辑、可撤销、人类确认。\n3.2 Workflow 型应用 业务流程由代码控制，LLM 只负责其中某些节点。\n比如文档审核、简历筛选、票据处理、报告流水线。\n这类应用不一定需要 Agent loop。流程稳定时，用规则和 workflow 控制通常更可靠。\n3.3 Agent 型应用 用户给出目标，系统自动规划、调用工具、执行多步任务。\n比如自动研究助手、自动代码修复助手、工单处理 Agent。\n这类应用必须有任务状态、工具权限、trace、失败恢复和最终验证。\n做 AI 应用前，先写清楚：\n用户是谁？ 用户原来怎么完成任务？ 痛点是什么？ AI 介入哪个环节？ AI 输出给谁使用？ 失败成本是什么？ 哪些操作必须由用户确认？ 用户如何纠错和反馈？ 不要默认把所有需求都塞进聊天框。聊天框只是入口，不是产品结构。\n5. 第四阶段：LLM Gateway，把模型调用变成工程模块 很多项目最初都会这样写：\n业务代码 -\u0026gt; 直接调用某个模型 SDK 这在 Demo 里没问题，但很快会失控。你会遇到不同 provider、不同协议、不同 streaming 格式、不同 tool calling 格式、不同错误码、不同 token 计费方式。\n所以要尽早建立 LLM Gateway：\nApplication -\u0026gt; LLM Gateway -\u0026gt; Provider Adapter A -\u0026gt; Provider Adapter B -\u0026gt; Provider Adapter C 一个合格的 LLM Gateway 至少要处理：\n多 provider 接入。 chat completions / responses 等协议差异。 非流式和流式输出。 JSON schema / structured output。 tool call 格式归一化。 prompt versioning。 token / cost / latency 记录。 timeout / retry / fallback。 raw response 保存。 推荐抽象：\nLLMRequest - model - messages / input - system instruction - tools - response_format - temperature - max_tokens - stream - metadata LLMResponse - text - structured_output - tool_calls - usage - latency - provider - raw_response 结构化输出尤其重要。Agent 系统里大量决策都不是自由文本，而是结构化数据：任务计划、工具参数、路由决策、错误分类、评估结果。\n当 JSON 解析失败时，不应该系统崩溃，而应该进入 repair loop：把 validation error、原始输出和目标 schema 一起反馈给模型，最多修复 1-2 次，仍失败就返回结构化错误。\n6. 第五阶段：RAG 与 Context Engineering Agent 不能只依赖模型参数记忆。真实系统必须能使用外部知识：文档、代码、项目规范、API 手册、历史记录、用户偏好。\nRAG 的重点不是“把文档塞进向量库”，而是构建一条可诊断的知识链路：\nDocument parsing -\u0026gt; Chunking -\u0026gt; Embedding / Indexing -\u0026gt; Retrieval -\u0026gt; Reranking -\u0026gt; Context assembly -\u0026gt; Answer generation -\u0026gt; Citation verification RAG 失败时，要能分类：\ningestion failure：文档没导入或解析错。 chunking failure：答案被切断。 retrieval failure：正确 chunk 没召回。 ranking failure：召回了但排太低。 context assembly failure：上下文噪声太多。 generation failure：上下文正确但模型答错。 citation failure：引用不支持结论。 不同错误对应不同修复方式。不能一遇到 RAG 不准就盲目换 embedding 模型。\n一个成熟的检索流程通常是：\nquery rewrite -\u0026gt; vector search top 30 -\u0026gt; keyword search top 30 -\u0026gt; metadata filter -\u0026gt; merge and dedupe -\u0026gt; rerank top 10 -\u0026gt; context compression top 5 -\u0026gt; answer with citations 尤其在代码库、API 文档、错误日志场景里，关键词检索很重要。函数名、错误码、配置项、类名往往不是向量检索最擅长的内容。\nContext Engineering 的目标是：在有限上下文窗口里放入最有用、最可信、最相关的信息。\n优先级大致是：\n当前用户目标 -\u0026gt; 安全和权限规则 -\u0026gt; 当前任务状态 -\u0026gt; 输出 schema -\u0026gt; 相关工具说明 -\u0026gt; 检索证据 -\u0026gt; 长期记忆 -\u0026gt; 最近对话摘要 -\u0026gt; 历史相似任务经验 低优先级内容不能挤掉高优先级内容。上下文不是越多越好，而是要被选择、压缩、排序和验证。\n7. 第六阶段：Memory，不要把记忆做成垃圾桶 Agent 的 memory 经常被误解为“把所有历史对话总结一下”。这很危险。\n记忆至少要分层：\n6.1 Working Memory 一次任务内的临时状态：当前目标、计划、中间观察、工具结果、未解决问题。\n它属于当前 run，不默认进入长期记忆。\n6.2 Episodic Memory 历史任务经验：某类任务怎么做、哪些工具组合有效、失败案例。\n适合相似任务召回。\n6.3 Semantic Memory 稳定事实：用户偏好、项目路径、API 约定、团队规范、环境事实。\n这类可以长期保存，但要有来源、scope、confidence、更新时间。\n6.4 Procedural Memory 可复用流程：如何 debug、如何发布、如何 code review、如何跑 eval。\n这类更适合沉淀为 skill、playbook、workflow，而不是普通记忆。\n长期记忆写入前，应该经过：\ncandidate extraction -\u0026gt; classification -\u0026gt; stability check -\u0026gt; conflict check -\u0026gt; sensitivity check -\u0026gt; deduplication -\u0026gt; write / update / reject 不要写入：临时任务进度、PR 编号、今天修了什么、临时 token、未验证的模型猜测。\n适合写入：长期偏好、项目稳定路径、API 约定、环境事实、稳定工作流。\n记忆系统的关键不是“记得多”，而是“记得准、记得有边界、需要时能召回、不需要时不污染上下文”。\n8. 第七阶段：Tool Calling 与 Tool Runtime 工具调用是 Agent 和普通聊天机器人的分界线。Agent 不只是回答，它会读文件、查网页、调用 API、运行命令、修改状态。\n这也是风险最大的地方。\n不要把函数直接暴露给模型。你需要 Tool Runtime：\nAgent -\u0026gt; Tool Registry -\u0026gt; Validator -\u0026gt; Permission Policy -\u0026gt; Executor -\u0026gt; Tool Result Normalizer -\u0026gt; ToolRun Log 每个工具都应该有：\nTool - name - description - input_schema - output_schema - risk_level - permissions_required - timeout - retry_policy - examples 工具按风险分层：\n等级 示例 策略 low 读取公开网页、读取安全目录 自动允许 medium 写临时文件、运行测试 可自动但记录日志 high 修改项目文件、安装依赖、调用外部 API 需要策略允许或确认 critical 删除数据、发消息、生产部署、支付 必须显式确认 工具结果也不要只返回字符串，建议结构化：\n{ \u0026#34;status\u0026#34;: \u0026#34;success|error\u0026#34;, \u0026#34;summary\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;data\u0026#34;: {}, \u0026#34;stdout\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;stderr\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;error_type\u0026#34;: null, \u0026#34;truncated\u0026#34;: false, \u0026#34;artifacts\u0026#34;: [] } 错误要归一化：\nVALIDATION_ERROR PERMISSION_DENIED TIMEOUT NOT_FOUND RATE_LIMITED TRANSIENT_ERROR FATAL_ERROR 模型看到错误类型后，才能决定是修参数、换工具、重试、请求用户确认，还是停止。\n9. 第八阶段：MCP，把工具生态标准化 MCP（Model Context Protocol）解决的是工具生态标准化问题。\n传统工具调用的问题是：每个应用都要自己接工具，schema、认证、错误格式、连接生命周期都不统一。MCP 把外部能力标准化为 server、tools、resources、prompts 和 transports。\n基本结构：\nAgent Runtime as MCP Client -\u0026gt; connect MCP Server -\u0026gt; list tools/resources/prompts -\u0026gt; register tools into Tool Registry -\u0026gt; call tool -\u0026gt; normalize result -\u0026gt; audit log 关键点：MCP 不替代 Tool Runtime。MCP 工具仍然必须经过本地权限、审计、超时、输出截断和错误归一化。\n推荐架构：\nAgent -\u0026gt; Tool Registry -\u0026gt; Permission Policy -\u0026gt; Tool Executor -\u0026gt; Native Tool -\u0026gt; MCP Tool Adapter -\u0026gt; MCP Server 如果 MCP server 很多，还可以加 MCP Gateway：\nAgent Runtime -\u0026gt; MCP Gateway -\u0026gt; server registry -\u0026gt; auth / policy -\u0026gt; tool discovery cache -\u0026gt; call routing -\u0026gt; audit log -\u0026gt; rate limit -\u0026gt; MCP Servers MCP 学习重点：\nserver / client / tool / resource / prompt / transport。 stdio 与 HTTP transport。 工具发现和命名空间。 凭据隔离，不把全部环境变量传给 server。 server healthcheck。 schema diff。 sampling 安全。 不可信 server 的权限限制。 一个很好的练习是实现 notes MCP server：\ntools: - search_notes(query) - read_note(id) - create_note(title, content) resources: - notes://index - notes://note/{id} 然后把它接入自己的 Tool Registry。\n10. 第九阶段：Harness 工程，把能力装进运行框架 前面的 LLM Gateway、RAG、Memory、Tool Runtime、MCP 都是能力模块。Harness 工程要做的事，是把这些能力装进一个统一运行框架，让 Agent 不只是“能调用”，而是“能被调度、能被追踪、能被恢复、能被评估”。\n可以把 Harness 理解为 Agent 的执行容器。它负责在每一次任务中维护：\nTask -\u0026gt; Run -\u0026gt; Plan -\u0026gt; Step -\u0026gt; LLMCall -\u0026gt; ToolRun -\u0026gt; Observation -\u0026gt; Artifact -\u0026gt; Verification -\u0026gt; Final Result 一个最小 Harness 应该提供这些接口：\nHarness.start(task) Harness.step(run_id) Harness.pause(run_id) Harness.resume(run_id) Harness.cancel(run_id) Harness.get_trace(run_id) Harness.get_artifacts(run_id) Harness.run_eval(eval_case_id) 它的核心数据结构通常包括：\nRun - id - user_goal - status - plan - current_step - budget - created_at - updated_at Step - id - run_id - type - input - output - status - evidence - error_type ToolRun - id - step_id - tool_name - input - output - permission_decision - latency_ms Artifact - id - run_id - type - path_or_uri - summary - checksum TraceEvent - id - run_id - event_type - payload - timestamp 为什么需要 Harness？因为单独的 LLM API 不知道任务是否完成，单独的 tool calling 不知道权限边界，单独的 RAG 不知道引用是否被最终答案正确使用，单独的 memory 不知道什么该长期保存。Harness 把这些能力统一到一个任务生命周期里。\n学习 Harness 工程时，建议先实现一个极小版本：\n接收用户任务，创建 Run。 调用 Planner 生成结构化计划。 逐 Step 执行。 每次 LLM call 和 ToolRun 都写 trace。 每个 Step 写 evidence。 结束前运行 Verifier。 产物进入 Artifact Store。 Eval Runner 可以复用同一套执行入口。 这个阶段完成后，你的 Agent 才开始从“脚本”变成“系统”。\n11. 第十阶段：Harness 核心：Agent Loop，不要只写 while 循环 最简 Agent loop 是：\nObserve -\u0026gt; Think / Plan -\u0026gt; Act -\u0026gt; Record -\u0026gt; Verify -\u0026gt; Continue or Stop 工程化版本应该是：\nload state -\u0026gt; build context -\u0026gt; decide next action -\u0026gt; validate action -\u0026gt; execute tool or ask user -\u0026gt; persist observation -\u0026gt; update plan/state -\u0026gt; check stop condition -\u0026gt; verify final output Agent loop 有多种形态。\nReAct Loop 适合探索性任务：\nThought -\u0026gt; Action -\u0026gt; Observation -\u0026gt; Thought -\u0026gt; ... 优点是简单通用；缺点是容易发散、成本不可控、难评估。\nPlan-and-Execute Loop 适合开发、研究、文档处理：\nPlan -\u0026gt; Execute Step 1 -\u0026gt; Update -\u0026gt; Execute Step 2 -\u0026gt; Verify State Machine Loop 适合生产系统：\ncreated -\u0026gt; planning -\u0026gt; executing -\u0026gt; waiting_for_user -\u0026gt; verifying -\u0026gt; completed -\u0026gt; failed -\u0026gt; cancelled Workflow + Agent Hybrid 适合企业应用：确定性流程由代码控制，困难节点交给 LLM。\n可靠 Agent 必须有 stop conditions：\nsuccess criteria satisfied max steps reached max tool calls reached max cost reached max runtime reached repeated action detected repeated failure detected permission blocked user confirmation required no progress detected 没有 stop condition 的 Agent，只是一个有预算风险的循环。\n12. 第十一阶段：Planning、Reflection 与 Verification 规划不是一次性输出漂亮清单，而是系统可执行的结构化计划。\n推荐 Plan Schema：\n{ \u0026#34;goal\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;assumptions\u0026#34;: [\u0026#34;...\u0026#34;], \u0026#34;steps\u0026#34;: [ { \u0026#34;id\u0026#34;: \u0026#34;s1\u0026#34;, \u0026#34;title\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;type\u0026#34;: \u0026#34;research|code|test|review|deploy|ask_user\u0026#34;, \u0026#34;depends_on\u0026#34;: [], \u0026#34;risk\u0026#34;: \u0026#34;low|medium|high|critical\u0026#34;, \u0026#34;can_delegate\u0026#34;: true, \u0026#34;expected_artifact\u0026#34;: \u0026#34;...\u0026#34;, \u0026#34;verification\u0026#34;: \u0026#34;...\u0026#34; } ], \u0026#34;stop_conditions\u0026#34;: [\u0026#34;...\u0026#34;], \u0026#34;success_criteria\u0026#34;: [\u0026#34;...\u0026#34;] } 规划模式包括：\nChecklist Planner：适合发布、检查、报告生成。 DAG Planner：适合有依赖和并行的复杂任务。 Hypothesis Planner：适合 debugging 和研究。 Risk-first Planner：适合有副作用任务。 Reflection 也不能只是模型自言自语。它应该是结构化检查：\n这一步是否产生预期观察？ 是否出现新约束？ 是否需要重试、换工具或重规划？ 是否消耗超过预算？ Verification 尽量使用确定性手段：\ntests pass file exists schema validates HTTP status 200 diff matches intent eval threshold reached LLM-as-judge 可以用于语义质量判断，但不能替代高风险决策和确定性验证。\n13. 第十二阶段：Subagent 与 Multi-Agent 多 Agent 的价值不是角色扮演，而是任务隔离、并行探索、互相审查和结构化合并。\n适合多 Agent 的任务：\n可自然拆成多个独立子任务。 需要并行搜索、并行编码、并行审查。 需要不同视角：实现者、测试者、审查者、研究者。 任务长，上下文多，单 Agent 容易遗忘。 不适合多 Agent 的任务：简单问答、强顺序依赖任务、目标不清任务、高风险副作用动作。\n标准多 Agent 结构：\nOrchestrator Agent -\u0026gt; Task Decomposer -\u0026gt; Worker Agents -\u0026gt; Reviewer Agents -\u0026gt; Merger / Synthesizer -\u0026gt; Final Verifier Subagent handoff 必须明确：\n- goal - background context - exact files or sources - constraints - allowed operations - forbidden operations - expected output format - verification required - deadline / step budget Worker 返回也必须结构化：\n- what was done - evidence or paths - verification result - unresolved issues - confidence - recommended next action 多 Agent 输出冲突时，不能强行糊成一个结论。合并规则应该优先真实工具验证结果、源码证据、可复现命令输出，并显式列出冲突点。\n14. 第十三阶段：生产级 Harness Runtime 一个生产级 Agent Runtime 至少包含：\ntask intake run/session/thread model state machine context builder llm gateway tool registry permission policy mcp manager memory manager planner executor loop subagent scheduler event bus / queue artifact store trace store eval harness observability deployment and ops 核心数据模型：\nSession：用户会话或工作区会话 Thread：对话或任务上下文线索 Run：一次 Agent 执行 Step：Run 中的一个决策或动作 ToolRun：一次工具调用 Artifact：文件、报告、代码补丁、图表等产物 Event：运行过程中的事件流 长任务不能阻塞 API 请求。典型架构是：\nAPI receives task -\u0026gt; enqueue run -\u0026gt; worker executes -\u0026gt; event stream updates UI 需要支持：retry、cancel、pause/resume、worker heartbeat、dead letter queue、priority、concurrency limit、workspace quota。\nArtifact Store 也很重要。Agent 的产物不应该只存在聊天记录里，而应该保存为：报告、代码 diff、CSV/JSON、截图、日志、eval report。\n15. 第十四阶段：评估、观测、安全 生产级 Agent 不能靠“看起来不错”上线。\nAgent 评估要覆盖最终答案和中间过程：\nfinal answer plan tool trajectory intermediate observations artifacts cost latency safety decisions Eval 分层：\nUnit Eval：评估单个 prompt、tool 参数、memory classifier、retriever。 Integration Eval：评估 RAG answer、tool error recovery、MCP bridge、planning + execution。 End-to-End Eval：评估完整 coding、research、document、data analysis 任务。 Safety Eval：评估 prompt injection、unsafe shell、secret exfiltration、unauthorized action。 Trace 是 Agent 的黑匣子记录。它应该能串起：\nuser task -\u0026gt; plan -\u0026gt; llm calls -\u0026gt; tool calls -\u0026gt; artifacts -\u0026gt; final verification Observability 至少包含：\nrun_success_rate avg_steps_per_run tool_failure_rate model_latency token_usage cost_per_task_type eval_pass_rate human_intervention_rate permission_denial_rate 安全重点：\n外部网页、PDF、GitHub issue、tool output 都是不可信输入。 不要把外部内容里的指令提升为系统规则。 secrets 不进 prompt，不进日志，不进错误消息。 高风险工具必须有权限和确认。 sandbox 执行代码和 shell。 不同 workspace 的 RAG 和 memory 不能串扰。 发布门禁应该包括：unit tests、core eval subset、safety smoke eval、golden trace diff、成本和延迟阈值。\n16. 第十五阶段：部署、扩展与成本控制 Agent 系统比普通 Web 服务复杂，因为它有长任务、模型调用、工具执行、文件产物、权限和外部 API。\n部署成熟度可以分四层：\nStage 0：本地脚本 单进程、SQLite / JSONL、本地文件。适合学习和个人工具。\nStage 1：本地服务 API server、本地 worker、SQLite、local artifact directory、简单 UI / CLI。适合个人工作台。\nStage 2：小规模服务 Postgres、Redis queue、object storage、vector database、worker pool、Docker Compose。适合团队使用。\nStage 3：生产平台 容器平台、worker autoscaling、sandbox pool、secrets manager、集中式 logs/metrics/traces、CI eval gate、backup/migration。\n成本控制要从一开始考虑：\n每个 workspace 设置预算。 每个 run 设置 max_cost。 小任务用便宜模型。 复杂规划和最终综合用强模型。 长上下文先压缩。 缓存 deterministic 子结果。 eval 分层运行，不每次 full suite。 模型路由可以是：\nclassification -\u0026gt; cheap model structured extraction -\u0026gt; medium model complex planning -\u0026gt; strong model final synthesis -\u0026gt; strong model judge eval -\u0026gt; separate judge model 不要所有任务都用最贵模型，也不要为了省钱牺牲关键步骤的可靠性。\n17. 第十六阶段：源码学习路线 AI Agent 框架变化很快。长期能力不是记住框架名，而是能从源码中还原设计。\n源码阅读不要从 README 顺着读，而要带问题：\n用户任务从哪里进入？ 模型调用在哪里？ 工具 schema 在哪里定义？ 状态如何保存？ loop 如何停止？ trace 如何记录？ eval 如何运行？ 权限如何控制？ 建议按层研究：\nLLM 应用框架：LangChain、LlamaIndex、Haystack、DSPy。 Agent Graph / Workflow：LangGraph、Semantic Kernel planners。 多 Agent 框架：AutoGen、CrewAI、MetaGPT 类项目。 编码 Agent：Aider、OpenHands、Continue、Cline / Roo Code、SWE-agent。 MCP 生态：MCP SDK、filesystem server、GitHub server、database server、browser server。 评测框架：SWE-bench harness、promptfoo、RAGAS、DeepEval。 每读一个项目，至少输出：\n01-positioning.md 02-architecture.md 03-execution-flow.md 04-data-model.md 05-tooling-and-mcp.md 06-memory-context-rag.md 07-agent-loop-planning.md 08-eval-observability.md 09-security-deployment.md 10-design-lessons-and-replica.md 读源码的最终目标是复刻最小设计点，比如 tool registry、state graph、retriever interface、MCP adapter、eval runner、patch applier、trace viewer。\n只看懂不复刻，学习效果会很浅。\n18. 90 天实践路线 如果要把这条路线落地，可以按 30 / 60 / 90 天推进。\n30 天：打通最小 Agent 系统 目标：\nLLM Gateway -\u0026gt; Tool Registry -\u0026gt; Agent Loop -\u0026gt; Trace -\u0026gt; Basic RAG -\u0026gt; Basic Eval 产物：\n一个 CLI Agent。 一个 LLM Gateway。 5 个基础工具。 一个最小 Plan-and-Execute loop。 20 条 eval case。 trace JSON。 60 天：可恢复、可扩展、可集成 目标：\nPlanning -\u0026gt; Memory -\u0026gt; MCP Bridge -\u0026gt; Subagent -\u0026gt; Multi-Agent Orchestrator 产物：\nplan schema。 replanning record。 memory classifier。 MCP tool adapter。 orchestrator / worker / reviewer / synthesizer。 90 天：生产级 Runtime 骨架 目标：\nAPI -\u0026gt; Queue -\u0026gt; Worker -\u0026gt; Artifact Store -\u0026gt; Eval Runner -\u0026gt; Observability -\u0026gt; Safety Gate -\u0026gt; Deployment 产物：\nAPI + worker 分离。 Run / Step / ToolRun / Artifact / Event 数据模型。 100 条 eval case。 safety eval。 Docker Compose。 运维 runbook。 一个可展示的 Agent Workbench。 19. 最终 Capstone：生产级 AI Agent Harness Workbench 最终项目不建议做“一个聊天机器人”，而应该做一个 Agent Workbench：Runtime + 应用壳层 + 工具生态 + 评测系统。\n它至少支持四类场景：\n源码理解：读取仓库，分析入口、模块、数据流、扩展点。 代码修改：定位 bug，修改文件，运行测试，输出 diff 和验证结果。 资料研究：拆分问题，并行搜索，合成带来源报告。 知识库问答：基于私有文档回答，不确定时拒绝编造。 模块结构：\nWorkbench ├── App Layer ├── Runtime Layer ├── Context Layer ├── Tool Layer ├── Model Layer ├── Quality Layer └── Storage Layer 作品集必须包含：\n架构图。 运行截图或演示视频。 三个典型 trace。 eval 报告。 失败案例分析。 安全边界说明。 部署说明。 下一步路线。 完成定义不是“功能很多”，而是：能跑、能解释、能评测、能追踪、能恢复、能部署、能说明不能做什么。\n20. 常见反模式 最后列几个常见坑。\n反模式 1：聊天框吞天下 所有功能都塞进一个 chat prompt。结果是状态不可控、权限不可控、难评测。\n反模式 2：无 trace 调 prompt 效果不好就改 prompt，但没有样例和 trace。结果是越改越玄学。\n反模式 3：工具无权限 模型能直接调用 shell、数据库、消息发送。结果是安全事故迟早发生。\n反模式 4：RAG 无引用 回答看起来对，但无法追溯证据。结果是用户无法信任，错误难排查。\n反模式 5：多 Agent 角色扮演 多个 Agent 互相聊天，但没有独立任务、证据和合并机制。结果是成本增加，质量不一定提高。\n反模式 6：没有 eval 的上线 靠几次演示判断质量。结果是回归不可见。\n反模式 7：把 memory 当垃圾桶 所有历史对话都写进长期记忆。结果是上下文污染和隐私风险。\n反模式 8：过早框架化 还没理解 run / step / tool，就引入复杂框架。结果是出了问题不知道去哪查。\n结语：Agent 的核心不是“自主”，而是“可控的自主” AI Agent 的吸引力在于它能把 LLM 从回答问题推进到执行任务。但越是能执行，越需要工程约束。\n真正可用的 Agent，不是更长的 prompt，而是一个有状态、有权限、有工具、有记忆、有评估、有观测、有部署、有安全边界的软件系统。\n学习 AI Agent 开发，最好的路线不是追逐框架，而是逐层搭建自己的理解：\nLLM API -\u0026gt; AI 应用场景 -\u0026gt; LLM Gateway -\u0026gt; RAG / Memory / Context -\u0026gt; Tool Runtime / MCP -\u0026gt; Harness 工程 -\u0026gt; Agent Loop / Planning -\u0026gt; Subagent / Multi-Agent -\u0026gt; Production Harness Runtime -\u0026gt; Eval / Observability / Safety / Deployment -\u0026gt; Source Study 当你能从零实现一个最小 Runtime，再读懂主流框架为什么这样设计，你才真正进入了 AI Agent 开发的核心区域。\n",
+  "author": {
+    "@type": "Person",
+    "name": "念念"
+  },
+  "dateModified": "2026-06-18T10:05:49+08:00",
+  "datePublished": "2026-06-17T11:01:37+08:00",
+  "description": " 此文章由 hermes 配合 gpt-5.5 模型 生成\n过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。\n一个可靠的 AI Agent 系统至少要回答这些问题：模 …",
+  "headline": "AI Agent 开发学习路线：从 LLM API 到 Harness 工程",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "AI Agent",
+    "LLM",
+    "Tool Calling",
+    "Harness",
+    "RAG",
+    "Agent Engineering"
+  ],
+  "mainEntityOfPage": {
+    "@id": "https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/",
+    "@type": "WebPage"
+  },
+  "name": "AI Agent 开发学习路线：从 LLM API 到 Harness 工程",
+  "publisher": {
+    "@type": "Person",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/",
+  "wordCount": 9244
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://blog.nuonian.top/" accesskey="h" title="念念的博客 (Alt + H)">念念的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://blog.nuonian.top/archives" title="存档">
+                    <span>存档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/categories" title="分类">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/tags" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/series" title="专栏">
+                    <span>专栏</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/search" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      AI Agent 开发学习路线：从 LLM API 到 Harness 工程
+    </h1>
+    <div class="post-meta"><span title='2026-06-17 11:01:37 +0800 +0800'>2026-06-17</span>&nbsp;·&nbsp;<span title='2026-06-18 10:05:49 +0800 +0800'>Updated:&nbsp;2026-06-18</span>&nbsp;·&nbsp;19 分钟&nbsp;·&nbsp;9244 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">学习路线</a>&nbsp;·&nbsp;<a href="https://blog.nuonian.top/series/ai-agent-%E5%BC%80%E5%8F%91/">AI Agent 开发</a>
+
+</div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-%e5%85%88%e5%bb%ba%e7%ab%8b%e6%ad%a3%e7%a1%ae%e5%9c%b0%e5%9b%beai-agent-%e4%b8%8d%e6%98%af%e5%8d%95%e7%82%b9%e6%8a%80%e6%9c%af" aria-label="1. 先建立正确地图：AI Agent 不是单点技术">1. 先建立正确地图：AI Agent 不是单点技术</a></li>
+                <li>
+                    <a href="#2-%e7%ac%ac%e4%b8%80%e9%98%b6%e6%ae%b5%e5%b7%a5%e7%a8%8b%e5%9f%ba%e7%a1%80%e4%b8%8d%e6%98%af%e5%8f%af%e9%80%89%e9%a1%b9" aria-label="2. 第一阶段：工程基础不是可选项">2. 第一阶段：工程基础不是可选项</a></li>
+                <li>
+                    <a href="#3-%e7%ac%ac%e4%ba%8c%e9%98%b6%e6%ae%b5llm-api-%e5%9f%ba%e7%a1%80%e5%85%88%e6%8a%8a%e6%a8%a1%e5%9e%8b%e8%b0%83%e7%94%a8%e5%90%83%e9%80%8f" aria-label="3. 第二阶段：LLM API 基础，先把模型调用吃透">3. 第二阶段：LLM API 基础，先把模型调用吃透</a></li>
+                <li>
+                    <a href="#4-%e7%ac%ac%e4%b8%89%e9%98%b6%e6%ae%b5ai-%e5%ba%94%e7%94%a8%e5%bc%80%e5%8f%91%e4%b8%8d%e8%a6%81%e6%8a%8a%e4%b8%80%e5%88%87%e5%81%9a%e6%88%90%e8%81%8a%e5%a4%a9%e6%a1%86" aria-label="4. 第三阶段：AI 应用开发，不要把一切做成聊天框">4. 第三阶段：AI 应用开发，不要把一切做成聊天框</a><ul>
+                        
+                <li>
+                    <a href="#31-copilot-%e5%9e%8b%e5%ba%94%e7%94%a8" aria-label="3.1 Copilot 型应用">3.1 Copilot 型应用</a></li>
+                <li>
+                    <a href="#32-workflow-%e5%9e%8b%e5%ba%94%e7%94%a8" aria-label="3.2 Workflow 型应用">3.2 Workflow 型应用</a></li>
+                <li>
+                    <a href="#33-agent-%e5%9e%8b%e5%ba%94%e7%94%a8" aria-label="3.3 Agent 型应用">3.3 Agent 型应用</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e7%ac%ac%e5%9b%9b%e9%98%b6%e6%ae%b5llm-gateway%e6%8a%8a%e6%a8%a1%e5%9e%8b%e8%b0%83%e7%94%a8%e5%8f%98%e6%88%90%e5%b7%a5%e7%a8%8b%e6%a8%a1%e5%9d%97" aria-label="5. 第四阶段：LLM Gateway，把模型调用变成工程模块">5. 第四阶段：LLM Gateway，把模型调用变成工程模块</a></li>
+                <li>
+                    <a href="#6-%e7%ac%ac%e4%ba%94%e9%98%b6%e6%ae%b5rag-%e4%b8%8e-context-engineering" aria-label="6. 第五阶段：RAG 与 Context Engineering">6. 第五阶段：RAG 与 Context Engineering</a></li>
+                <li>
+                    <a href="#7-%e7%ac%ac%e5%85%ad%e9%98%b6%e6%ae%b5memory%e4%b8%8d%e8%a6%81%e6%8a%8a%e8%ae%b0%e5%bf%86%e5%81%9a%e6%88%90%e5%9e%83%e5%9c%be%e6%a1%b6" aria-label="7. 第六阶段：Memory，不要把记忆做成垃圾桶">7. 第六阶段：Memory，不要把记忆做成垃圾桶</a><ul>
+                        
+                <li>
+                    <a href="#61-working-memory" aria-label="6.1 Working Memory">6.1 Working Memory</a></li>
+                <li>
+                    <a href="#62-episodic-memory" aria-label="6.2 Episodic Memory">6.2 Episodic Memory</a></li>
+                <li>
+                    <a href="#63-semantic-memory" aria-label="6.3 Semantic Memory">6.3 Semantic Memory</a></li>
+                <li>
+                    <a href="#64-procedural-memory" aria-label="6.4 Procedural Memory">6.4 Procedural Memory</a></li></ul>
+                </li>
+                <li>
+                    <a href="#8-%e7%ac%ac%e4%b8%83%e9%98%b6%e6%ae%b5tool-calling-%e4%b8%8e-tool-runtime" aria-label="8. 第七阶段：Tool Calling 与 Tool Runtime">8. 第七阶段：Tool Calling 与 Tool Runtime</a></li>
+                <li>
+                    <a href="#9-%e7%ac%ac%e5%85%ab%e9%98%b6%e6%ae%b5mcp%e6%8a%8a%e5%b7%a5%e5%85%b7%e7%94%9f%e6%80%81%e6%a0%87%e5%87%86%e5%8c%96" aria-label="9. 第八阶段：MCP，把工具生态标准化">9. 第八阶段：MCP，把工具生态标准化</a></li>
+                <li>
+                    <a href="#10-%e7%ac%ac%e4%b9%9d%e9%98%b6%e6%ae%b5harness-%e5%b7%a5%e7%a8%8b%e6%8a%8a%e8%83%bd%e5%8a%9b%e8%a3%85%e8%bf%9b%e8%bf%90%e8%a1%8c%e6%a1%86%e6%9e%b6" aria-label="10. 第九阶段：Harness 工程，把能力装进运行框架">10. 第九阶段：Harness 工程，把能力装进运行框架</a></li>
+                <li>
+                    <a href="#11-%e7%ac%ac%e5%8d%81%e9%98%b6%e6%ae%b5harness-%e6%a0%b8%e5%bf%83agent-loop%e4%b8%8d%e8%a6%81%e5%8f%aa%e5%86%99-while-%e5%be%aa%e7%8e%af" aria-label="11. 第十阶段：Harness 核心：Agent Loop，不要只写 while 循环">11. 第十阶段：Harness 核心：Agent Loop，不要只写 while 循环</a><ul>
+                        
+                <li>
+                    <a href="#react-loop" aria-label="ReAct Loop">ReAct Loop</a></li>
+                <li>
+                    <a href="#plan-and-execute-loop" aria-label="Plan-and-Execute Loop">Plan-and-Execute Loop</a></li>
+                <li>
+                    <a href="#state-machine-loop" aria-label="State Machine Loop">State Machine Loop</a></li>
+                <li>
+                    <a href="#workflow--agent-hybrid" aria-label="Workflow &#43; Agent Hybrid">Workflow + Agent Hybrid</a></li></ul>
+                </li>
+                <li>
+                    <a href="#12-%e7%ac%ac%e5%8d%81%e4%b8%80%e9%98%b6%e6%ae%b5planningreflection-%e4%b8%8e-verification" aria-label="12. 第十一阶段：Planning、Reflection 与 Verification">12. 第十一阶段：Planning、Reflection 与 Verification</a></li>
+                <li>
+                    <a href="#13-%e7%ac%ac%e5%8d%81%e4%ba%8c%e9%98%b6%e6%ae%b5subagent-%e4%b8%8e-multi-agent" aria-label="13. 第十二阶段：Subagent 与 Multi-Agent">13. 第十二阶段：Subagent 与 Multi-Agent</a></li>
+                <li>
+                    <a href="#14-%e7%ac%ac%e5%8d%81%e4%b8%89%e9%98%b6%e6%ae%b5%e7%94%9f%e4%ba%a7%e7%ba%a7-harness-runtime" aria-label="14. 第十三阶段：生产级 Harness Runtime">14. 第十三阶段：生产级 Harness Runtime</a></li>
+                <li>
+                    <a href="#15-%e7%ac%ac%e5%8d%81%e5%9b%9b%e9%98%b6%e6%ae%b5%e8%af%84%e4%bc%b0%e8%a7%82%e6%b5%8b%e5%ae%89%e5%85%a8" aria-label="15. 第十四阶段：评估、观测、安全">15. 第十四阶段：评估、观测、安全</a></li>
+                <li>
+                    <a href="#16-%e7%ac%ac%e5%8d%81%e4%ba%94%e9%98%b6%e6%ae%b5%e9%83%a8%e7%bd%b2%e6%89%a9%e5%b1%95%e4%b8%8e%e6%88%90%e6%9c%ac%e6%8e%a7%e5%88%b6" aria-label="16. 第十五阶段：部署、扩展与成本控制">16. 第十五阶段：部署、扩展与成本控制</a><ul>
+                        
+                <li>
+                    <a href="#stage-0%e6%9c%ac%e5%9c%b0%e8%84%9a%e6%9c%ac" aria-label="Stage 0：本地脚本">Stage 0：本地脚本</a></li>
+                <li>
+                    <a href="#stage-1%e6%9c%ac%e5%9c%b0%e6%9c%8d%e5%8a%a1" aria-label="Stage 1：本地服务">Stage 1：本地服务</a></li>
+                <li>
+                    <a href="#stage-2%e5%b0%8f%e8%a7%84%e6%a8%a1%e6%9c%8d%e5%8a%a1" aria-label="Stage 2：小规模服务">Stage 2：小规模服务</a></li>
+                <li>
+                    <a href="#stage-3%e7%94%9f%e4%ba%a7%e5%b9%b3%e5%8f%b0" aria-label="Stage 3：生产平台">Stage 3：生产平台</a></li></ul>
+                </li>
+                <li>
+                    <a href="#17-%e7%ac%ac%e5%8d%81%e5%85%ad%e9%98%b6%e6%ae%b5%e6%ba%90%e7%a0%81%e5%ad%a6%e4%b9%a0%e8%b7%af%e7%ba%bf" aria-label="17. 第十六阶段：源码学习路线">17. 第十六阶段：源码学习路线</a></li>
+                <li>
+                    <a href="#18-90-%e5%a4%a9%e5%ae%9e%e8%b7%b5%e8%b7%af%e7%ba%bf" aria-label="18. 90 天实践路线">18. 90 天实践路线</a><ul>
+                        
+                <li>
+                    <a href="#30-%e5%a4%a9%e6%89%93%e9%80%9a%e6%9c%80%e5%b0%8f-agent-%e7%b3%bb%e7%bb%9f" aria-label="30 天：打通最小 Agent 系统">30 天：打通最小 Agent 系统</a></li>
+                <li>
+                    <a href="#60-%e5%a4%a9%e5%8f%af%e6%81%a2%e5%a4%8d%e5%8f%af%e6%89%a9%e5%b1%95%e5%8f%af%e9%9b%86%e6%88%90" aria-label="60 天：可恢复、可扩展、可集成">60 天：可恢复、可扩展、可集成</a></li>
+                <li>
+                    <a href="#90-%e5%a4%a9%e7%94%9f%e4%ba%a7%e7%ba%a7-runtime-%e9%aa%a8%e6%9e%b6" aria-label="90 天：生产级 Runtime 骨架">90 天：生产级 Runtime 骨架</a></li></ul>
+                </li>
+                <li>
+                    <a href="#19-%e6%9c%80%e7%bb%88-capstone%e7%94%9f%e4%ba%a7%e7%ba%a7-ai-agent-harness-workbench" aria-label="19. 最终 Capstone：生产级 AI Agent Harness Workbench">19. 最终 Capstone：生产级 AI Agent Harness Workbench</a></li>
+                <li>
+                    <a href="#20-%e5%b8%b8%e8%a7%81%e5%8f%8d%e6%a8%a1%e5%bc%8f" aria-label="20. 常见反模式">20. 常见反模式</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-1%e8%81%8a%e5%a4%a9%e6%a1%86%e5%90%9e%e5%a4%a9%e4%b8%8b" aria-label="反模式 1：聊天框吞天下">反模式 1：聊天框吞天下</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-2%e6%97%a0-trace-%e8%b0%83-prompt" aria-label="反模式 2：无 trace 调 prompt">反模式 2：无 trace 调 prompt</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-3%e5%b7%a5%e5%85%b7%e6%97%a0%e6%9d%83%e9%99%90" aria-label="反模式 3：工具无权限">反模式 3：工具无权限</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-4rag-%e6%97%a0%e5%bc%95%e7%94%a8" aria-label="反模式 4：RAG 无引用">反模式 4：RAG 无引用</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-5%e5%a4%9a-agent-%e8%a7%92%e8%89%b2%e6%89%ae%e6%bc%94" aria-label="反模式 5：多 Agent 角色扮演">反模式 5：多 Agent 角色扮演</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-6%e6%b2%a1%e6%9c%89-eval-%e7%9a%84%e4%b8%8a%e7%ba%bf" aria-label="反模式 6：没有 eval 的上线">反模式 6：没有 eval 的上线</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-7%e6%8a%8a-memory-%e5%bd%93%e5%9e%83%e5%9c%be%e6%a1%b6" aria-label="反模式 7：把 memory 当垃圾桶">反模式 7：把 memory 当垃圾桶</a></li>
+                <li>
+                    <a href="#%e5%8f%8d%e6%a8%a1%e5%bc%8f-8%e8%bf%87%e6%97%a9%e6%a1%86%e6%9e%b6%e5%8c%96" aria-label="反模式 8：过早框架化">反模式 8：过早框架化</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%bb%93%e8%af%adagent-%e7%9a%84%e6%a0%b8%e5%bf%83%e4%b8%8d%e6%98%af%e8%87%aa%e4%b8%bb%e8%80%8c%e6%98%af%e5%8f%af%e6%8e%a7%e7%9a%84%e8%87%aa%e4%b8%bb" aria-label="结语：Agent 的核心不是“自主”，而是“可控的自主”">结语：Agent 的核心不是“自主”，而是“可控的自主”</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 &&
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+
+</script>
+
+  <div class="post-content md-content"><blockquote>
+<p>此文章由 hermes 配合 gpt-5.5 模型 生成</p>
+</blockquote>
+<p>过去一两年，很多人对 AI Agent 的理解还停留在“给大模型一个目标，然后让它自己循环调用工具”。这个说法不能说错，但它太容易把人带偏：真正能落地的 Agent，不是一个 prompt，也不是一个 while loop，而是一套工程系统。</p>
+<p>一个可靠的 AI Agent 系统至少要回答这些问题：模型如何接入？上下文如何构建？知识如何检索？记忆如何写入？工具如何授权？任务如何规划？失败如何恢复？多 Agent 如何分工？结果如何评估？线上如何观测？成本如何控制？安全事故如何避免？系统如何部署和回滚？</p>
+<p>如果这些问题没有答案，所谓 Agent 很可能只是一个演示视频里跑通的玩具。它可能偶尔表现惊艳，但很难被交给真实用户、真实业务和真实生产环境。</p>
+<p>这篇文章整理一条完整的 AI Agent 开发学习路线。它的目标不是教你“用某个框架快速做 Demo”，而是帮助你建立从 LLM API 到 Harness 工程的系统能力：先学会稳定调用模型，再把模型包进一套可执行、可评估、可观测、可恢复、可部署的运行框架里。这里的 Harness，可以理解为围绕 LLM 的工程外骨骼：它负责接入模型、构建上下文、注册工具、保存状态、驱动循环、记录 trace、运行 eval、控制权限和承载部署。</p>
+<hr>
+<h2 id="1-先建立正确地图ai-agent-不是单点技术">1. 先建立正确地图：AI Agent 不是单点技术<a hidden class="anchor" aria-hidden="true" href="#1-先建立正确地图ai-agent-不是单点技术">#</a></h2>
+<p>AI Agent 开发不是一个单独技能，而是一组能力的组合。标题里说“从 LLM API 到 Harness 工程”，重点就在这里：LLM API 只是能力入口，Harness 才是把模型能力变成稳定软件系统的工程层。</p>
+<p>可以把它拆成十层：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>AI Agent Developer
+</span></span><span style="display:flex;"><span>├── LLM API 基础能力
+</span></span><span style="display:flex;"><span>├── AI 应用产品能力
+</span></span><span style="display:flex;"><span>├── LLM 应用工程能力
+</span></span><span style="display:flex;"><span>├── RAG / 知识 / 上下文能力
+</span></span><span style="display:flex;"><span>├── Memory 能力
+</span></span><span style="display:flex;"><span>├── Tool Calling / MCP 能力
+</span></span><span style="display:flex;"><span>├── Harness / Agent Runtime 能力
+</span></span><span style="display:flex;"><span>├── Subagent / Multi-Agent 编排能力
+</span></span><span style="display:flex;"><span>├── 评估 / 观测 / 安全 / 部署能力
+</span></span><span style="display:flex;"><span>└── 源码学习与架构抽象能力
+</span></span></code></pre></div><p>其中 Harness / Agent Runtime 是中枢层。它不是某个单一框架，而是一组工程职责的集合：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Harness
+</span></span><span style="display:flex;"><span>├── Model Adapter / LLM Gateway
+</span></span><span style="display:flex;"><span>├── Prompt &amp; Context Builder
+</span></span><span style="display:flex;"><span>├── Tool Registry / MCP Adapter
+</span></span><span style="display:flex;"><span>├── Permission Policy
+</span></span><span style="display:flex;"><span>├── Agent Loop / State Machine
+</span></span><span style="display:flex;"><span>├── Planner / Executor / Verifier
+</span></span><span style="display:flex;"><span>├── Memory Manager
+</span></span><span style="display:flex;"><span>├── Event Log / Trace Store
+</span></span><span style="display:flex;"><span>├── Artifact Store
+</span></span><span style="display:flex;"><span>├── Eval Runner
+</span></span><span style="display:flex;"><span>├── Sandbox / Runtime Isolation
+</span></span><span style="display:flex;"><span>└── Deployment &amp; Ops
+</span></span></code></pre></div><p>其中最容易被忽略的是：AI Agent 首先是软件系统，其次才是模型应用。模型负责不确定性推理，系统负责边界、状态、权限、恢复、追踪和验证。</p>
+<p>所以学习顺序不应该是“先找最火的 Agent 框架”，而应该是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>LLM API 基础
+</span></span><span style="display:flex;"><span>  -&gt; 工程基础
+</span></span><span style="display:flex;"><span>  -&gt; AI 应用开发
+</span></span><span style="display:flex;"><span>  -&gt; LLM Gateway
+</span></span><span style="display:flex;"><span>  -&gt; RAG / Memory / Context
+</span></span><span style="display:flex;"><span>  -&gt; Tool Runtime / MCP
+</span></span><span style="display:flex;"><span>  -&gt; Harness 核心：Agent Loop / State / Trace
+</span></span><span style="display:flex;"><span>  -&gt; Planning / Verification / Reliability
+</span></span><span style="display:flex;"><span>  -&gt; Subagent / Multi-Agent
+</span></span><span style="display:flex;"><span>  -&gt; Production Harness Runtime
+</span></span><span style="display:flex;"><span>  -&gt; Evaluation / Observability / Safety / Deployment
+</span></span><span style="display:flex;"><span>  -&gt; Source Study
+</span></span></code></pre></div><p>这个顺序的核心逻辑是：先把一个小系统做稳，再增加自主性；先让 Agent 会安全执行，再让它多步规划；先让单 Agent 可追踪，再做多 Agent 并行。</p>
+<hr>
+<h2 id="2-第一阶段工程基础不是可选项">2. 第一阶段：工程基础不是可选项<a hidden class="anchor" aria-hidden="true" href="#2-第一阶段工程基础不是可选项">#</a></h2>
+<p>很多 AI 应用失败，不是因为模型不够强，而是因为工程底座太弱。</p>
+<p>一个 Agent 系统会频繁遇到这些基础问题：</p>
+<ul>
+<li>读写文件。</li>
+<li>调用 HTTP API。</li>
+<li>运行命令。</li>
+<li>处理 stdout / stderr / exit code。</li>
+<li>持久化任务状态。</li>
+<li>管理后台 worker。</li>
+<li>记录结构化日志。</li>
+<li>做错误分类和重试。</li>
+<li>写测试和评测样例。</li>
+</ul>
+<p>因此，在接触复杂 Agent 之前，至少要能做出一个基础任务系统：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>CLI / API
+</span></span><span style="display:flex;"><span>  -&gt; SQLite / Postgres
+</span></span><span style="display:flex;"><span>  -&gt; task table
+</span></span><span style="display:flex;"><span>  -&gt; worker
+</span></span><span style="display:flex;"><span>  -&gt; logs
+</span></span><span style="display:flex;"><span>  -&gt; tests
+</span></span></code></pre></div><p>一个很好的入门练习是实现命令行任务管理器：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>agent-task add <span style="color:#e6db74">&#34;read paper&#34;</span>
+</span></span><span style="display:flex;"><span>agent-task list
+</span></span><span style="display:flex;"><span>agent-task <span style="color:#66d9ef">done</span> &lt;id&gt;
+</span></span><span style="display:flex;"><span>agent-task log &lt;id&gt; <span style="color:#e6db74">&#34;note&#34;</span>
+</span></span></code></pre></div><p>然后把它封装成 HTTP API：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>POST /tasks
+</span></span><span style="display:flex;"><span>GET /tasks
+</span></span><span style="display:flex;"><span>PATCH /tasks/:id
+</span></span><span style="display:flex;"><span>POST /tasks/:id/logs
+</span></span></code></pre></div><p>再加一个后台 worker，从数据库读取 pending 任务，执行、记录结果、失败重试。</p>
+<p>这个练习看起来和 AI 无关，但它会直接迁移到 Agent Runtime：用户目标是 task，Planner 会生成 task，Executor 会消费 task，工具执行会写 logs，失败恢复会依赖状态机。</p>
+<p>如果你不能稳定实现这些基础设施，就不要急着做多 Agent。</p>
+<hr>
+<h2 id="3-第二阶段llm-api-基础先把模型调用吃透">3. 第二阶段：LLM API 基础，先把模型调用吃透<a hidden class="anchor" aria-hidden="true" href="#3-第二阶段llm-api-基础先把模型调用吃透">#</a></h2>
+<p>在谈 Agent 之前，先把 LLM API 当成一个不稳定但强大的外部依赖来处理。很多 Agent 系统的问题，本质上是最底层模型调用没有工程化：没有 timeout，没有 retry，没有 token 统计，没有 raw response，没有结构化输出校验，也没有 provider 差异抽象。</p>
+<p>这一阶段要掌握的不是“如何发一个请求”，而是如何把模型请求变成可控的系统能力。</p>
+<p>最小学习范围包括：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>HTTP request / response
+</span></span><span style="display:flex;"><span>authentication
+</span></span><span style="display:flex;"><span>chat completions / responses API
+</span></span><span style="display:flex;"><span>messages / input schema
+</span></span><span style="display:flex;"><span>system / user / assistant roles
+</span></span><span style="display:flex;"><span>streaming / SSE
+</span></span><span style="display:flex;"><span>JSON mode / structured output
+</span></span><span style="display:flex;"><span>tool call format
+</span></span><span style="display:flex;"><span>usage / token accounting
+</span></span><span style="display:flex;"><span>rate limit / retry / timeout
+</span></span><span style="display:flex;"><span>error normalization
+</span></span></code></pre></div><p>一个最小 LLM API 实验应该包括：</p>
+<ol>
+<li>调用一个模型完成普通问答。</li>
+<li>调用一个模型输出固定 JSON schema。</li>
+<li>开启 streaming，并把 chunk 合并成完整输出。</li>
+<li>记录 latency、token usage、status、error type。</li>
+<li>故意触发超时、限流、JSON 解析失败，并做错误分类。</li>
+</ol>
+<p>建议从第一天就保存调用记录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>LLMCall
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- provider
+</span></span><span style="display:flex;"><span>- model
+</span></span><span style="display:flex;"><span>- request_hash
+</span></span><span style="display:flex;"><span>- prompt_version
+</span></span><span style="display:flex;"><span>- input_tokens
+</span></span><span style="display:flex;"><span>- output_tokens
+</span></span><span style="display:flex;"><span>- latency_ms
+</span></span><span style="display:flex;"><span>- status
+</span></span><span style="display:flex;"><span>- error_type
+</span></span><span style="display:flex;"><span>- raw_request_path
+</span></span><span style="display:flex;"><span>- raw_response_path
+</span></span></code></pre></div><p>这样后续你才有能力回答：哪个 prompt 变贵了？哪个模型变慢了？哪个 provider 出错最多？结构化输出失败率是多少？</p>
+<p>这一阶段的目标是：不要把 LLM 当魔法函数，而要把它当成一个需要封装、观察、降级和评估的远程服务。</p>
+<hr>
+<h2 id="4-第三阶段ai-应用开发不要把一切做成聊天框">4. 第三阶段：AI 应用开发，不要把一切做成聊天框<a hidden class="anchor" aria-hidden="true" href="#4-第三阶段ai-应用开发不要把一切做成聊天框">#</a></h2>
+<p>AI 应用不等于聊天机器人。</p>
+<p>真实 AI 应用至少有三种形态：</p>
+<h3 id="31-copilot-型应用">3.1 Copilot 型应用<a hidden class="anchor" aria-hidden="true" href="#31-copilot-型应用">#</a></h3>
+<p>用户仍是主操作者，AI 做辅助：总结、补全、建议、检索、草稿。</p>
+<p>典型例子：编程助手、写作助手、客服坐席助手、数据分析助手。</p>
+<p>关键是低延迟、可编辑、可撤销、人类确认。</p>
+<h3 id="32-workflow-型应用">3.2 Workflow 型应用<a hidden class="anchor" aria-hidden="true" href="#32-workflow-型应用">#</a></h3>
+<p>业务流程由代码控制，LLM 只负责其中某些节点。</p>
+<p>比如文档审核、简历筛选、票据处理、报告流水线。</p>
+<p>这类应用不一定需要 Agent loop。流程稳定时，用规则和 workflow 控制通常更可靠。</p>
+<h3 id="33-agent-型应用">3.3 Agent 型应用<a hidden class="anchor" aria-hidden="true" href="#33-agent-型应用">#</a></h3>
+<p>用户给出目标，系统自动规划、调用工具、执行多步任务。</p>
+<p>比如自动研究助手、自动代码修复助手、工单处理 Agent。</p>
+<p>这类应用必须有任务状态、工具权限、trace、失败恢复和最终验证。</p>
+<p>做 AI 应用前，先写清楚：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>用户是谁？
+</span></span><span style="display:flex;"><span>用户原来怎么完成任务？
+</span></span><span style="display:flex;"><span>痛点是什么？
+</span></span><span style="display:flex;"><span>AI 介入哪个环节？
+</span></span><span style="display:flex;"><span>AI 输出给谁使用？
+</span></span><span style="display:flex;"><span>失败成本是什么？
+</span></span><span style="display:flex;"><span>哪些操作必须由用户确认？
+</span></span><span style="display:flex;"><span>用户如何纠错和反馈？
+</span></span></code></pre></div><p>不要默认把所有需求都塞进聊天框。聊天框只是入口，不是产品结构。</p>
+<hr>
+<h2 id="5-第四阶段llm-gateway把模型调用变成工程模块">5. 第四阶段：LLM Gateway，把模型调用变成工程模块<a hidden class="anchor" aria-hidden="true" href="#5-第四阶段llm-gateway把模型调用变成工程模块">#</a></h2>
+<p>很多项目最初都会这样写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>业务代码 -&gt; 直接调用某个模型 SDK
+</span></span></code></pre></div><p>这在 Demo 里没问题，但很快会失控。你会遇到不同 provider、不同协议、不同 streaming 格式、不同 tool calling 格式、不同错误码、不同 token 计费方式。</p>
+<p>所以要尽早建立 LLM Gateway：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Application
+</span></span><span style="display:flex;"><span>  -&gt; LLM Gateway
+</span></span><span style="display:flex;"><span>      -&gt; Provider Adapter A
+</span></span><span style="display:flex;"><span>      -&gt; Provider Adapter B
+</span></span><span style="display:flex;"><span>      -&gt; Provider Adapter C
+</span></span></code></pre></div><p>一个合格的 LLM Gateway 至少要处理：</p>
+<ul>
+<li>多 provider 接入。</li>
+<li>chat completions / responses 等协议差异。</li>
+<li>非流式和流式输出。</li>
+<li>JSON schema / structured output。</li>
+<li>tool call 格式归一化。</li>
+<li>prompt versioning。</li>
+<li>token / cost / latency 记录。</li>
+<li>timeout / retry / fallback。</li>
+<li>raw response 保存。</li>
+</ul>
+<p>推荐抽象：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>LLMRequest
+</span></span><span style="display:flex;"><span>- model
+</span></span><span style="display:flex;"><span>- messages / input
+</span></span><span style="display:flex;"><span>- system instruction
+</span></span><span style="display:flex;"><span>- tools
+</span></span><span style="display:flex;"><span>- response_format
+</span></span><span style="display:flex;"><span>- temperature
+</span></span><span style="display:flex;"><span>- max_tokens
+</span></span><span style="display:flex;"><span>- stream
+</span></span><span style="display:flex;"><span>- metadata
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>LLMResponse
+</span></span><span style="display:flex;"><span>- text
+</span></span><span style="display:flex;"><span>- structured_output
+</span></span><span style="display:flex;"><span>- tool_calls
+</span></span><span style="display:flex;"><span>- usage
+</span></span><span style="display:flex;"><span>- latency
+</span></span><span style="display:flex;"><span>- provider
+</span></span><span style="display:flex;"><span>- raw_response
+</span></span></code></pre></div><p>结构化输出尤其重要。Agent 系统里大量决策都不是自由文本，而是结构化数据：任务计划、工具参数、路由决策、错误分类、评估结果。</p>
+<p>当 JSON 解析失败时，不应该系统崩溃，而应该进入 repair loop：把 validation error、原始输出和目标 schema 一起反馈给模型，最多修复 1-2 次，仍失败就返回结构化错误。</p>
+<hr>
+<h2 id="6-第五阶段rag-与-context-engineering">6. 第五阶段：RAG 与 Context Engineering<a hidden class="anchor" aria-hidden="true" href="#6-第五阶段rag-与-context-engineering">#</a></h2>
+<p>Agent 不能只依赖模型参数记忆。真实系统必须能使用外部知识：文档、代码、项目规范、API 手册、历史记录、用户偏好。</p>
+<p>RAG 的重点不是“把文档塞进向量库”，而是构建一条可诊断的知识链路：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Document parsing
+</span></span><span style="display:flex;"><span>  -&gt; Chunking
+</span></span><span style="display:flex;"><span>  -&gt; Embedding / Indexing
+</span></span><span style="display:flex;"><span>  -&gt; Retrieval
+</span></span><span style="display:flex;"><span>  -&gt; Reranking
+</span></span><span style="display:flex;"><span>  -&gt; Context assembly
+</span></span><span style="display:flex;"><span>  -&gt; Answer generation
+</span></span><span style="display:flex;"><span>  -&gt; Citation verification
+</span></span></code></pre></div><p>RAG 失败时，要能分类：</p>
+<ul>
+<li>ingestion failure：文档没导入或解析错。</li>
+<li>chunking failure：答案被切断。</li>
+<li>retrieval failure：正确 chunk 没召回。</li>
+<li>ranking failure：召回了但排太低。</li>
+<li>context assembly failure：上下文噪声太多。</li>
+<li>generation failure：上下文正确但模型答错。</li>
+<li>citation failure：引用不支持结论。</li>
+</ul>
+<p>不同错误对应不同修复方式。不能一遇到 RAG 不准就盲目换 embedding 模型。</p>
+<p>一个成熟的检索流程通常是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>query rewrite
+</span></span><span style="display:flex;"><span>-&gt; vector search top 30
+</span></span><span style="display:flex;"><span>-&gt; keyword search top 30
+</span></span><span style="display:flex;"><span>-&gt; metadata filter
+</span></span><span style="display:flex;"><span>-&gt; merge and dedupe
+</span></span><span style="display:flex;"><span>-&gt; rerank top 10
+</span></span><span style="display:flex;"><span>-&gt; context compression top 5
+</span></span><span style="display:flex;"><span>-&gt; answer with citations
+</span></span></code></pre></div><p>尤其在代码库、API 文档、错误日志场景里，关键词检索很重要。函数名、错误码、配置项、类名往往不是向量检索最擅长的内容。</p>
+<p>Context Engineering 的目标是：在有限上下文窗口里放入最有用、最可信、最相关的信息。</p>
+<p>优先级大致是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>当前用户目标
+</span></span><span style="display:flex;"><span>-&gt; 安全和权限规则
+</span></span><span style="display:flex;"><span>-&gt; 当前任务状态
+</span></span><span style="display:flex;"><span>-&gt; 输出 schema
+</span></span><span style="display:flex;"><span>-&gt; 相关工具说明
+</span></span><span style="display:flex;"><span>-&gt; 检索证据
+</span></span><span style="display:flex;"><span>-&gt; 长期记忆
+</span></span><span style="display:flex;"><span>-&gt; 最近对话摘要
+</span></span><span style="display:flex;"><span>-&gt; 历史相似任务经验
+</span></span></code></pre></div><p>低优先级内容不能挤掉高优先级内容。上下文不是越多越好，而是要被选择、压缩、排序和验证。</p>
+<hr>
+<h2 id="7-第六阶段memory不要把记忆做成垃圾桶">7. 第六阶段：Memory，不要把记忆做成垃圾桶<a hidden class="anchor" aria-hidden="true" href="#7-第六阶段memory不要把记忆做成垃圾桶">#</a></h2>
+<p>Agent 的 memory 经常被误解为“把所有历史对话总结一下”。这很危险。</p>
+<p>记忆至少要分层：</p>
+<h3 id="61-working-memory">6.1 Working Memory<a hidden class="anchor" aria-hidden="true" href="#61-working-memory">#</a></h3>
+<p>一次任务内的临时状态：当前目标、计划、中间观察、工具结果、未解决问题。</p>
+<p>它属于当前 run，不默认进入长期记忆。</p>
+<h3 id="62-episodic-memory">6.2 Episodic Memory<a hidden class="anchor" aria-hidden="true" href="#62-episodic-memory">#</a></h3>
+<p>历史任务经验：某类任务怎么做、哪些工具组合有效、失败案例。</p>
+<p>适合相似任务召回。</p>
+<h3 id="63-semantic-memory">6.3 Semantic Memory<a hidden class="anchor" aria-hidden="true" href="#63-semantic-memory">#</a></h3>
+<p>稳定事实：用户偏好、项目路径、API 约定、团队规范、环境事实。</p>
+<p>这类可以长期保存，但要有来源、scope、confidence、更新时间。</p>
+<h3 id="64-procedural-memory">6.4 Procedural Memory<a hidden class="anchor" aria-hidden="true" href="#64-procedural-memory">#</a></h3>
+<p>可复用流程：如何 debug、如何发布、如何 code review、如何跑 eval。</p>
+<p>这类更适合沉淀为 skill、playbook、workflow，而不是普通记忆。</p>
+<p>长期记忆写入前，应该经过：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>candidate extraction
+</span></span><span style="display:flex;"><span>-&gt; classification
+</span></span><span style="display:flex;"><span>-&gt; stability check
+</span></span><span style="display:flex;"><span>-&gt; conflict check
+</span></span><span style="display:flex;"><span>-&gt; sensitivity check
+</span></span><span style="display:flex;"><span>-&gt; deduplication
+</span></span><span style="display:flex;"><span>-&gt; write / update / reject
+</span></span></code></pre></div><p>不要写入：临时任务进度、PR 编号、今天修了什么、临时 token、未验证的模型猜测。</p>
+<p>适合写入：长期偏好、项目稳定路径、API 约定、环境事实、稳定工作流。</p>
+<p>记忆系统的关键不是“记得多”，而是“记得准、记得有边界、需要时能召回、不需要时不污染上下文”。</p>
+<hr>
+<h2 id="8-第七阶段tool-calling-与-tool-runtime">8. 第七阶段：Tool Calling 与 Tool Runtime<a hidden class="anchor" aria-hidden="true" href="#8-第七阶段tool-calling-与-tool-runtime">#</a></h2>
+<p>工具调用是 Agent 和普通聊天机器人的分界线。Agent 不只是回答，它会读文件、查网页、调用 API、运行命令、修改状态。</p>
+<p>这也是风险最大的地方。</p>
+<p>不要把函数直接暴露给模型。你需要 Tool Runtime：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Agent
+</span></span><span style="display:flex;"><span>  -&gt; Tool Registry
+</span></span><span style="display:flex;"><span>  -&gt; Validator
+</span></span><span style="display:flex;"><span>  -&gt; Permission Policy
+</span></span><span style="display:flex;"><span>  -&gt; Executor
+</span></span><span style="display:flex;"><span>  -&gt; Tool Result Normalizer
+</span></span><span style="display:flex;"><span>  -&gt; ToolRun Log
+</span></span></code></pre></div><p>每个工具都应该有：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Tool
+</span></span><span style="display:flex;"><span>- name
+</span></span><span style="display:flex;"><span>- description
+</span></span><span style="display:flex;"><span>- input_schema
+</span></span><span style="display:flex;"><span>- output_schema
+</span></span><span style="display:flex;"><span>- risk_level
+</span></span><span style="display:flex;"><span>- permissions_required
+</span></span><span style="display:flex;"><span>- timeout
+</span></span><span style="display:flex;"><span>- retry_policy
+</span></span><span style="display:flex;"><span>- examples
+</span></span></code></pre></div><p>工具按风险分层：</p>
+<table>
+	<thead>
+			<tr>
+					<th>等级</th>
+					<th>示例</th>
+					<th>策略</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>low</td>
+					<td>读取公开网页、读取安全目录</td>
+					<td>自动允许</td>
+			</tr>
+			<tr>
+					<td>medium</td>
+					<td>写临时文件、运行测试</td>
+					<td>可自动但记录日志</td>
+			</tr>
+			<tr>
+					<td>high</td>
+					<td>修改项目文件、安装依赖、调用外部 API</td>
+					<td>需要策略允许或确认</td>
+			</tr>
+			<tr>
+					<td>critical</td>
+					<td>删除数据、发消息、生产部署、支付</td>
+					<td>必须显式确认</td>
+			</tr>
+	</tbody>
+</table>
+<p>工具结果也不要只返回字符串，建议结构化：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;success|error&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;summary&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;data&#34;</span>: {},
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;stdout&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;stderr&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;error_type&#34;</span>: <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;truncated&#34;</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;artifacts&#34;</span>: []
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>错误要归一化：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>VALIDATION_ERROR
+</span></span><span style="display:flex;"><span>PERMISSION_DENIED
+</span></span><span style="display:flex;"><span>TIMEOUT
+</span></span><span style="display:flex;"><span>NOT_FOUND
+</span></span><span style="display:flex;"><span>RATE_LIMITED
+</span></span><span style="display:flex;"><span>TRANSIENT_ERROR
+</span></span><span style="display:flex;"><span>FATAL_ERROR
+</span></span></code></pre></div><p>模型看到错误类型后，才能决定是修参数、换工具、重试、请求用户确认，还是停止。</p>
+<hr>
+<h2 id="9-第八阶段mcp把工具生态标准化">9. 第八阶段：MCP，把工具生态标准化<a hidden class="anchor" aria-hidden="true" href="#9-第八阶段mcp把工具生态标准化">#</a></h2>
+<p>MCP（Model Context Protocol）解决的是工具生态标准化问题。</p>
+<p>传统工具调用的问题是：每个应用都要自己接工具，schema、认证、错误格式、连接生命周期都不统一。MCP 把外部能力标准化为 server、tools、resources、prompts 和 transports。</p>
+<p>基本结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Agent Runtime as MCP Client
+</span></span><span style="display:flex;"><span>  -&gt; connect MCP Server
+</span></span><span style="display:flex;"><span>  -&gt; list tools/resources/prompts
+</span></span><span style="display:flex;"><span>  -&gt; register tools into Tool Registry
+</span></span><span style="display:flex;"><span>  -&gt; call tool
+</span></span><span style="display:flex;"><span>  -&gt; normalize result
+</span></span><span style="display:flex;"><span>  -&gt; audit log
+</span></span></code></pre></div><p>关键点：MCP 不替代 Tool Runtime。MCP 工具仍然必须经过本地权限、审计、超时、输出截断和错误归一化。</p>
+<p>推荐架构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Agent
+</span></span><span style="display:flex;"><span>  -&gt; Tool Registry
+</span></span><span style="display:flex;"><span>  -&gt; Permission Policy
+</span></span><span style="display:flex;"><span>  -&gt; Tool Executor
+</span></span><span style="display:flex;"><span>      -&gt; Native Tool
+</span></span><span style="display:flex;"><span>      -&gt; MCP Tool Adapter
+</span></span><span style="display:flex;"><span>          -&gt; MCP Server
+</span></span></code></pre></div><p>如果 MCP server 很多，还可以加 MCP Gateway：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Agent Runtime
+</span></span><span style="display:flex;"><span>  -&gt; MCP Gateway
+</span></span><span style="display:flex;"><span>      -&gt; server registry
+</span></span><span style="display:flex;"><span>      -&gt; auth / policy
+</span></span><span style="display:flex;"><span>      -&gt; tool discovery cache
+</span></span><span style="display:flex;"><span>      -&gt; call routing
+</span></span><span style="display:flex;"><span>      -&gt; audit log
+</span></span><span style="display:flex;"><span>      -&gt; rate limit
+</span></span><span style="display:flex;"><span>      -&gt; MCP Servers
+</span></span></code></pre></div><p>MCP 学习重点：</p>
+<ul>
+<li>server / client / tool / resource / prompt / transport。</li>
+<li>stdio 与 HTTP transport。</li>
+<li>工具发现和命名空间。</li>
+<li>凭据隔离，不把全部环境变量传给 server。</li>
+<li>server healthcheck。</li>
+<li>schema diff。</li>
+<li>sampling 安全。</li>
+<li>不可信 server 的权限限制。</li>
+</ul>
+<p>一个很好的练习是实现 notes MCP server：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>tools:
+</span></span><span style="display:flex;"><span>- search_notes(query)
+</span></span><span style="display:flex;"><span>- read_note(id)
+</span></span><span style="display:flex;"><span>- create_note(title, content)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>resources:
+</span></span><span style="display:flex;"><span>- notes://index
+</span></span><span style="display:flex;"><span>- notes://note/{id}
+</span></span></code></pre></div><p>然后把它接入自己的 Tool Registry。</p>
+<hr>
+<h2 id="10-第九阶段harness-工程把能力装进运行框架">10. 第九阶段：Harness 工程，把能力装进运行框架<a hidden class="anchor" aria-hidden="true" href="#10-第九阶段harness-工程把能力装进运行框架">#</a></h2>
+<p>前面的 LLM Gateway、RAG、Memory、Tool Runtime、MCP 都是能力模块。Harness 工程要做的事，是把这些能力装进一个统一运行框架，让 Agent 不只是“能调用”，而是“能被调度、能被追踪、能被恢复、能被评估”。</p>
+<p>可以把 Harness 理解为 Agent 的执行容器。它负责在每一次任务中维护：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Task
+</span></span><span style="display:flex;"><span>-&gt; Run
+</span></span><span style="display:flex;"><span>-&gt; Plan
+</span></span><span style="display:flex;"><span>-&gt; Step
+</span></span><span style="display:flex;"><span>-&gt; LLMCall
+</span></span><span style="display:flex;"><span>-&gt; ToolRun
+</span></span><span style="display:flex;"><span>-&gt; Observation
+</span></span><span style="display:flex;"><span>-&gt; Artifact
+</span></span><span style="display:flex;"><span>-&gt; Verification
+</span></span><span style="display:flex;"><span>-&gt; Final Result
+</span></span></code></pre></div><p>一个最小 Harness 应该提供这些接口：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Harness.start(task)
+</span></span><span style="display:flex;"><span>Harness.step(run_id)
+</span></span><span style="display:flex;"><span>Harness.pause(run_id)
+</span></span><span style="display:flex;"><span>Harness.resume(run_id)
+</span></span><span style="display:flex;"><span>Harness.cancel(run_id)
+</span></span><span style="display:flex;"><span>Harness.get_trace(run_id)
+</span></span><span style="display:flex;"><span>Harness.get_artifacts(run_id)
+</span></span><span style="display:flex;"><span>Harness.run_eval(eval_case_id)
+</span></span></code></pre></div><p>它的核心数据结构通常包括：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Run
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- user_goal
+</span></span><span style="display:flex;"><span>- status
+</span></span><span style="display:flex;"><span>- plan
+</span></span><span style="display:flex;"><span>- current_step
+</span></span><span style="display:flex;"><span>- budget
+</span></span><span style="display:flex;"><span>- created_at
+</span></span><span style="display:flex;"><span>- updated_at
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Step
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- run_id
+</span></span><span style="display:flex;"><span>- type
+</span></span><span style="display:flex;"><span>- input
+</span></span><span style="display:flex;"><span>- output
+</span></span><span style="display:flex;"><span>- status
+</span></span><span style="display:flex;"><span>- evidence
+</span></span><span style="display:flex;"><span>- error_type
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ToolRun
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- step_id
+</span></span><span style="display:flex;"><span>- tool_name
+</span></span><span style="display:flex;"><span>- input
+</span></span><span style="display:flex;"><span>- output
+</span></span><span style="display:flex;"><span>- permission_decision
+</span></span><span style="display:flex;"><span>- latency_ms
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Artifact
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- run_id
+</span></span><span style="display:flex;"><span>- type
+</span></span><span style="display:flex;"><span>- path_or_uri
+</span></span><span style="display:flex;"><span>- summary
+</span></span><span style="display:flex;"><span>- checksum
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>TraceEvent
+</span></span><span style="display:flex;"><span>- id
+</span></span><span style="display:flex;"><span>- run_id
+</span></span><span style="display:flex;"><span>- event_type
+</span></span><span style="display:flex;"><span>- payload
+</span></span><span style="display:flex;"><span>- timestamp
+</span></span></code></pre></div><p>为什么需要 Harness？因为单独的 LLM API 不知道任务是否完成，单独的 tool calling 不知道权限边界，单独的 RAG 不知道引用是否被最终答案正确使用，单独的 memory 不知道什么该长期保存。Harness 把这些能力统一到一个任务生命周期里。</p>
+<p>学习 Harness 工程时，建议先实现一个极小版本：</p>
+<ol>
+<li>接收用户任务，创建 Run。</li>
+<li>调用 Planner 生成结构化计划。</li>
+<li>逐 Step 执行。</li>
+<li>每次 LLM call 和 ToolRun 都写 trace。</li>
+<li>每个 Step 写 evidence。</li>
+<li>结束前运行 Verifier。</li>
+<li>产物进入 Artifact Store。</li>
+<li>Eval Runner 可以复用同一套执行入口。</li>
+</ol>
+<p>这个阶段完成后，你的 Agent 才开始从“脚本”变成“系统”。</p>
+<hr>
+<h2 id="11-第十阶段harness-核心agent-loop不要只写-while-循环">11. 第十阶段：Harness 核心：Agent Loop，不要只写 while 循环<a hidden class="anchor" aria-hidden="true" href="#11-第十阶段harness-核心agent-loop不要只写-while-循环">#</a></h2>
+<p>最简 Agent loop 是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Observe -&gt; Think / Plan -&gt; Act -&gt; Record -&gt; Verify -&gt; Continue or Stop
+</span></span></code></pre></div><p>工程化版本应该是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>load state
+</span></span><span style="display:flex;"><span>-&gt; build context
+</span></span><span style="display:flex;"><span>-&gt; decide next action
+</span></span><span style="display:flex;"><span>-&gt; validate action
+</span></span><span style="display:flex;"><span>-&gt; execute tool or ask user
+</span></span><span style="display:flex;"><span>-&gt; persist observation
+</span></span><span style="display:flex;"><span>-&gt; update plan/state
+</span></span><span style="display:flex;"><span>-&gt; check stop condition
+</span></span><span style="display:flex;"><span>-&gt; verify final output
+</span></span></code></pre></div><p>Agent loop 有多种形态。</p>
+<h3 id="react-loop">ReAct Loop<a hidden class="anchor" aria-hidden="true" href="#react-loop">#</a></h3>
+<p>适合探索性任务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Thought -&gt; Action -&gt; Observation -&gt; Thought -&gt; ...
+</span></span></code></pre></div><p>优点是简单通用；缺点是容易发散、成本不可控、难评估。</p>
+<h3 id="plan-and-execute-loop">Plan-and-Execute Loop<a hidden class="anchor" aria-hidden="true" href="#plan-and-execute-loop">#</a></h3>
+<p>适合开发、研究、文档处理：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Plan -&gt; Execute Step 1 -&gt; Update -&gt; Execute Step 2 -&gt; Verify
+</span></span></code></pre></div><h3 id="state-machine-loop">State Machine Loop<a hidden class="anchor" aria-hidden="true" href="#state-machine-loop">#</a></h3>
+<p>适合生产系统：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>created -&gt; planning -&gt; executing -&gt; waiting_for_user -&gt; verifying -&gt; completed
+</span></span><span style="display:flex;"><span>                                      -&gt; failed
+</span></span><span style="display:flex;"><span>                                      -&gt; cancelled
+</span></span></code></pre></div><h3 id="workflow--agent-hybrid">Workflow + Agent Hybrid<a hidden class="anchor" aria-hidden="true" href="#workflow--agent-hybrid">#</a></h3>
+<p>适合企业应用：确定性流程由代码控制，困难节点交给 LLM。</p>
+<p>可靠 Agent 必须有 stop conditions：</p>
+<ul>
+<li>success criteria satisfied</li>
+<li>max steps reached</li>
+<li>max tool calls reached</li>
+<li>max cost reached</li>
+<li>max runtime reached</li>
+<li>repeated action detected</li>
+<li>repeated failure detected</li>
+<li>permission blocked</li>
+<li>user confirmation required</li>
+<li>no progress detected</li>
+</ul>
+<p>没有 stop condition 的 Agent，只是一个有预算风险的循环。</p>
+<hr>
+<h2 id="12-第十一阶段planningreflection-与-verification">12. 第十一阶段：Planning、Reflection 与 Verification<a hidden class="anchor" aria-hidden="true" href="#12-第十一阶段planningreflection-与-verification">#</a></h2>
+<p>规划不是一次性输出漂亮清单，而是系统可执行的结构化计划。</p>
+<p>推荐 Plan Schema：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;goal&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;assumptions&#34;</span>: [<span style="color:#e6db74">&#34;...&#34;</span>],
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;steps&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;s1&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;research|code|test|review|deploy|ask_user&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;depends_on&#34;</span>: [],
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;risk&#34;</span>: <span style="color:#e6db74">&#34;low|medium|high|critical&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;can_delegate&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;expected_artifact&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;verification&#34;</span>: <span style="color:#e6db74">&#34;...&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;stop_conditions&#34;</span>: [<span style="color:#e6db74">&#34;...&#34;</span>],
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;success_criteria&#34;</span>: [<span style="color:#e6db74">&#34;...&#34;</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>规划模式包括：</p>
+<ul>
+<li>Checklist Planner：适合发布、检查、报告生成。</li>
+<li>DAG Planner：适合有依赖和并行的复杂任务。</li>
+<li>Hypothesis Planner：适合 debugging 和研究。</li>
+<li>Risk-first Planner：适合有副作用任务。</li>
+</ul>
+<p>Reflection 也不能只是模型自言自语。它应该是结构化检查：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>这一步是否产生预期观察？
+</span></span><span style="display:flex;"><span>是否出现新约束？
+</span></span><span style="display:flex;"><span>是否需要重试、换工具或重规划？
+</span></span><span style="display:flex;"><span>是否消耗超过预算？
+</span></span></code></pre></div><p>Verification 尽量使用确定性手段：</p>
+<ul>
+<li>tests pass</li>
+<li>file exists</li>
+<li>schema validates</li>
+<li>HTTP status 200</li>
+<li>diff matches intent</li>
+<li>eval threshold reached</li>
+</ul>
+<p>LLM-as-judge 可以用于语义质量判断，但不能替代高风险决策和确定性验证。</p>
+<hr>
+<h2 id="13-第十二阶段subagent-与-multi-agent">13. 第十二阶段：Subagent 与 Multi-Agent<a hidden class="anchor" aria-hidden="true" href="#13-第十二阶段subagent-与-multi-agent">#</a></h2>
+<p>多 Agent 的价值不是角色扮演，而是任务隔离、并行探索、互相审查和结构化合并。</p>
+<p>适合多 Agent 的任务：</p>
+<ul>
+<li>可自然拆成多个独立子任务。</li>
+<li>需要并行搜索、并行编码、并行审查。</li>
+<li>需要不同视角：实现者、测试者、审查者、研究者。</li>
+<li>任务长，上下文多，单 Agent 容易遗忘。</li>
+</ul>
+<p>不适合多 Agent 的任务：简单问答、强顺序依赖任务、目标不清任务、高风险副作用动作。</p>
+<p>标准多 Agent 结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Orchestrator Agent
+</span></span><span style="display:flex;"><span>  -&gt; Task Decomposer
+</span></span><span style="display:flex;"><span>  -&gt; Worker Agents
+</span></span><span style="display:flex;"><span>  -&gt; Reviewer Agents
+</span></span><span style="display:flex;"><span>  -&gt; Merger / Synthesizer
+</span></span><span style="display:flex;"><span>  -&gt; Final Verifier
+</span></span></code></pre></div><p>Subagent handoff 必须明确：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>- goal
+</span></span><span style="display:flex;"><span>- background context
+</span></span><span style="display:flex;"><span>- exact files or sources
+</span></span><span style="display:flex;"><span>- constraints
+</span></span><span style="display:flex;"><span>- allowed operations
+</span></span><span style="display:flex;"><span>- forbidden operations
+</span></span><span style="display:flex;"><span>- expected output format
+</span></span><span style="display:flex;"><span>- verification required
+</span></span><span style="display:flex;"><span>- deadline / step budget
+</span></span></code></pre></div><p>Worker 返回也必须结构化：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>- what was done
+</span></span><span style="display:flex;"><span>- evidence or paths
+</span></span><span style="display:flex;"><span>- verification result
+</span></span><span style="display:flex;"><span>- unresolved issues
+</span></span><span style="display:flex;"><span>- confidence
+</span></span><span style="display:flex;"><span>- recommended next action
+</span></span></code></pre></div><p>多 Agent 输出冲突时，不能强行糊成一个结论。合并规则应该优先真实工具验证结果、源码证据、可复现命令输出，并显式列出冲突点。</p>
+<hr>
+<h2 id="14-第十三阶段生产级-harness-runtime">14. 第十三阶段：生产级 Harness Runtime<a hidden class="anchor" aria-hidden="true" href="#14-第十三阶段生产级-harness-runtime">#</a></h2>
+<p>一个生产级 Agent Runtime 至少包含：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>task intake
+</span></span><span style="display:flex;"><span>run/session/thread model
+</span></span><span style="display:flex;"><span>state machine
+</span></span><span style="display:flex;"><span>context builder
+</span></span><span style="display:flex;"><span>llm gateway
+</span></span><span style="display:flex;"><span>tool registry
+</span></span><span style="display:flex;"><span>permission policy
+</span></span><span style="display:flex;"><span>mcp manager
+</span></span><span style="display:flex;"><span>memory manager
+</span></span><span style="display:flex;"><span>planner
+</span></span><span style="display:flex;"><span>executor loop
+</span></span><span style="display:flex;"><span>subagent scheduler
+</span></span><span style="display:flex;"><span>event bus / queue
+</span></span><span style="display:flex;"><span>artifact store
+</span></span><span style="display:flex;"><span>trace store
+</span></span><span style="display:flex;"><span>eval harness
+</span></span><span style="display:flex;"><span>observability
+</span></span><span style="display:flex;"><span>deployment and ops
+</span></span></code></pre></div><p>核心数据模型：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Session：用户会话或工作区会话
+</span></span><span style="display:flex;"><span>Thread：对话或任务上下文线索
+</span></span><span style="display:flex;"><span>Run：一次 Agent 执行
+</span></span><span style="display:flex;"><span>Step：Run 中的一个决策或动作
+</span></span><span style="display:flex;"><span>ToolRun：一次工具调用
+</span></span><span style="display:flex;"><span>Artifact：文件、报告、代码补丁、图表等产物
+</span></span><span style="display:flex;"><span>Event：运行过程中的事件流
+</span></span></code></pre></div><p>长任务不能阻塞 API 请求。典型架构是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>API receives task -&gt; enqueue run -&gt; worker executes -&gt; event stream updates UI
+</span></span></code></pre></div><p>需要支持：retry、cancel、pause/resume、worker heartbeat、dead letter queue、priority、concurrency limit、workspace quota。</p>
+<p>Artifact Store 也很重要。Agent 的产物不应该只存在聊天记录里，而应该保存为：报告、代码 diff、CSV/JSON、截图、日志、eval report。</p>
+<hr>
+<h2 id="15-第十四阶段评估观测安全">15. 第十四阶段：评估、观测、安全<a hidden class="anchor" aria-hidden="true" href="#15-第十四阶段评估观测安全">#</a></h2>
+<p>生产级 Agent 不能靠“看起来不错”上线。</p>
+<p>Agent 评估要覆盖最终答案和中间过程：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>final answer
+</span></span><span style="display:flex;"><span>plan
+</span></span><span style="display:flex;"><span>tool trajectory
+</span></span><span style="display:flex;"><span>intermediate observations
+</span></span><span style="display:flex;"><span>artifacts
+</span></span><span style="display:flex;"><span>cost
+</span></span><span style="display:flex;"><span>latency
+</span></span><span style="display:flex;"><span>safety decisions
+</span></span></code></pre></div><p>Eval 分层：</p>
+<ul>
+<li>Unit Eval：评估单个 prompt、tool 参数、memory classifier、retriever。</li>
+<li>Integration Eval：评估 RAG answer、tool error recovery、MCP bridge、planning + execution。</li>
+<li>End-to-End Eval：评估完整 coding、research、document、data analysis 任务。</li>
+<li>Safety Eval：评估 prompt injection、unsafe shell、secret exfiltration、unauthorized action。</li>
+</ul>
+<p>Trace 是 Agent 的黑匣子记录。它应该能串起：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>user task -&gt; plan -&gt; llm calls -&gt; tool calls -&gt; artifacts -&gt; final verification
+</span></span></code></pre></div><p>Observability 至少包含：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>run_success_rate
+</span></span><span style="display:flex;"><span>avg_steps_per_run
+</span></span><span style="display:flex;"><span>tool_failure_rate
+</span></span><span style="display:flex;"><span>model_latency
+</span></span><span style="display:flex;"><span>token_usage
+</span></span><span style="display:flex;"><span>cost_per_task_type
+</span></span><span style="display:flex;"><span>eval_pass_rate
+</span></span><span style="display:flex;"><span>human_intervention_rate
+</span></span><span style="display:flex;"><span>permission_denial_rate
+</span></span></code></pre></div><p>安全重点：</p>
+<ul>
+<li>外部网页、PDF、GitHub issue、tool output 都是不可信输入。</li>
+<li>不要把外部内容里的指令提升为系统规则。</li>
+<li>secrets 不进 prompt，不进日志，不进错误消息。</li>
+<li>高风险工具必须有权限和确认。</li>
+<li>sandbox 执行代码和 shell。</li>
+<li>不同 workspace 的 RAG 和 memory 不能串扰。</li>
+</ul>
+<p>发布门禁应该包括：unit tests、core eval subset、safety smoke eval、golden trace diff、成本和延迟阈值。</p>
+<hr>
+<h2 id="16-第十五阶段部署扩展与成本控制">16. 第十五阶段：部署、扩展与成本控制<a hidden class="anchor" aria-hidden="true" href="#16-第十五阶段部署扩展与成本控制">#</a></h2>
+<p>Agent 系统比普通 Web 服务复杂，因为它有长任务、模型调用、工具执行、文件产物、权限和外部 API。</p>
+<p>部署成熟度可以分四层：</p>
+<h3 id="stage-0本地脚本">Stage 0：本地脚本<a hidden class="anchor" aria-hidden="true" href="#stage-0本地脚本">#</a></h3>
+<p>单进程、SQLite / JSONL、本地文件。适合学习和个人工具。</p>
+<h3 id="stage-1本地服务">Stage 1：本地服务<a hidden class="anchor" aria-hidden="true" href="#stage-1本地服务">#</a></h3>
+<p>API server、本地 worker、SQLite、local artifact directory、简单 UI / CLI。适合个人工作台。</p>
+<h3 id="stage-2小规模服务">Stage 2：小规模服务<a hidden class="anchor" aria-hidden="true" href="#stage-2小规模服务">#</a></h3>
+<p>Postgres、Redis queue、object storage、vector database、worker pool、Docker Compose。适合团队使用。</p>
+<h3 id="stage-3生产平台">Stage 3：生产平台<a hidden class="anchor" aria-hidden="true" href="#stage-3生产平台">#</a></h3>
+<p>容器平台、worker autoscaling、sandbox pool、secrets manager、集中式 logs/metrics/traces、CI eval gate、backup/migration。</p>
+<p>成本控制要从一开始考虑：</p>
+<ul>
+<li>每个 workspace 设置预算。</li>
+<li>每个 run 设置 max_cost。</li>
+<li>小任务用便宜模型。</li>
+<li>复杂规划和最终综合用强模型。</li>
+<li>长上下文先压缩。</li>
+<li>缓存 deterministic 子结果。</li>
+<li>eval 分层运行，不每次 full suite。</li>
+</ul>
+<p>模型路由可以是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>classification -&gt; cheap model
+</span></span><span style="display:flex;"><span>structured extraction -&gt; medium model
+</span></span><span style="display:flex;"><span>complex planning -&gt; strong model
+</span></span><span style="display:flex;"><span>final synthesis -&gt; strong model
+</span></span><span style="display:flex;"><span>judge eval -&gt; separate judge model
+</span></span></code></pre></div><p>不要所有任务都用最贵模型，也不要为了省钱牺牲关键步骤的可靠性。</p>
+<hr>
+<h2 id="17-第十六阶段源码学习路线">17. 第十六阶段：源码学习路线<a hidden class="anchor" aria-hidden="true" href="#17-第十六阶段源码学习路线">#</a></h2>
+<p>AI Agent 框架变化很快。长期能力不是记住框架名，而是能从源码中还原设计。</p>
+<p>源码阅读不要从 README 顺着读，而要带问题：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>用户任务从哪里进入？
+</span></span><span style="display:flex;"><span>模型调用在哪里？
+</span></span><span style="display:flex;"><span>工具 schema 在哪里定义？
+</span></span><span style="display:flex;"><span>状态如何保存？
+</span></span><span style="display:flex;"><span>loop 如何停止？
+</span></span><span style="display:flex;"><span>trace 如何记录？
+</span></span><span style="display:flex;"><span>eval 如何运行？
+</span></span><span style="display:flex;"><span>权限如何控制？
+</span></span></code></pre></div><p>建议按层研究：</p>
+<ol>
+<li>LLM 应用框架：LangChain、LlamaIndex、Haystack、DSPy。</li>
+<li>Agent Graph / Workflow：LangGraph、Semantic Kernel planners。</li>
+<li>多 Agent 框架：AutoGen、CrewAI、MetaGPT 类项目。</li>
+<li>编码 Agent：Aider、OpenHands、Continue、Cline / Roo Code、SWE-agent。</li>
+<li>MCP 生态：MCP SDK、filesystem server、GitHub server、database server、browser server。</li>
+<li>评测框架：SWE-bench harness、promptfoo、RAGAS、DeepEval。</li>
+</ol>
+<p>每读一个项目，至少输出：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>01-positioning.md
+</span></span><span style="display:flex;"><span>02-architecture.md
+</span></span><span style="display:flex;"><span>03-execution-flow.md
+</span></span><span style="display:flex;"><span>04-data-model.md
+</span></span><span style="display:flex;"><span>05-tooling-and-mcp.md
+</span></span><span style="display:flex;"><span>06-memory-context-rag.md
+</span></span><span style="display:flex;"><span>07-agent-loop-planning.md
+</span></span><span style="display:flex;"><span>08-eval-observability.md
+</span></span><span style="display:flex;"><span>09-security-deployment.md
+</span></span><span style="display:flex;"><span>10-design-lessons-and-replica.md
+</span></span></code></pre></div><p>读源码的最终目标是复刻最小设计点，比如 tool registry、state graph、retriever interface、MCP adapter、eval runner、patch applier、trace viewer。</p>
+<p>只看懂不复刻，学习效果会很浅。</p>
+<hr>
+<h2 id="18-90-天实践路线">18. 90 天实践路线<a hidden class="anchor" aria-hidden="true" href="#18-90-天实践路线">#</a></h2>
+<p>如果要把这条路线落地，可以按 30 / 60 / 90 天推进。</p>
+<h3 id="30-天打通最小-agent-系统">30 天：打通最小 Agent 系统<a hidden class="anchor" aria-hidden="true" href="#30-天打通最小-agent-系统">#</a></h3>
+<p>目标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>LLM Gateway
+</span></span><span style="display:flex;"><span>-&gt; Tool Registry
+</span></span><span style="display:flex;"><span>-&gt; Agent Loop
+</span></span><span style="display:flex;"><span>-&gt; Trace
+</span></span><span style="display:flex;"><span>-&gt; Basic RAG
+</span></span><span style="display:flex;"><span>-&gt; Basic Eval
+</span></span></code></pre></div><p>产物：</p>
+<ul>
+<li>一个 CLI Agent。</li>
+<li>一个 LLM Gateway。</li>
+<li>5 个基础工具。</li>
+<li>一个最小 Plan-and-Execute loop。</li>
+<li>20 条 eval case。</li>
+<li>trace JSON。</li>
+</ul>
+<h3 id="60-天可恢复可扩展可集成">60 天：可恢复、可扩展、可集成<a hidden class="anchor" aria-hidden="true" href="#60-天可恢复可扩展可集成">#</a></h3>
+<p>目标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Planning
+</span></span><span style="display:flex;"><span>-&gt; Memory
+</span></span><span style="display:flex;"><span>-&gt; MCP Bridge
+</span></span><span style="display:flex;"><span>-&gt; Subagent
+</span></span><span style="display:flex;"><span>-&gt; Multi-Agent Orchestrator
+</span></span></code></pre></div><p>产物：</p>
+<ul>
+<li>plan schema。</li>
+<li>replanning record。</li>
+<li>memory classifier。</li>
+<li>MCP tool adapter。</li>
+<li>orchestrator / worker / reviewer / synthesizer。</li>
+</ul>
+<h3 id="90-天生产级-runtime-骨架">90 天：生产级 Runtime 骨架<a hidden class="anchor" aria-hidden="true" href="#90-天生产级-runtime-骨架">#</a></h3>
+<p>目标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>API
+</span></span><span style="display:flex;"><span>-&gt; Queue
+</span></span><span style="display:flex;"><span>-&gt; Worker
+</span></span><span style="display:flex;"><span>-&gt; Artifact Store
+</span></span><span style="display:flex;"><span>-&gt; Eval Runner
+</span></span><span style="display:flex;"><span>-&gt; Observability
+</span></span><span style="display:flex;"><span>-&gt; Safety Gate
+</span></span><span style="display:flex;"><span>-&gt; Deployment
+</span></span></code></pre></div><p>产物：</p>
+<ul>
+<li>API + worker 分离。</li>
+<li>Run / Step / ToolRun / Artifact / Event 数据模型。</li>
+<li>100 条 eval case。</li>
+<li>safety eval。</li>
+<li>Docker Compose。</li>
+<li>运维 runbook。</li>
+<li>一个可展示的 Agent Workbench。</li>
+</ul>
+<hr>
+<h2 id="19-最终-capstone生产级-ai-agent-harness-workbench">19. 最终 Capstone：生产级 AI Agent Harness Workbench<a hidden class="anchor" aria-hidden="true" href="#19-最终-capstone生产级-ai-agent-harness-workbench">#</a></h2>
+<p>最终项目不建议做“一个聊天机器人”，而应该做一个 Agent Workbench：Runtime + 应用壳层 + 工具生态 + 评测系统。</p>
+<p>它至少支持四类场景：</p>
+<ol>
+<li>源码理解：读取仓库，分析入口、模块、数据流、扩展点。</li>
+<li>代码修改：定位 bug，修改文件，运行测试，输出 diff 和验证结果。</li>
+<li>资料研究：拆分问题，并行搜索，合成带来源报告。</li>
+<li>知识库问答：基于私有文档回答，不确定时拒绝编造。</li>
+</ol>
+<p>模块结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Workbench
+</span></span><span style="display:flex;"><span>├── App Layer
+</span></span><span style="display:flex;"><span>├── Runtime Layer
+</span></span><span style="display:flex;"><span>├── Context Layer
+</span></span><span style="display:flex;"><span>├── Tool Layer
+</span></span><span style="display:flex;"><span>├── Model Layer
+</span></span><span style="display:flex;"><span>├── Quality Layer
+</span></span><span style="display:flex;"><span>└── Storage Layer
+</span></span></code></pre></div><p>作品集必须包含：</p>
+<ul>
+<li>架构图。</li>
+<li>运行截图或演示视频。</li>
+<li>三个典型 trace。</li>
+<li>eval 报告。</li>
+<li>失败案例分析。</li>
+<li>安全边界说明。</li>
+<li>部署说明。</li>
+<li>下一步路线。</li>
+</ul>
+<p>完成定义不是“功能很多”，而是：能跑、能解释、能评测、能追踪、能恢复、能部署、能说明不能做什么。</p>
+<hr>
+<h2 id="20-常见反模式">20. 常见反模式<a hidden class="anchor" aria-hidden="true" href="#20-常见反模式">#</a></h2>
+<p>最后列几个常见坑。</p>
+<h3 id="反模式-1聊天框吞天下">反模式 1：聊天框吞天下<a hidden class="anchor" aria-hidden="true" href="#反模式-1聊天框吞天下">#</a></h3>
+<p>所有功能都塞进一个 chat prompt。结果是状态不可控、权限不可控、难评测。</p>
+<h3 id="反模式-2无-trace-调-prompt">反模式 2：无 trace 调 prompt<a hidden class="anchor" aria-hidden="true" href="#反模式-2无-trace-调-prompt">#</a></h3>
+<p>效果不好就改 prompt，但没有样例和 trace。结果是越改越玄学。</p>
+<h3 id="反模式-3工具无权限">反模式 3：工具无权限<a hidden class="anchor" aria-hidden="true" href="#反模式-3工具无权限">#</a></h3>
+<p>模型能直接调用 shell、数据库、消息发送。结果是安全事故迟早发生。</p>
+<h3 id="反模式-4rag-无引用">反模式 4：RAG 无引用<a hidden class="anchor" aria-hidden="true" href="#反模式-4rag-无引用">#</a></h3>
+<p>回答看起来对，但无法追溯证据。结果是用户无法信任，错误难排查。</p>
+<h3 id="反模式-5多-agent-角色扮演">反模式 5：多 Agent 角色扮演<a hidden class="anchor" aria-hidden="true" href="#反模式-5多-agent-角色扮演">#</a></h3>
+<p>多个 Agent 互相聊天，但没有独立任务、证据和合并机制。结果是成本增加，质量不一定提高。</p>
+<h3 id="反模式-6没有-eval-的上线">反模式 6：没有 eval 的上线<a hidden class="anchor" aria-hidden="true" href="#反模式-6没有-eval-的上线">#</a></h3>
+<p>靠几次演示判断质量。结果是回归不可见。</p>
+<h3 id="反模式-7把-memory-当垃圾桶">反模式 7：把 memory 当垃圾桶<a hidden class="anchor" aria-hidden="true" href="#反模式-7把-memory-当垃圾桶">#</a></h3>
+<p>所有历史对话都写进长期记忆。结果是上下文污染和隐私风险。</p>
+<h3 id="反模式-8过早框架化">反模式 8：过早框架化<a hidden class="anchor" aria-hidden="true" href="#反模式-8过早框架化">#</a></h3>
+<p>还没理解 run / step / tool，就引入复杂框架。结果是出了问题不知道去哪查。</p>
+<hr>
+<h2 id="结语agent-的核心不是自主而是可控的自主">结语：Agent 的核心不是“自主”，而是“可控的自主”<a hidden class="anchor" aria-hidden="true" href="#结语agent-的核心不是自主而是可控的自主">#</a></h2>
+<p>AI Agent 的吸引力在于它能把 LLM 从回答问题推进到执行任务。但越是能执行，越需要工程约束。</p>
+<p>真正可用的 Agent，不是更长的 prompt，而是一个有状态、有权限、有工具、有记忆、有评估、有观测、有部署、有安全边界的软件系统。</p>
+<p>学习 AI Agent 开发，最好的路线不是追逐框架，而是逐层搭建自己的理解：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>LLM API
+</span></span><span style="display:flex;"><span>-&gt; AI 应用场景
+</span></span><span style="display:flex;"><span>-&gt; LLM Gateway
+</span></span><span style="display:flex;"><span>-&gt; RAG / Memory / Context
+</span></span><span style="display:flex;"><span>-&gt; Tool Runtime / MCP
+</span></span><span style="display:flex;"><span>-&gt; Harness 工程
+</span></span><span style="display:flex;"><span>-&gt; Agent Loop / Planning
+</span></span><span style="display:flex;"><span>-&gt; Subagent / Multi-Agent
+</span></span><span style="display:flex;"><span>-&gt; Production Harness Runtime
+</span></span><span style="display:flex;"><span>-&gt; Eval / Observability / Safety / Deployment
+</span></span><span style="display:flex;"><span>-&gt; Source Study
+</span></span></code></pre></div><p>当你能从零实现一个最小 Runtime，再读懂主流框架为什么这样设计，你才真正进入了 AI Agent 开发的核心区域。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://blog.nuonian.top/tags/ai-agent/">AI Agent</a></li>
+      <li><a href="https://blog.nuonian.top/tags/llm/">LLM</a></li>
+      <li><a href="https://blog.nuonian.top/tags/tool-calling/">Tool Calling</a></li>
+      <li><a href="https://blog.nuonian.top/tags/harness/">Harness</a></li>
+      <li><a href="https://blog.nuonian.top/tags/rag/">RAG</a></li>
+      <li><a href="https://blog.nuonian.top/tags/agent-engineering/">Agent Engineering</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/">
+    <span class="title">« 上一页</span>
+    <span>Ai Agent Development Roadmap</span>
+  </a>
+  <a class="next" href="https://blog.nuonian.top/2026/06/cloudflare-reverse-proxy-emby/">
+    <span class="title">下一页 »</span>
+    <span>利用 Cloudflare 反代 Emby 的完整教程</span>
+  </a>
+</nav>
+
+  </footer>
+
+<div class="waline-container" data-path="/2026/06/ai-agent-harness-development-roadmap/"></div>
+<link href="https://unpkg.com/@waline/client@v3/dist/waline.css" rel="stylesheet" />
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        
+        const walineInit = () => {
+            import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
+                const walineContainers = document.querySelectorAll('.waline-container[data-path]');
+                walineContainers.forEach(container => {
+                    if (!container.__waline__) {
+                        const path = container.getAttribute('data-path');
+                        container.__waline__ = init({
+                            el: container,
+                            serverURL: 'https:\/\/waline.nuonian.top\/',
+                            lang: 'zh-cn',
+                            visitor: '匿名者',
+                            emoji: [
+                        'https:\/\/cdn.jsdelivr.net\/gh\/walinejs\/emojis\/weibo',
+                    ],
+                        requiredMeta: [
+                        'nick',
+                    ],
+                        locale: {
+                            admin: '作者本人',
+                                placeholder: '🍗所以我配有一条评论吗！',
+                        },
+                        path: path,
+                            dark: 'body.dark',
+
+                            
+                            commentSorting: 'hottest',  
+                            wordLimit: 500,             
+                            search: false,              
+                            reaction: false,            
+                            imageUploader: false,       
+                    });
+                    }
+                });
+            }).catch(error => {
+                console.error("Waline 初始化失败：", error);
+            });
+        };
+
+        walineInit();
+    });
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://blog.nuonian.top/">念念的博客</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
