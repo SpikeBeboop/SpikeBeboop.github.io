@@ -27,7 +27,7 @@
 - 技术博客
 
 ## 最新文章
-- [Ai Agent Development Roadmap](https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/)
+- [AI Agent 开发学习路线：从 LLM API 到生产级 Agent 平台](https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/)
    此文章由 hermes 配合 gpt-5.5 模型 生成
 总目标 最终形成四类能力：
 AI 应用开发：LLM API、Prompt、结构化输出、流式输出、RAG、多模态与产品集成。 Agent 开发：工具调用、任务规划、记忆、状态管理、执行循环、错误恢复。 Agent 工程化： …
