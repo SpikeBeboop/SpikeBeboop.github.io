@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Hermes Agent Skill 系统说明文档 | 念念的博客</title>
+<meta name="keywords" content="Hermes Agent, AI Agent, Skill, Agent 工程, Prompt Engineering">
+<meta name="description" content="
+适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。
+依据来源：Hermes 官方文档 Skills System、Creating Skills，以及本机 Hermes 源码中的 tools/skills_tool.py、tools/skill_manager_tool.py、agent/skill_commands.py、agent/prompt_builder.py、agent/skill_utils.py、agent/skill_preprocessing.py。">
+<meta name="author" content="念念">
+<link rel="canonical" href="https://blog.nuonian.top/2026/06/hermes-agent-skill-system/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d9aaa8612eece03864ad262f96ef59e994f1c94586b18f19cdb42c1bccada91a.css" integrity="sha256-2aqoYS7s4DhkrSYvlu9Z6ZTxyUWGsY8ZzbQsG8ytqRo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.nuonian.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.nuonian.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.nuonian.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.nuonian.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.nuonian.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://blog.nuonian.top/2026/06/hermes-agent-skill-system/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="念念">
+<meta name="keywords" content="Hugo, PaperMod, 前端开发, 后端开发, 数据库, Linux, Git, 游戏开发, 技术博客">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Regular/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Bold/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-Italic/result.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chinese-fonts/maple-mono-cn@2.0.0/dist/MapleMono-CN-BoldItalic/result.css">
+<meta property="og:url" content="https://blog.nuonian.top/2026/06/hermes-agent-skill-system/">
+  <meta property="og:site_name" content="念念的博客">
+  <meta property="og:title" content="Hermes Agent Skill 系统说明文档">
+  <meta property="og:description" content="适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。
+依据来源：Hermes 官方文档 Skills System、Creating Skills，以及本机 Hermes 源码中的 tools/skills_tool.py、tools/skill_manager_tool.py、agent/skill_commands.py、agent/prompt_builder.py、agent/skill_utils.py、agent/skill_preprocessing.py。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-06-22T10:37:59+08:00">
+    <meta property="article:modified_time" content="2026-06-22T11:14:30+08:00">
+    <meta property="article:tag" content="Hermes Agent">
+    <meta property="article:tag" content="AI Agent">
+    <meta property="article:tag" content="Skill">
+    <meta property="article:tag" content="Agent 工程">
+    <meta property="article:tag" content="Prompt Engineering">
+      <meta property="og:image" content="https://blog.nuonian.top/images/author.jpg">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/">
+      <meta property="og:see_also" content="https://blog.nuonian.top/2026/06/ai-agent-harness-development-roadmap/">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://blog.nuonian.top/images/author.jpg">
+  <meta name="twitter:title" content="Hermes Agent Skill 系统说明文档">
+  <meta name="twitter:description" content="适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。
+依据来源：Hermes 官方文档 Skills System、Creating Skills，以及本机 Hermes 源码中的 tools/skills_tool.py、tools/skill_manager_tool.py、agent/skill_commands.py、agent/prompt_builder.py、agent/skill_utils.py、agent/skill_preprocessing.py。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/",
+      "name": "念念的博客",
+      "position": 1
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/posts/",
+      "name": "Posts",
+      "position": 2
+    },
+    {
+      "@type": "ListItem",
+      "item": "https://blog.nuonian.top/2026/06/hermes-agent-skill-system/",
+      "name": "Hermes Agent Skill 系统说明文档",
+      "position": 3
+    }
+  ]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "articleBody": " 适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。\n依据来源：Hermes 官方文档 Skills System、Creating Skills，以及本机 Hermes 源码中的 tools/skills_tool.py、tools/skill_manager_tool.py、agent/skill_commands.py、agent/prompt_builder.py、agent/skill_utils.py、agent/skill_preprocessing.py。\n核心结论：Skill 是 Hermes 的“按需加载的程序性知识”，不是工具本身；它通过 Markdown + YAML frontmatter 描述何时使用、怎么做、有哪些坑、如何验证，并可附带 references/templates/scripts/assets 等支持文件。\n1. Skill 是什么 Hermes Agent 的 Skill 是一种按需加载的知识包，用来让 agent 在特定任务中获得更专业、更稳定的操作流程。\n它通常包含：\n触发条件：什么时候应该加载这个 skill。 操作流程：agent 应该按什么步骤完成任务。 工具/命令用法：CLI、API、脚本、Hermes 工具调用建议。 坑点与失败处理：常见错误、环境限制、替代路径。 验证标准：任务完成前如何确认结果可靠。 支持文件：参考文档、模板、脚本、资产文件。 Skill 的本质是“过程性记忆 / procedural memory”。\n它和普通 memory 的区别：\n类型 用途 典型内容 是否常驻上下文 Memory / User Profile 持久事实、偏好、环境约定 用户偏好、项目路径、稳定事实 是，通常注入每轮 Skill 可复用工作流和专业流程 如何调研论文、如何发布 PR、如何用某工具 否，按需加载 Tool 可执行能力 读文件、跑命令、浏览器、发消息 以工具 schema 形式暴露 一句话：\nMemory 记“事实”。 Skill 记“怎么做”。 Tool 负责“执行动作”。 2. Skill 适合解决什么问题 适合做成 Skill 的场景：\n任务能用“说明 + 现有工具 + shell/API/脚本”表达。 需要稳定复用同一套流程。 任务流程比一句提示复杂，容易遗漏步骤或坑点。 agent 曾经通过多轮尝试找到可靠做法。 用户明确纠正过某类任务的做法。 需要让后续 agent 以一致标准执行。 典型例子：\nGitHub PR 工作流。 代码审查流程。 大型源码学习流程。 Excel 数据分析流程。 调研报告撰写规范。 特定 CLI/API 的使用手册。 某网站自动化操作经验。 图像生成/前端设计质量标准。 不适合做成 Skill 的场景：\n场景 更适合 需要精确、强约束、每次一致执行的计算逻辑 Tool 或脚本 需要处理流式事件、二进制协议、复杂认证 Tool / 插件 只是一个短期任务状态 不保存；留在当前会话即可 一周后会过期的进度、PR号、commit SHA 不写 memory，也不写 skill 单次临时说明 当前对话即可 3. Skill 总体架构 Hermes Skill 系统可以分成 7 层：\n用户请求 ↓ 系统提示中的 Skill 索引（只含 name/description/category） ↓ 模型判断相关 skill ↓ skill_view(name) 加载完整 SKILL.md ↓ 需要时 skill_view(name, file_path) 加载支持文件 ↓ agent 按 Skill 指令调用 terminal/file/web/browser 等工具执行任务 ↓ 如果发现新流程或修正旧流程，用 skill_manage 维护 skill 关键原则是 progressive disclosure（渐进披露）：\n层级 入口 加载内容 目的 Level 0 系统提示 / skills_list 名称、描述、分类 让模型知道有哪些 skill Level 1 skill_view(name) 完整 SKILL.md、元数据、支持文件列表 任务相关时加载完整流程 Level 2 skill_view(name, file_path) 单个 references/templates/scripts/assets 文件 只在需要时加载大文件/细节 这样能避免把所有 skill 全文塞进上下文，减少 token 消耗。\n4. Skill 的存放位置 4.1 本地主目录 当前 Hermes 文档定义的主 skill 目录是：\n~/.hermes/skills/ 这是运行时的 single source of truth：\n内置 bundled skills 安装/更新后会同步到这里。 hub 安装的 skills 会放到这里。 agent 通过 skill_manage(action='create') 创建的新 skill 会放到这里。 agent 可通过 skill_manage 修改这里的 skill。 示例结构：\n~/.hermes/skills/ ├── mlops/ │ └── axolotl/ │ ├── SKILL.md │ ├── references/ │ ├── templates/ │ ├── scripts/ │ └── assets/ ├── github/ │ └── github-workflows/ │ └── SKILL.md ├── software-development/ │ └── test-driven-development/ │ └── SKILL.md ├── .hub/ │ ├── lock.json │ ├── quarantine/ │ └── audit.log └── .bundled_manifest 4.2 Profile 隔离 Hermes profile 有独立的 skills 目录。\n默认 profile：\n~/.hermes/skills/ 命名 profile：\n~/.hermes/profiles/\u0026lt;profile-name\u0026gt;/skills/ 影响：\n当前会话只加载 active profile 的 skills。 修改另一个 profile 的 skills 需要显式切换 profile 或使用带 cross-profile 权限的文件工具。 skill_manage 默认只操作当前 active profile。 4.3 外部 Skill 目录 external_dirs Hermes 支持额外扫描外部 skill 目录。\n配置位置：\nskills: external_dirs: - ~/.agents/skills - /home/shared/team-skills - ${SKILLS_REPO}/skills 行为：\n本地 ~/.hermes/skills/ 优先。 external dirs 也会出现在系统 prompt、skills_list、skill_view、slash command 中。 如果同名，local 版本优先；某些加载路径遇到歧义会拒绝猜测，要求用分类路径明确指定。 skill_manage 修改已存在 skill 时，会改它实际所在位置，包括 external_dirs 中的可写 skill。 新建 skill 默认写入 local skills dir，不写 external_dirs。 4.4 Bundled / Optional / Hub / Plugin Skills 类型 来源 安装/发现方式 信任级别 bundled skills Hermes 仓库 skills/ 安装和 update 同步到 ~/.hermes/skills/ builtin optional skills Hermes 仓库 optional-skills/ hermes skills install official/... official hub skills skills.sh、GitHub、well-known、ClawHub、LobeHub、browse.sh 等 hermes skills install ... trusted/community plugin skills Hermes 插件提供 plugin:skill 形式加载 取决于插件 5. 标准 Skill 包结构 推荐结构：\n\u0026lt;skill-name\u0026gt;/ ├── SKILL.md # 必需：主说明文件 ├── README.md # 可选：给人看的安装/交接说明 ├── references/ # 可选：长参考资料、API 文档、经验库 │ ├── api.md │ └── edge-cases.md ├── templates/ # 可选：输出模板、配置模板、提示模板 │ ├── report.md │ └── config.yaml ├── scripts/ # 可选：辅助脚本 │ ├── analyze.py │ └── export.sh └── assets/ # 可选：资产文件、示例图片、静态资源 └── example.json 目录含义：\n目录 作用 加载方式 SKILL.md 主流程和核心指令 skill_view(name) references/ 长文档、细节、API、背景知识 skill_view(name, \u0026quot;references/x.md\u0026quot;) templates/ 输出格式、配置文件、prompt 模板 skill_view(name, \u0026quot;templates/x.md\u0026quot;) scripts/ 可直接执行的辅助脚本 通过 skill 注入的绝对路径运行 assets/ 资产、示例、非文档材料 按路径引用或读取 注意：\n支持目录中的 SKILL.md 不会被当作独立 skill 扫描。 扫描器会跳过 .git、.github、.hub、.archive、.venv、node_modules、__pycache__ 等目录。 支持文件建议保持职责清晰，避免把所有内容塞进主 SKILL.md。 6. SKILL.md 文件格式规范 6.1 最小合法格式 SKILL.md 必须从 YAML frontmatter 开始，不能有前导空行或 BOM。\n--- name: my-skill description: Brief description of what this skill does --- # My Skill ## When to Use - Use when ... ## Procedure 1. Do ... 2. Verify ... 硬性校验规则：\n规则 要求 开头 文件必须以 --- 开头 frontmatter 结束 必须有独立 closing --- 行 YAML frontmatter 必须能解析为 YAML mapping name 必须存在 description 必须存在，最长 1024 字符 body frontmatter 后必须有非空正文 总长度 agent 写入的 SKILL.md 不超过 100,000 字符 支持文件大小 agent 写入的单个支持文件不超过 1 MiB 6.2 推荐 frontmatter --- name: my-skill-name description: Use when \u0026lt;trigger\u0026gt;. \u0026lt;one-line behavior and outcome\u0026gt;. version: 1.0.0 author: Hermes Agent license: MIT platforms: [linux, macos] metadata: hermes: tags: [automation, research, cli] related_skills: [other-skill] --- 字段说明：\n字段 必需 说明 name 是 skill 逻辑名称；建议小写、数字、连字符/下划线/点 description 是 展示在索引和搜索结果中；应写触发条件和用途 version 否 版本号；建议保留 author 否 作者；建议保留 license 否 许可证；建议保留 platforms 否 限制平台：macos、linux、windows metadata.hermes.tags 否 分类/关键词 metadata.hermes.related_skills 否 相关 skills 6.3 name 规范 skill_manage 创建 skill 时，名称必须符合：\n^[a-z0-9][a-z0-9._-]*$ 并且最长 64 字符。\n推荐：\ngithub-workflows test-driven-development ocr-and-documents sn-da-excel-workflow 不推荐：\nGitHub Workflow # 有空格和大写 /my-skill # 绝对路径感 ../my-skill # 路径穿越 my skill! # 特殊字符 6.4 description 写法 description 是模型决定是否加载 skill 的主要依据之一，应当：\n开头写触发条件：Use when ... 描述任务类型，而不是单次任务。 包含关键工具/领域词。 不超过 1024 字符。 好例子：\ndescription: Use when operating GitHub end-to-end: authentication, repositories, pull requests, code reviews, issues, and CI/CD with gh CLI and git via terminal. 差例子：\ndescription: GitHub stuff. 6.5 platforms 平台限制 platforms: [macos] platforms: [linux, macos] platforms: [windows] 行为：\n不匹配当前 OS 时，该 skill 不显示在系统 prompt、skills_list、slash commands 中。 显式 skill_view 加载时也会返回 unsupported。 不写或为空代表所有平台可用。 7. Hermes 专属 metadata 规范 Hermes 主要读取 metadata.hermes 下的字段。\n完整示例：\nmetadata: hermes: tags: [web, automation, scraping] category: research related_skills: [web-access, research-intelligence-workflows] requires_toolsets: [web] requires_tools: [web_search] fallback_for_toolsets: [browser] fallback_for_tools: [browser_navigate] config: - key: myplugin.path description: Path to the plugin data directory default: ~/myplugin-data prompt: Plugin data directory path blueprint: schedule: \u0026#34;0 9 * * *\u0026#34; deliver: origin prompt: \u0026#34;Run the daily workflow.\u0026#34; no_agent: false 7.1 tags / related_skills metadata: hermes: tags: [python, automation] related_skills: [github-workflows, test-driven-development] 用途：\ntags 帮助检索、目录展示、人工理解。 related_skills 帮助 agent 或用户发现配套 skill。 7.2 条件激活 requires / fallback 条件激活控制 skill 是否出现在当前会话的 skill index 中。\nmetadata: hermes: requires_toolsets: [web] requires_tools: [web_search] fallback_for_toolsets: [browser] fallback_for_tools: [browser_navigate] 语义：\n字段 行为 requires_toolsets 列出的任一 toolset 不可用时隐藏 requires_tools 列出的任一 tool 不可用时隐藏 fallback_for_toolsets 列出的任一 toolset 可用时隐藏；不可用时显示 fallback_for_tools 列出的任一 tool 可用时隐藏；不可用时显示 典型用法：\nrequires_toolsets: [web]：只有联网工具可用时才显示。 fallback_for_tools: [web_search]：没有 web_search 工具时才显示替代搜索 skill。 7.3 config：非敏感设置 Skill 可以声明需要的非敏感配置，存入 config.yaml 的 skills.config 下。\nmetadata: hermes: config: - key: myplugin.path description: Path to the plugin data directory default: ~/myplugin-data prompt: Plugin data directory path 存储后类似：\nskills: config: myplugin: path: ~/myplugin-data 运行时行为：\nhermes config migrate 可发现并提示补齐未配置项。 skill 被 slash command 加载时，Hermes 会把解析后的配置值注入 skill 消息： [Skill config (from ~/.hermes/config.yaml): myplugin.path = /home/user/myplugin-data ] 注意：\nconfig 用于路径、偏好、开关等非敏感值。 API key、token 这类秘密不要放 config，应放 required environment variables。 7.4 blueprint：skill 兼作自动化蓝图 Skill 可以声明 metadata.hermes.blueprint，作为可安装的自动化建议。\nmetadata: hermes: tags: [blueprint, email] blueprint: schedule: \u0026#34;0 8 * * *\u0026#34; deliver: telegram prompt: \u0026#34;Summarize unread email and today\u0026#39;s calendar.\u0026#34; no_agent: false 行为：\n安装带 blueprint 的 skill 不会自动创建 cron job。 Hermes 会生成 suggested cron job。 用户通过 /suggestions 显式接受后才创建定时任务。 8. 环境变量与凭证文件规范 8.1 required_environment_variables 用于声明 API key、token 等秘密。\nrequired_environment_variables: - name: TENOR_API_KEY prompt: Tenor API key help: Get a key from https://developers.google.com/tenor required_for: GIF search functionality 字段：\n字段 必需 说明 name 是 环境变量名，如 TENOR_API_KEY prompt 否 本地 CLI 安全输入时展示 help 否 获取 key 的说明或 URL required_for 否 哪个功能需要它 运行时行为：\nskill_view 加载 skill 时读取该声明。 Hermes 检查 ~/.hermes/.env 中是否已有对应变量。 本地 CLI 可安全提示输入；用户可跳过。 Gateway/消息平台不会在聊天中收集 secret，只给本地配置提示。 已存在的变量会自动注册为 terminal / execute_code sandbox passthrough。 也就是说，skill 的脚本可以直接访问：\necho \u0026#34;$TENOR_API_KEY\u0026#34; 或 Python：\nimport os key = os.environ[\u0026#34;TENOR_API_KEY\u0026#34;] 8.2 legacy prerequisites.env_vars 旧格式仍兼容：\nprerequisites: env_vars: [API_KEY] commands: [curl, jq] 但新 skill 推荐使用 required_environment_variables。\n8.3 required_credential_files 用于 OAuth token、service account JSON、证书等文件型凭证。\nrequired_credential_files: - path: google_token.json description: Google OAuth2 token created by setup script - path: google_client_secret.json description: Google OAuth client secret 行为：\npath 相对 ~/.hermes/。 加载 skill 时检查文件是否存在。 文件存在时可注册给 Docker/Modal 等远程 backend 挂载/同步。 缺失时返回 setup_needed 信息。 9. SKILL.md 正文结构规范 推荐结构：\n# Skill Title ## Overview 一句话说明 skill 解决什么问题，以及它为什么存在。 ## When to Use - 触发条件 1 - 触发条件 2 - Don\u0026#39;t use for: 不适用边界 ## Quick Reference | 场景 | 命令/做法 | |---|---| | ... | ... | ## Procedure 1. 第一步：检查前置条件。 2. 第二步：执行核心流程。 3. 第三步：处理失败分支。 4. 第四步：验证结果。 ## Common Pitfalls 1. 坑点：原因；修复方式。 2. 坑点：原因；修复方式。 ## Verification Checklist - [ ] 结果文件存在 - [ ] 测试通过 - [ ] 用户要求全部满足 写作原则：\n先写最常用流程，再写边缘情况。 用明确步骤，不写抽象口号。 命令要可复制运行。 坑点要写“怎么识别 + 怎么修”。 验证标准要可执行、可观察。 对危险操作明确要求确认。 不要把一次任务的临时细节写进 skill。 大段参考资料放 references/，主文只保留路由和关键流程。 10. 支持文件的加载机制 当 skill_view(name) 加载主 skill 时，返回结果里会包含 linked_files。\n示例：\n{ \u0026#34;success\u0026#34;: true, \u0026#34;name\u0026#34;: \u0026#34;example-skill\u0026#34;, \u0026#34;content\u0026#34;: \u0026#34;...SKILL.md...\u0026#34;, \u0026#34;skill_dir\u0026#34;: \u0026#34;/root/.hermes/skills/category/example-skill\u0026#34;, \u0026#34;linked_files\u0026#34;: { \u0026#34;references\u0026#34;: [\u0026#34;references/api.md\u0026#34;], \u0026#34;templates\u0026#34;: [\u0026#34;templates/report.md\u0026#34;], \u0026#34;scripts\u0026#34;: [\u0026#34;scripts/analyze.py\u0026#34;], \u0026#34;assets\u0026#34;: [\u0026#34;assets/schema.json\u0026#34;] }, \u0026#34;usage_hint\u0026#34;: \u0026#34;To view linked files, call skill_view(name, file_path) ...\u0026#34; } 加载支持文件：\nskill_view(name=\u0026#34;example-skill\u0026#34;, file_path=\u0026#34;references/api.md\u0026#34;) 安全限制：\nfile_path 不能包含 ..。 解析后必须仍在 skill 目录内。 支持文件不存在时，Hermes 会列出可用文件。 二进制文件不能作为文本读取时，会返回 binary 信息。 11. Skill 调用机制 11.1 自然语言调用 用户可以直接说：\n用 github-workflows 帮我创建 PR 模型会：\n从系统 prompt 的 skill index 看到 github-workflows。 判断它相关。 调用 skill_view(name=\u0026quot;github-workflows\u0026quot;)。 按加载出的指令执行。 11.2 tools 调用 可用工具：\n工具 作用 skills_list(category?) 列出可用 skill 的 name/description/category skill_view(name, file_path?) 加载完整 skill 或支持文件 skill_manage(...) 创建、修改、删除 skill skills_list 返回精简信息；skill_view 才返回完整正文。\n11.3 slash command 调用 每个安装的 skill 会自动生成一个 slash command。\n示例：\n/github-workflows create a PR for the auth refactor /excalidraw draw the architecture /axolotl help me fine-tune a Llama model 调用过程：\nHermes 扫描 skill 目录，生成 /skill-name 命令映射。 用户输入 slash command。 Hermes 加载 skill 全文。 构造一条模型可读消息，包含： skill 被调用的说明。 完整 skill 内容。 skill 绝对目录。 支持文件列表。 用户在 slash command 后附带的指令。 setup/config/runtime note。 agent 根据这条消息继续执行。 slash command 名称规范化：\n转小写。 空格和下划线转连字符。 移除非 a-z0-9- 字符。 多个连字符压缩成一个。 11.4 skill command 消息骨架 slash command 加载后，Hermes 会生成类似内容：\n[IMPORTANT: The user has invoked the \u0026lt;skill-name\u0026gt; skill. The full skill content is loaded below.] \u0026lt;SKILL.md content\u0026gt; [Skill directory: /abs/path/to/skill] Resolve any relative paths in this skill ... against that directory ... [This skill has supporting files:] - references/api.md -\u0026gt; /abs/path/references/api.md - scripts/foo.js -\u0026gt; /abs/path/scripts/foo.js Load any of these with skill_view(...), or run scripts directly by absolute path ... The user has provided the following instruction alongside the skill invocation: \u0026lt;user instruction\u0026gt; 这个设计的关键点：\nSkill 内容作为用户消息进入 agent loop，而不是永久修改 system prompt。 这样不会破坏 prompt cache。 Memory provider 会尝试只提取用户原始 instruction，避免把整篇 skill 误存进记忆。 11.5 预加载 skill CLI 支持：\nhermes --skills github-workflows hermes -s github-workflows,test-driven-development 会话内支持：\n/skill github-workflows 12. 系统提示中的 Skill Index 机制 Hermes 会在系统提示中加入一个 compact skill index。\n大致结构：\n## Skills (mandatory) Before replying, scan the skills below. If a skill matches ... MUST load it ... \u0026lt;available_skills\u0026gt; github: - github-workflows: Use when operating GitHub end-to-end... software-development: - test-driven-development: Use when implementing any feature... \u0026lt;/available_skills\u0026gt; 构建流程：\n扫描 ~/.hermes/skills/。 扫描 skills.external_dirs。 读取每个 SKILL.md 的 frontmatter 和 description。 过滤不匹配平台的 skill。 过滤当前环境不相关的 skill。 过滤 disabled skill。 应用 requires/fallback 条件。 按 category 分组。 写入系统提示。 缓存机制：\n进程内 LRU cache。 磁盘 snapshot .skills_prompt_snapshot.json。 cache key 包含：skills dir、external dirs、可用工具、可用 toolsets、平台、disabled 列表、压缩类别等。 这意味着：\n新增/删除 skill 后，当前会话未必立刻刷新系统 prompt。 slash command 可以 reload skill map，但不一定重建系统 prompt cache。 新会话通常能看到最新 index。 13. Skill 发现与查找规则 skill_view(name) 的查找策略包括：\n插件 qualified name：plugin:skill。 分类 fall-through：category:skill 可尝试映射为 category/skill。 直接路径：skills_dir/name/SKILL.md。 递归按目录名查找。 递归按 frontmatter name 查找。 legacy 平铺 Markdown：name.md。 安全限制：\nname 不能是绝对路径。 不能包含 .. 路径穿越。 Windows drive path 也会拒绝，避免误识别为 plugin namespace。 多个候选匹配时，Hermes 拒绝猜测并要求用完整相对路径。 14. Skill 启用、禁用、平台过滤 Skill 可能因为以下原因不显示：\nplatforms 不匹配当前系统。 metadata.hermes.requires_* 条件不满足。 metadata.hermes.fallback_for_* 对应工具已可用。 用户在 skills config 中禁用。 当前运行环境不匹配 environment tags。 所在目录被排除扫描。 常用管理命令：\nhermes skills list hermes skills config hermes tools list hermes tools enable \u0026lt;toolset\u0026gt; hermes tools disable \u0026lt;toolset\u0026gt; 如果启用/禁用后不生效：\n在 CLI 中开新会话或 /reset。 gateway 中重启或 /restart。 新 skill 当前 session 看不到时，通常是 loader/cache 行为，不一定是 bug。 15. skill_manage 写入机制 skill_manage 是 agent 维护 skill 的工具。\nActions：\naction 用途 关键参数 create 新建 skill name, content, optional category patch 局部替换，推荐 name, old_string, new_string, optional file_path edit 整体重写 SKILL.md name, content delete 删除 skill name, optional absorbed_into write_file 写支持文件 name, file_path, file_content remove_file 删除支持文件 name, file_path 15.1 create skill_manage( action=\u0026#34;create\u0026#34;, name=\u0026#34;my-skill\u0026#34;, category=\u0026#34;software-development\u0026#34;, content=\u0026#34;\u0026#34;\u0026#34;--- name: my-skill description: Use when ... version: 1.0.0 author: Hermes Agent license: MIT --- # My Skill ... \u0026#34;\u0026#34;\u0026#34; ) 行为：\n校验 name。 校验 category。 校验 frontmatter。 校验内容大小。 检查是否已有同名 skill。 创建目录。 原子写入 SKILL.md。 如开启 skills.guard_agent_created，执行安全扫描；若阻止则回滚。 15.2 patch 适合小修小补。\nskill_manage( action=\u0026#34;patch\u0026#34;, name=\u0026#34;my-skill\u0026#34;, old_string=\u0026#34;旧内容\u0026#34;, new_string=\u0026#34;新内容\u0026#34; ) 也可以 patch 支持文件：\nskill_manage( action=\u0026#34;patch\u0026#34;, name=\u0026#34;my-skill\u0026#34;, file_path=\u0026#34;references/api.md\u0026#34;, old_string=\u0026#34;旧内容\u0026#34;, new_string=\u0026#34;新内容\u0026#34; ) 推荐优先用 patch，因为：\ntoken 少。 不容易误删大段内容。 更适合维护已有 skill。 15.3 edit 用于大改，需要提供完整新的 SKILL.md。\n风险：\n容易丢失原内容。 更消耗 token。 应先读取旧 skill 再完整重写。 15.4 write_file / remove_file write_file 只能写以下位置：\nreferences/ templates/ scripts/ assets/ SKILL.md 路径限制：\n不允许 ..。 必须在 skill 目录内。 支持文件大小限制 1 MiB。 15.5 delete 删除有防护：\n不能删除 pinned skill。 不能删除 skills root 本身。 不能删除不在已知 skill root 内的路径。 拒绝删除 symlink/junction 指向的目录。 删除时建议传 absorbed_into：\nskill_manage(action=\u0026#34;delete\u0026#34;, name=\u0026#34;old-skill\u0026#34;, absorbed_into=\u0026#34;new-skill\u0026#34;) 如果只是清理，无合并目标：\nskill_manage(action=\u0026#34;delete\u0026#34;, name=\u0026#34;old-skill\u0026#34;, absorbed_into=\u0026#34;\u0026#34;) 16. 安全机制 16.1 路径安全 Hermes 对 skill name 和 file_path 做路径限制：\n禁止绝对路径。 禁止 ..。 支持文件必须解析在 skill 目录内。 删除操作必须在已知 skills root 内。 16.2 Prompt injection 提示 加载 skill 时，Hermes 会扫描一些常见 prompt injection 字符串，例如：\nignore previous instructions you are now system prompt: \u0026lt;system\u0026gt; 发现后会记录 warning，但本地 skill 一般仍会加载。第三方 hub 安装会经过更完整的安全扫描。\n16.3 Hub 安装安全扫描 Hub 安装的第三方 skills 会扫描：\n数据外传模式。 prompt injection。 破坏性命令。 shell injection。 供应链风险。 trust level：\nlevel 来源 策略 builtin Hermes bundled skills 默认可信 official Hermes optional skills 默认可信 trusted 可信 registry/repo 较宽松 community 第三方来源 非 dangerous 可 force；dangerous 不允许 16.4 agent-created skill guard 配置：\nskills: guard_agent_created: true 默认关闭。开启后，agent 通过 skill_manage 创建/修改的 skill 会经过 security scan；阻止时会回滚写入。\n16.5 write approval 配置：\nskills: write_approval: true 开启后，skill_manage 的写操作会先 staged 到：\n~/.hermes/pending/skills/ 用户通过命令审批：\n/skills pending /skills diff \u0026lt;id\u0026gt; /skills approve \u0026lt;id\u0026gt; /skills reject \u0026lt;id\u0026gt; /skills approval on|off 17. 模板变量与 inline shell 17.1 模板变量 Skill 正文中可使用：\n${HERMES_SKILL_DIR} ${HERMES_SESSION_ID} 加载时替换：\n变量 替换为 ${HERMES_SKILL_DIR} 当前 skill 目录绝对路径 ${HERMES_SESSION_ID} 当前 session id；没有则保留原样 示例：\nRun: ```bash python ${HERMES_SKILL_DIR}/scripts/analyze.py input.json 关闭方式： ```yaml skills: template_vars: false 17.2 inline shell Skill 可以写：\nCurrent date: !`date -u +%Y-%m-%d` Git branch: !`git rev-parse --abbrev-ref HEAD` 但默认关闭。\n开启：\nskills: inline_shell: true inline_shell_timeout: 10 行为：\n每个 !cmd`` 用 bash 执行。 cwd 是 skill 目录。 stdout 被内联到 skill 内容中。 输出最多 4000 字符。 超时/失败会插入 [inline-shell error: ...]。 安全注意：\ninline shell 会在 host 上执行，且加载 skill 时执行。 只应对可信 skill 源开启。 18. Skill Bundles Skill bundle 是一份 YAML，把多个 skill 绑定成一个 slash command。\n位置：\n~/.hermes/skill-bundles/\u0026lt;slug\u0026gt;.yaml 格式：\nname: backend-dev description: Backend feature work — review, test, PR workflow. skills: - github-workflows - test-driven-development - requesting-code-review instruction: | Always start by writing failing tests, then implement. Open the PR through the standard workflow. 调用：\n/backend-dev refactor the auth middleware 行为：\n加载 listed skills。 附加 bundle instruction。 slash command 名称与单 skill 冲突时，bundle 优先。 缺失 skill 会跳过，不导致整个 bundle 失败。 不修改 system prompt，作为一次用户消息注入。 管理命令：\nhermes bundles list hermes bundles show backend-dev hermes bundles create backend-dev --skill github-workflows --skill test-driven-development hermes bundles delete backend-dev hermes bundles reload 19. Skills Hub 与发布机制 常用命令：\nhermes skills browse hermes skills search kubernetes hermes skills inspect openai/skills/k8s hermes skills install openai/skills/k8s hermes skills check hermes skills update hermes skills uninstall k8s hermes skills publish skills/my-skill --to github --repo owner/repo hermes skills tap add myorg/skills-repo 支持来源：\nsource 示例 official official/security/1password skills-sh skills-sh/vercel-labs/json-render/json-render-react well-known well-known:https://mintlify.com/docs/.well-known/skills/mintlify github openai/skills/k8s url https://example.com/SKILL.md clawhub 第三方 marketplace lobehub LobeHub agents browse-sh 浏览器自动化 skill catalog 19.1 Tap 仓库结构 owner/repo ├── skills/ │ ├── my-workflow/ │ │ ├── SKILL.md │ │ ├── references/ │ │ ├── templates/ │ │ └── scripts/ │ └── another-skill/ │ └── SKILL.md └── README.md 安装：\nhermes skills tap add owner/repo hermes skills search my-workflow hermes skills install owner/repo/my-workflow 20. Bundled skill 更新机制 Hermes 安装和 update 会把仓库内置 skills 同步到 ~/.hermes/skills/。\n同步状态记录在：\n~/.hermes/skills/.bundled_manifest 逻辑：\n本地 skill 未修改：可自动更新为新的 bundled 版本。 本地 skill 已修改：视为 user-modified，后续同步跳过，避免覆盖用户修改。 重置：\nhermes skills reset google-workspace hermes skills reset google-workspace --restore hermes skills reset google-workspace --restore --yes 区别：\n命令 行为 reset 清除 manifest entry，保留当前文件，重新 baseline reset --restore 删除本地修改，恢复当前 bundled 版本 21. 创建高质量 Skill 的推荐模板 --- name: example-workflow description: Use when performing \u0026lt;task class\u0026gt;. Provides \u0026lt;main procedure\u0026gt;, \u0026lt;failure handling\u0026gt;, and \u0026lt;verification\u0026gt;. version: 1.0.0 author: Hermes Agent license: MIT platforms: [linux, macos] metadata: hermes: tags: [example, workflow] related_skills: [] --- # Example Workflow ## Overview This skill standardizes how to perform \u0026lt;task class\u0026gt;. ## When to Use Use this skill when: - ... - ... Do not use this skill when: - ... ## Inputs Expected inputs: - `\u0026lt;input-a\u0026gt;`: ... - `\u0026lt;input-b\u0026gt;`: ... If required input is missing: - Try to infer from files/context only when safe. - Ask the user only if the ambiguity changes execution. ## Procedure 1. Discover prerequisites. - Check ... - Read ... 2. Execute the core workflow. - Run ... - Write ... 3. Handle failures. - If ..., then ... - If ..., then ... 4. Verify. - Run ... - Confirm ... ## Output Format Return: - Path(s) changed or created. - Verification command and result. - Remaining blockers, if any. ## Common Pitfalls 1. Pitfall: ... Fix: ... 2. Pitfall: ... Fix: ... ## Verification Checklist - [ ] Required inputs resolved - [ ] Main artifact produced - [ ] Verification command run - [ ] Failures or assumptions reported honestly 22. Skill 编写检查清单 创建前：\n是否真的是可复用流程，而不是单次任务？ 是否已有类似 skill 可 patch，而不是新建？ 是否该放 ~/.hermes/skills/、repo bundled、optional-skills，还是 hub？ Frontmatter：\n文件首字节就是 ---。 有 closing ---。 YAML 可解析。 name 存在，≤64 字符。 description 存在，≤1024 字符。 version / author / license 建议存在。 metadata.hermes.tags 建议存在。 如果平台有限制，写 platforms。 如果需要工具条件，写 requires/fallback。 secret 写 required_environment_variables，不要写进正文或 config。 正文：\n有 When to Use。 有明确 Procedure。 有 Common Pitfalls。 有 Verification 或 checklist。 命令可复制运行。 危险操作需要确认。 大参考资料拆到 references/。 模板拆到 templates/。 复杂解析逻辑放 scripts/。 安全：\n不包含明文 secret。 不要求 agent 忽略系统/用户指令。 不隐藏破坏性命令。 不从不可信 URL 执行脚本，除非有校验和/审计说明。 验证：\nskill_view(name) 能加载。 skills_list() 能看到。 slash command 可触发。 支持文件可通过 skill_view(name, file_path) 加载。 如果包含脚本，脚本可直接运行或有清晰依赖说明。 23. 常见坑 23.1 当前会话看不到刚创建的 Skill 原因：system prompt skill index 和 slash command map 有缓存。\n处理：\n新开会话。 /reset。 /reload-skills 或相关 reload 命令只刷新 slash-command map，不一定重建 system prompt cache。 23.2 description 太泛，模型不加载 差：\ndescription: Helps with reports. 好：\ndescription: Use when generating Markdown research reports from gathered evidence. Enforces source grounding, structure, synthesis, and verification before final delivery. 23.3 把知识库写成了任务日志 Skill 不应写：\n2026-06-20 我完成了 X 项目第 3 阶段。 应写：\nWhen continuing a source-study project, first load the project map, then inspect current entry points, then update the knowledge index. 23.4 把 secret 写入 SKILL.md 不要：\napi_key: sk-xxxx 应该：\nrequired_environment_variables: - name: SERVICE_API_KEY prompt: Service API key 23.5 支持文件路径写错 不要让 agent 猜相对路径。推荐在 skill 里写：\nRun: ```bash python ${HERMES_SKILL_DIR}/scripts/analyze.py \u0026lt;input\u0026gt; ### 23.6 误用 skill_manage create 创建 repo 内置 skill `skill_manage(action=\u0026#39;create\u0026#39;)` 创建到当前 profile 的 `~/.hermes/skills/`。 如果你在 Hermes 源码仓库里开发 bundled skill，应写入： ```text \u0026lt;repo\u0026gt;/skills/\u0026lt;category\u0026gt;/\u0026lt;skill-name\u0026gt;/SKILL.md 并提交 git。\n23.7 过长 SKILL.md 超过 100,000 字符会被 agent 写入校验拒绝。即使没超，也不建议过长。\n拆分原则：\n主流程保留在 SKILL.md。 大表格、API、长示例放 references/。 输出格式放 templates/。 可执行逻辑放 scripts/。 24. 端到端示例：创建一个 Skill 包 目标：创建一个“发布博客文章”的 skill。\n目录：\n~/.hermes/skills/writing/hugo-post-authoring/ ├── SKILL.md ├── templates/ │ └── frontmatter.md └── references/ └── taxonomy.md SKILL.md：\n--- name: hugo-post-authoring description: Use when creating or editing Hugo blog posts. Enforces front matter, target section routing, Markdown structure, and final path reporting. version: 1.0.0 author: Hermes Agent license: MIT platforms: [linux, macos] metadata: hermes: tags: [hugo, blog, markdown, writing] related_skills: [hugo-blog-authoring, writing-and-editing-workflows] --- # Hugo Post Authoring ## When to Use Use when the user asks to create, edit, or structure a Hugo blog post. ## Procedure 1. Determine target section. 2. Read existing site conventions if available. 3. Draft Markdown with valid front matter. 4. Save under the correct content path. 5. Verify file exists and front matter parses. ## Supporting Files - `templates/frontmatter.md`: front matter template. - `references/taxonomy.md`: section/tag/category conventions. ## Verification Checklist - [ ] File path is under the correct Hugo section - [ ] Front matter includes title/date/tags/categories as needed - [ ] Markdown headings are coherent - [ ] Final response includes file path only if creation succeeded 创建：\nskill_manage(action=\u0026#34;create\u0026#34;, name=\u0026#34;hugo-post-authoring\u0026#34;, category=\u0026#34;writing\u0026#34;, content=\u0026#34;...\u0026#34;) skill_manage(action=\u0026#34;write_file\u0026#34;, name=\u0026#34;hugo-post-authoring\u0026#34;, file_path=\u0026#34;templates/frontmatter.md\u0026#34;, file_content=\u0026#34;...\u0026#34;) skill_manage(action=\u0026#34;write_file\u0026#34;, name=\u0026#34;hugo-post-authoring\u0026#34;, file_path=\u0026#34;references/taxonomy.md\u0026#34;, file_content=\u0026#34;...\u0026#34;) 使用：\n/hugo-post-authoring 写一篇关于 SQLite FTS5 的教程 25. 快速命令参考 用户侧 hermes skills list hermes skills browse hermes skills search \u0026lt;query\u0026gt; hermes skills inspect \u0026lt;id\u0026gt; hermes skills install \u0026lt;id\u0026gt; hermes skills update hermes skills check hermes skills uninstall \u0026lt;name\u0026gt; hermes skills config hermes skills reset \u0026lt;name\u0026gt; 会话内 /skill \u0026lt;name\u0026gt; /\u0026lt;skill-name\u0026gt; \u0026lt;instruction\u0026gt; /skills list /skills search \u0026lt;query\u0026gt; /skills install \u0026lt;id\u0026gt; /skills pending /skills diff \u0026lt;id\u0026gt; /skills approve \u0026lt;id\u0026gt; /skills reject \u0026lt;id\u0026gt; /bundles Agent 工具 skills_list() skills_list(category=\u0026#34;software-development\u0026#34;) skill_view(name=\u0026#34;github-workflows\u0026#34;) skill_view(name=\u0026#34;github-workflows\u0026#34;, file_path=\u0026#34;references/api.md\u0026#34;) skill_manage(action=\u0026#34;patch\u0026#34;, name=\u0026#34;github-workflows\u0026#34;, old_string=\u0026#34;...\u0026#34;, new_string=\u0026#34;...\u0026#34;) 26. 最佳实践总结 Skill 的 description 决定它是否会被正确召回，必须写清触发条件。 主 SKILL.md 写流程，细节拆支持文件。 优先用 patch 维护 skill，少用整体 edit。 复杂逻辑写脚本，不让 LLM 每次临场重写解析器。 所有 skill 都应有验证步骤。 发现 skill 错误或遗漏时，立即 patch；否则 skill 会变成长期负债。 不把临时进度、PR号、commit SHA、一次性日志写进 skill。 secret 永远放 required_environment_variables / .env，不要进 Markdown 正文。 新 skill 当前会话不可见时，优先考虑缓存/新会话问题。 Skill 是 agent 能力增长的核心机制：把稳定、可复用、经过验证的做法沉淀进去。 27. 参考入口 官方文档：\nhttps://hermes-agent.nousresearch.com/docs/user-guide/features/skills https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills 本机源码关键文件：\n/root/.hermes/hermes-agent/tools/skills_tool.py /root/.hermes/hermes-agent/tools/skill_manager_tool.py /root/.hermes/hermes-agent/agent/skill_utils.py /root/.hermes/hermes-agent/agent/skill_commands.py /root/.hermes/hermes-agent/agent/skill_preprocessing.py /root/.hermes/hermes-agent/agent/prompt_builder.py ",
+  "author": {
+    "@type": "Person",
+    "name": "念念"
+  },
+  "dateModified": "2026-06-22T11:14:30+08:00",
+  "datePublished": "2026-06-22T10:37:59+08:00",
+  "description": " 适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。\n依据来源：Hermes 官方文档 Skills System、Creating Skills，以及本机 Hermes 源码中的 …",
+  "headline": "Hermes Agent Skill 系统说明文档",
+  "image": [
+    "https://blog.nuonian.top/images/author.jpg"
+  ],
+  "inLanguage": "zh",
+  "keywords": [
+    "Hermes Agent",
+    "AI Agent",
+    "Skill",
+    "Agent 工程",
+    "Prompt Engineering"
+  ],
+  "mainEntityOfPage": {
+    "@id": "https://blog.nuonian.top/2026/06/hermes-agent-skill-system/",
+    "@type": "WebPage"
+  },
+  "name": "Hermes Agent Skill 系统说明文档",
+  "publisher": {
+    "@type": "Person",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.nuonian.top/images/author.jpg"
+    },
+    "name": "念念的博客",
+    "url": "https://blog.nuonian.top/"
+  },
+  "url": "https://blog.nuonian.top/2026/06/hermes-agent-skill-system/",
+  "wordCount": 9153
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://blog.nuonian.top/" accesskey="h" title="念念的博客 (Alt + H)">念念的博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://blog.nuonian.top/archives" title="存档">
+                    <span>存档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/categories" title="分类">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/tags" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/series" title="专栏">
+                    <span>专栏</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.nuonian.top/search" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">主页</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/posts/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Hermes Agent Skill 系统说明文档
+    </h1>
+    <div class="post-meta"><span title='2026-06-22 10:37:59 +0800 +0800'>2026-06-22</span>&nbsp;·&nbsp;<span title='2026-06-22 11:14:30 +0800 +0800'>Updated:&nbsp;2026-06-22</span>&nbsp;·&nbsp;19 分钟&nbsp;·&nbsp;9153 字&nbsp;·&nbsp;念念&nbsp;·&nbsp;<a href="https://blog.nuonian.top/categories/ai-agent-%E5%BC%80%E5%8F%91/">AI Agent 开发</a>&nbsp;·&nbsp;<a href="https://blog.nuonian.top/series/ai-agent/">AI Agent</a>
+
+</div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-skill-%e6%98%af%e4%bb%80%e4%b9%88" aria-label="1. Skill 是什么">1. Skill 是什么</a></li>
+                <li>
+                    <a href="#2-skill-%e9%80%82%e5%90%88%e8%a7%a3%e5%86%b3%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98" aria-label="2. Skill 适合解决什么问题">2. Skill 适合解决什么问题</a></li>
+                <li>
+                    <a href="#3-skill-%e6%80%bb%e4%bd%93%e6%9e%b6%e6%9e%84" aria-label="3. Skill 总体架构">3. Skill 总体架构</a></li>
+                <li>
+                    <a href="#4-skill-%e7%9a%84%e5%ad%98%e6%94%be%e4%bd%8d%e7%bd%ae" aria-label="4. Skill 的存放位置">4. Skill 的存放位置</a><ul>
+                        
+                <li>
+                    <a href="#41-%e6%9c%ac%e5%9c%b0%e4%b8%bb%e7%9b%ae%e5%bd%95" aria-label="4.1 本地主目录">4.1 本地主目录</a></li>
+                <li>
+                    <a href="#42-profile-%e9%9a%94%e7%a6%bb" aria-label="4.2 Profile 隔离">4.2 Profile 隔离</a></li>
+                <li>
+                    <a href="#43-%e5%a4%96%e9%83%a8-skill-%e7%9b%ae%e5%bd%95-external_dirs" aria-label="4.3 外部 Skill 目录 external_dirs">4.3 外部 Skill 目录 external_dirs</a></li>
+                <li>
+                    <a href="#44-bundled--optional--hub--plugin-skills" aria-label="4.4 Bundled / Optional / Hub / Plugin Skills">4.4 Bundled / Optional / Hub / Plugin Skills</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e6%a0%87%e5%87%86-skill-%e5%8c%85%e7%bb%93%e6%9e%84" aria-label="5. 标准 Skill 包结构">5. 标准 Skill 包结构</a></li>
+                <li>
+                    <a href="#6-skillmd-%e6%96%87%e4%bb%b6%e6%a0%bc%e5%bc%8f%e8%a7%84%e8%8c%83" aria-label="6. SKILL.md 文件格式规范">6. SKILL.md 文件格式规范</a><ul>
+                        
+                <li>
+                    <a href="#61-%e6%9c%80%e5%b0%8f%e5%90%88%e6%b3%95%e6%a0%bc%e5%bc%8f" aria-label="6.1 最小合法格式">6.1 最小合法格式</a></li>
+                <li>
+                    <a href="#62-%e6%8e%a8%e8%8d%90-frontmatter" aria-label="6.2 推荐 frontmatter">6.2 推荐 frontmatter</a></li>
+                <li>
+                    <a href="#63-name-%e8%a7%84%e8%8c%83" aria-label="6.3 name 规范">6.3 name 规范</a></li>
+                <li>
+                    <a href="#64-description-%e5%86%99%e6%b3%95" aria-label="6.4 description 写法">6.4 description 写法</a></li>
+                <li>
+                    <a href="#65-platforms-%e5%b9%b3%e5%8f%b0%e9%99%90%e5%88%b6" aria-label="6.5 platforms 平台限制">6.5 platforms 平台限制</a></li></ul>
+                </li>
+                <li>
+                    <a href="#7-hermes-%e4%b8%93%e5%b1%9e-metadata-%e8%a7%84%e8%8c%83" aria-label="7. Hermes 专属 metadata 规范">7. Hermes 专属 metadata 规范</a><ul>
+                        
+                <li>
+                    <a href="#71-tags--related_skills" aria-label="7.1 tags / related_skills">7.1 tags / related_skills</a></li>
+                <li>
+                    <a href="#72-%e6%9d%a1%e4%bb%b6%e6%bf%80%e6%b4%bb-requires--fallback" aria-label="7.2 条件激活 requires / fallback">7.2 条件激活 requires / fallback</a></li>
+                <li>
+                    <a href="#73-config%e9%9d%9e%e6%95%8f%e6%84%9f%e8%ae%be%e7%bd%ae" aria-label="7.3 config：非敏感设置">7.3 config：非敏感设置</a></li>
+                <li>
+                    <a href="#74-blueprintskill-%e5%85%bc%e4%bd%9c%e8%87%aa%e5%8a%a8%e5%8c%96%e8%93%9d%e5%9b%be" aria-label="7.4 blueprint：skill 兼作自动化蓝图">7.4 blueprint：skill 兼作自动化蓝图</a></li></ul>
+                </li>
+                <li>
+                    <a href="#8-%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f%e4%b8%8e%e5%87%ad%e8%af%81%e6%96%87%e4%bb%b6%e8%a7%84%e8%8c%83" aria-label="8. 环境变量与凭证文件规范">8. 环境变量与凭证文件规范</a><ul>
+                        
+                <li>
+                    <a href="#81-required_environment_variables" aria-label="8.1 required_environment_variables">8.1 required_environment_variables</a></li>
+                <li>
+                    <a href="#82-legacy-prerequisitesenv_vars" aria-label="8.2 legacy prerequisites.env_vars">8.2 legacy prerequisites.env_vars</a></li>
+                <li>
+                    <a href="#83-required_credential_files" aria-label="8.3 required_credential_files">8.3 required_credential_files</a></li></ul>
+                </li>
+                <li>
+                    <a href="#9-skillmd-%e6%ad%a3%e6%96%87%e7%bb%93%e6%9e%84%e8%a7%84%e8%8c%83" aria-label="9. SKILL.md 正文结构规范">9. SKILL.md 正文结构规范</a></li>
+                <li>
+                    <a href="#10-%e6%94%af%e6%8c%81%e6%96%87%e4%bb%b6%e7%9a%84%e5%8a%a0%e8%bd%bd%e6%9c%ba%e5%88%b6" aria-label="10. 支持文件的加载机制">10. 支持文件的加载机制</a></li>
+                <li>
+                    <a href="#11-skill-%e8%b0%83%e7%94%a8%e6%9c%ba%e5%88%b6" aria-label="11. Skill 调用机制">11. Skill 调用机制</a><ul>
+                        
+                <li>
+                    <a href="#111-%e8%87%aa%e7%84%b6%e8%af%ad%e8%a8%80%e8%b0%83%e7%94%a8" aria-label="11.1 自然语言调用">11.1 自然语言调用</a></li>
+                <li>
+                    <a href="#112-tools-%e8%b0%83%e7%94%a8" aria-label="11.2 tools 调用">11.2 tools 调用</a></li>
+                <li>
+                    <a href="#113-slash-command-%e8%b0%83%e7%94%a8" aria-label="11.3 slash command 调用">11.3 slash command 调用</a></li>
+                <li>
+                    <a href="#114-skill-command-%e6%b6%88%e6%81%af%e9%aa%a8%e6%9e%b6" aria-label="11.4 skill command 消息骨架">11.4 skill command 消息骨架</a></li>
+                <li>
+                    <a href="#115-%e9%a2%84%e5%8a%a0%e8%bd%bd-skill" aria-label="11.5 预加载 skill">11.5 预加载 skill</a></li></ul>
+                </li>
+                <li>
+                    <a href="#12-%e7%b3%bb%e7%bb%9f%e6%8f%90%e7%a4%ba%e4%b8%ad%e7%9a%84-skill-index-%e6%9c%ba%e5%88%b6" aria-label="12. 系统提示中的 Skill Index 机制">12. 系统提示中的 Skill Index 机制</a></li>
+                <li>
+                    <a href="#13-skill-%e5%8f%91%e7%8e%b0%e4%b8%8e%e6%9f%a5%e6%89%be%e8%a7%84%e5%88%99" aria-label="13. Skill 发现与查找规则">13. Skill 发现与查找规则</a></li>
+                <li>
+                    <a href="#14-skill-%e5%90%af%e7%94%a8%e7%a6%81%e7%94%a8%e5%b9%b3%e5%8f%b0%e8%bf%87%e6%bb%a4" aria-label="14. Skill 启用、禁用、平台过滤">14. Skill 启用、禁用、平台过滤</a></li>
+                <li>
+                    <a href="#15-skill_manage-%e5%86%99%e5%85%a5%e6%9c%ba%e5%88%b6" aria-label="15. skill_manage 写入机制">15. skill_manage 写入机制</a><ul>
+                        
+                <li>
+                    <a href="#151-create" aria-label="15.1 create">15.1 create</a></li>
+                <li>
+                    <a href="#152-patch" aria-label="15.2 patch">15.2 patch</a></li>
+                <li>
+                    <a href="#153-edit" aria-label="15.3 edit">15.3 edit</a></li>
+                <li>
+                    <a href="#154-write_file--remove_file" aria-label="15.4 write_file / remove_file">15.4 write_file / remove_file</a></li>
+                <li>
+                    <a href="#155-delete" aria-label="15.5 delete">15.5 delete</a></li></ul>
+                </li>
+                <li>
+                    <a href="#16-%e5%ae%89%e5%85%a8%e6%9c%ba%e5%88%b6" aria-label="16. 安全机制">16. 安全机制</a><ul>
+                        
+                <li>
+                    <a href="#161-%e8%b7%af%e5%be%84%e5%ae%89%e5%85%a8" aria-label="16.1 路径安全">16.1 路径安全</a></li>
+                <li>
+                    <a href="#162-prompt-injection-%e6%8f%90%e7%a4%ba" aria-label="16.2 Prompt injection 提示">16.2 Prompt injection 提示</a></li>
+                <li>
+                    <a href="#163-hub-%e5%ae%89%e8%a3%85%e5%ae%89%e5%85%a8%e6%89%ab%e6%8f%8f" aria-label="16.3 Hub 安装安全扫描">16.3 Hub 安装安全扫描</a></li>
+                <li>
+                    <a href="#164-agent-created-skill-guard" aria-label="16.4 agent-created skill guard">16.4 agent-created skill guard</a></li>
+                <li>
+                    <a href="#165-write-approval" aria-label="16.5 write approval">16.5 write approval</a></li></ul>
+                </li>
+                <li>
+                    <a href="#17-%e6%a8%a1%e6%9d%bf%e5%8f%98%e9%87%8f%e4%b8%8e-inline-shell" aria-label="17. 模板变量与 inline shell">17. 模板变量与 inline shell</a><ul>
+                        
+                <li>
+                    <a href="#171-%e6%a8%a1%e6%9d%bf%e5%8f%98%e9%87%8f" aria-label="17.1 模板变量">17.1 模板变量</a></li>
+                <li>
+                    <a href="#172-inline-shell" aria-label="17.2 inline shell">17.2 inline shell</a></li></ul>
+                </li>
+                <li>
+                    <a href="#18-skill-bundles" aria-label="18. Skill Bundles">18. Skill Bundles</a></li>
+                <li>
+                    <a href="#19-skills-hub-%e4%b8%8e%e5%8f%91%e5%b8%83%e6%9c%ba%e5%88%b6" aria-label="19. Skills Hub 与发布机制">19. Skills Hub 与发布机制</a><ul>
+                        
+                <li>
+                    <a href="#191-tap-%e4%bb%93%e5%ba%93%e7%bb%93%e6%9e%84" aria-label="19.1 Tap 仓库结构">19.1 Tap 仓库结构</a></li></ul>
+                </li>
+                <li>
+                    <a href="#20-bundled-skill-%e6%9b%b4%e6%96%b0%e6%9c%ba%e5%88%b6" aria-label="20. Bundled skill 更新机制">20. Bundled skill 更新机制</a></li>
+                <li>
+                    <a href="#21-%e5%88%9b%e5%bb%ba%e9%ab%98%e8%b4%a8%e9%87%8f-skill-%e7%9a%84%e6%8e%a8%e8%8d%90%e6%a8%a1%e6%9d%bf" aria-label="21. 创建高质量 Skill 的推荐模板">21. 创建高质量 Skill 的推荐模板</a></li>
+                <li>
+                    <a href="#22-skill-%e7%bc%96%e5%86%99%e6%a3%80%e6%9f%a5%e6%b8%85%e5%8d%95" aria-label="22. Skill 编写检查清单">22. Skill 编写检查清单</a></li>
+                <li>
+                    <a href="#23-%e5%b8%b8%e8%a7%81%e5%9d%91" aria-label="23. 常见坑">23. 常见坑</a><ul>
+                        
+                <li>
+                    <a href="#231-%e5%bd%93%e5%89%8d%e4%bc%9a%e8%af%9d%e7%9c%8b%e4%b8%8d%e5%88%b0%e5%88%9a%e5%88%9b%e5%bb%ba%e7%9a%84-skill" aria-label="23.1 当前会话看不到刚创建的 Skill">23.1 当前会话看不到刚创建的 Skill</a></li>
+                <li>
+                    <a href="#232-description-%e5%a4%aa%e6%b3%9b%e6%a8%a1%e5%9e%8b%e4%b8%8d%e5%8a%a0%e8%bd%bd" aria-label="23.2 description 太泛，模型不加载">23.2 description 太泛，模型不加载</a></li>
+                <li>
+                    <a href="#233-%e6%8a%8a%e7%9f%a5%e8%af%86%e5%ba%93%e5%86%99%e6%88%90%e4%ba%86%e4%bb%bb%e5%8a%a1%e6%97%a5%e5%bf%97" aria-label="23.3 把知识库写成了任务日志">23.3 把知识库写成了任务日志</a></li>
+                <li>
+                    <a href="#234-%e6%8a%8a-secret-%e5%86%99%e5%85%a5-skillmd" aria-label="23.4 把 secret 写入 SKILL.md">23.4 把 secret 写入 SKILL.md</a></li>
+                <li>
+                    <a href="#235-%e6%94%af%e6%8c%81%e6%96%87%e4%bb%b6%e8%b7%af%e5%be%84%e5%86%99%e9%94%99" aria-label="23.5 支持文件路径写错">23.5 支持文件路径写错</a></li>
+                <li>
+                    <a href="#237-%e8%bf%87%e9%95%bf-skillmd" aria-label="23.7 过长 SKILL.md">23.7 过长 SKILL.md</a></li></ul>
+                </li>
+                <li>
+                    <a href="#24-%e7%ab%af%e5%88%b0%e7%ab%af%e7%a4%ba%e4%be%8b%e5%88%9b%e5%bb%ba%e4%b8%80%e4%b8%aa-skill-%e5%8c%85" aria-label="24. 端到端示例：创建一个 Skill 包">24. 端到端示例：创建一个 Skill 包</a></li>
+                <li>
+                    <a href="#25-%e5%bf%ab%e9%80%9f%e5%91%bd%e4%bb%a4%e5%8f%82%e8%80%83" aria-label="25. 快速命令参考">25. 快速命令参考</a><ul>
+                        
+                <li>
+                    <a href="#%e7%94%a8%e6%88%b7%e4%be%a7" aria-label="用户侧">用户侧</a></li>
+                <li>
+                    <a href="#%e4%bc%9a%e8%af%9d%e5%86%85" aria-label="会话内">会话内</a></li>
+                <li>
+                    <a href="#agent-%e5%b7%a5%e5%85%b7" aria-label="Agent 工具">Agent 工具</a></li></ul>
+                </li>
+                <li>
+                    <a href="#26-%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%e6%80%bb%e7%bb%93" aria-label="26. 最佳实践总结">26. 最佳实践总结</a></li>
+                <li>
+                    <a href="#27-%e5%8f%82%e8%80%83%e5%85%a5%e5%8f%a3" aria-label="27. 参考入口">27. 参考入口</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 &&
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+
+</script>
+
+  <div class="post-content md-content"><blockquote>
+<p>适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。</p>
+<p>依据来源：Hermes 官方文档 <code>Skills System</code>、<code>Creating Skills</code>，以及本机 Hermes 源码中的 <code>tools/skills_tool.py</code>、<code>tools/skill_manager_tool.py</code>、<code>agent/skill_commands.py</code>、<code>agent/prompt_builder.py</code>、<code>agent/skill_utils.py</code>、<code>agent/skill_preprocessing.py</code>。</p>
+<p>核心结论：Skill 是 Hermes 的“按需加载的程序性知识”，不是工具本身；它通过 Markdown + YAML frontmatter 描述何时使用、怎么做、有哪些坑、如何验证，并可附带 references/templates/scripts/assets 等支持文件。</p>
+</blockquote>
+<hr>
+<h2 id="1-skill-是什么">1. Skill 是什么<a hidden class="anchor" aria-hidden="true" href="#1-skill-是什么">#</a></h2>
+<p>Hermes Agent 的 Skill 是一种按需加载的知识包，用来让 agent 在特定任务中获得更专业、更稳定的操作流程。</p>
+<p>它通常包含：</p>
+<ul>
+<li>触发条件：什么时候应该加载这个 skill。</li>
+<li>操作流程：agent 应该按什么步骤完成任务。</li>
+<li>工具/命令用法：CLI、API、脚本、Hermes 工具调用建议。</li>
+<li>坑点与失败处理：常见错误、环境限制、替代路径。</li>
+<li>验证标准：任务完成前如何确认结果可靠。</li>
+<li>支持文件：参考文档、模板、脚本、资产文件。</li>
+</ul>
+<p>Skill 的本质是“过程性记忆 / procedural memory”。</p>
+<p>它和普通 memory 的区别：</p>
+<table>
+	<thead>
+			<tr>
+					<th>类型</th>
+					<th>用途</th>
+					<th>典型内容</th>
+					<th>是否常驻上下文</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Memory / User Profile</td>
+					<td>持久事实、偏好、环境约定</td>
+					<td>用户偏好、项目路径、稳定事实</td>
+					<td>是，通常注入每轮</td>
+			</tr>
+			<tr>
+					<td>Skill</td>
+					<td>可复用工作流和专业流程</td>
+					<td>如何调研论文、如何发布 PR、如何用某工具</td>
+					<td>否，按需加载</td>
+			</tr>
+			<tr>
+					<td>Tool</td>
+					<td>可执行能力</td>
+					<td>读文件、跑命令、浏览器、发消息</td>
+					<td>以工具 schema 形式暴露</td>
+			</tr>
+	</tbody>
+</table>
+<p>一句话：</p>
+<ul>
+<li>Memory 记“事实”。</li>
+<li>Skill 记“怎么做”。</li>
+<li>Tool 负责“执行动作”。</li>
+</ul>
+<hr>
+<h2 id="2-skill-适合解决什么问题">2. Skill 适合解决什么问题<a hidden class="anchor" aria-hidden="true" href="#2-skill-适合解决什么问题">#</a></h2>
+<p>适合做成 Skill 的场景：</p>
+<ol>
+<li>任务能用“说明 + 现有工具 + shell/API/脚本”表达。</li>
+<li>需要稳定复用同一套流程。</li>
+<li>任务流程比一句提示复杂，容易遗漏步骤或坑点。</li>
+<li>agent 曾经通过多轮尝试找到可靠做法。</li>
+<li>用户明确纠正过某类任务的做法。</li>
+<li>需要让后续 agent 以一致标准执行。</li>
+</ol>
+<p>典型例子：</p>
+<ul>
+<li>GitHub PR 工作流。</li>
+<li>代码审查流程。</li>
+<li>大型源码学习流程。</li>
+<li>Excel 数据分析流程。</li>
+<li>调研报告撰写规范。</li>
+<li>特定 CLI/API 的使用手册。</li>
+<li>某网站自动化操作经验。</li>
+<li>图像生成/前端设计质量标准。</li>
+</ul>
+<p>不适合做成 Skill 的场景：</p>
+<table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>更适合</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>需要精确、强约束、每次一致执行的计算逻辑</td>
+					<td>Tool 或脚本</td>
+			</tr>
+			<tr>
+					<td>需要处理流式事件、二进制协议、复杂认证</td>
+					<td>Tool / 插件</td>
+			</tr>
+			<tr>
+					<td>只是一个短期任务状态</td>
+					<td>不保存；留在当前会话即可</td>
+			</tr>
+			<tr>
+					<td>一周后会过期的进度、PR号、commit SHA</td>
+					<td>不写 memory，也不写 skill</td>
+			</tr>
+			<tr>
+					<td>单次临时说明</td>
+					<td>当前对话即可</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="3-skill-总体架构">3. Skill 总体架构<a hidden class="anchor" aria-hidden="true" href="#3-skill-总体架构">#</a></h2>
+<p>Hermes Skill 系统可以分成 7 层：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>用户请求
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>系统提示中的 Skill 索引（只含 name/description/category）
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>模型判断相关 skill
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>skill_view(name) 加载完整 SKILL.md
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>需要时 skill_view(name, file_path) 加载支持文件
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>agent 按 Skill 指令调用 terminal/file/web/browser 等工具执行任务
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>如果发现新流程或修正旧流程，用 skill_manage 维护 skill
+</span></span></code></pre></div><p>关键原则是 progressive disclosure（渐进披露）：</p>
+<table>
+	<thead>
+			<tr>
+					<th>层级</th>
+					<th>入口</th>
+					<th>加载内容</th>
+					<th>目的</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Level 0</td>
+					<td>系统提示 / skills_list</td>
+					<td>名称、描述、分类</td>
+					<td>让模型知道有哪些 skill</td>
+			</tr>
+			<tr>
+					<td>Level 1</td>
+					<td>skill_view(name)</td>
+					<td>完整 SKILL.md、元数据、支持文件列表</td>
+					<td>任务相关时加载完整流程</td>
+			</tr>
+			<tr>
+					<td>Level 2</td>
+					<td>skill_view(name, file_path)</td>
+					<td>单个 references/templates/scripts/assets 文件</td>
+					<td>只在需要时加载大文件/细节</td>
+			</tr>
+	</tbody>
+</table>
+<p>这样能避免把所有 skill 全文塞进上下文，减少 token 消耗。</p>
+<hr>
+<h2 id="4-skill-的存放位置">4. Skill 的存放位置<a hidden class="anchor" aria-hidden="true" href="#4-skill-的存放位置">#</a></h2>
+<h3 id="41-本地主目录">4.1 本地主目录<a hidden class="anchor" aria-hidden="true" href="#41-本地主目录">#</a></h3>
+<p>当前 Hermes 文档定义的主 skill 目录是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/
+</span></span></code></pre></div><p>这是运行时的 single source of truth：</p>
+<ul>
+<li>内置 bundled skills 安装/更新后会同步到这里。</li>
+<li>hub 安装的 skills 会放到这里。</li>
+<li>agent 通过 <code>skill_manage(action='create')</code> 创建的新 skill 会放到这里。</li>
+<li>agent 可通过 <code>skill_manage</code> 修改这里的 skill。</li>
+</ul>
+<p>示例结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/
+</span></span><span style="display:flex;"><span>├── mlops/
+</span></span><span style="display:flex;"><span>│   └── axolotl/
+</span></span><span style="display:flex;"><span>│       ├── SKILL.md
+</span></span><span style="display:flex;"><span>│       ├── references/
+</span></span><span style="display:flex;"><span>│       ├── templates/
+</span></span><span style="display:flex;"><span>│       ├── scripts/
+</span></span><span style="display:flex;"><span>│       └── assets/
+</span></span><span style="display:flex;"><span>├── github/
+</span></span><span style="display:flex;"><span>│   └── github-workflows/
+</span></span><span style="display:flex;"><span>│       └── SKILL.md
+</span></span><span style="display:flex;"><span>├── software-development/
+</span></span><span style="display:flex;"><span>│   └── test-driven-development/
+</span></span><span style="display:flex;"><span>│       └── SKILL.md
+</span></span><span style="display:flex;"><span>├── .hub/
+</span></span><span style="display:flex;"><span>│   ├── lock.json
+</span></span><span style="display:flex;"><span>│   ├── quarantine/
+</span></span><span style="display:flex;"><span>│   └── audit.log
+</span></span><span style="display:flex;"><span>└── .bundled_manifest
+</span></span></code></pre></div><h3 id="42-profile-隔离">4.2 Profile 隔离<a hidden class="anchor" aria-hidden="true" href="#42-profile-隔离">#</a></h3>
+<p>Hermes profile 有独立的 skills 目录。</p>
+<p>默认 profile：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/
+</span></span></code></pre></div><p>命名 profile：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/profiles/&lt;profile-name&gt;/skills/
+</span></span></code></pre></div><p>影响：</p>
+<ul>
+<li>当前会话只加载 active profile 的 skills。</li>
+<li>修改另一个 profile 的 skills 需要显式切换 profile 或使用带 cross-profile 权限的文件工具。</li>
+<li><code>skill_manage</code> 默认只操作当前 active profile。</li>
+</ul>
+<h3 id="43-外部-skill-目录-external_dirs">4.3 外部 Skill 目录 external_dirs<a hidden class="anchor" aria-hidden="true" href="#43-外部-skill-目录-external_dirs">#</a></h3>
+<p>Hermes 支持额外扫描外部 skill 目录。</p>
+<p>配置位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">external_dirs</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">~/.agents/skills</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">/home/shared/team-skills</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">${SKILLS_REPO}/skills</span>
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li>本地 <code>~/.hermes/skills/</code> 优先。</li>
+<li>external dirs 也会出现在系统 prompt、<code>skills_list</code>、<code>skill_view</code>、slash command 中。</li>
+<li>如果同名，local 版本优先；某些加载路径遇到歧义会拒绝猜测，要求用分类路径明确指定。</li>
+<li><code>skill_manage</code> 修改已存在 skill 时，会改它实际所在位置，包括 external_dirs 中的可写 skill。</li>
+<li>新建 skill 默认写入 local skills dir，不写 external_dirs。</li>
+</ul>
+<h3 id="44-bundled--optional--hub--plugin-skills">4.4 Bundled / Optional / Hub / Plugin Skills<a hidden class="anchor" aria-hidden="true" href="#44-bundled--optional--hub--plugin-skills">#</a></h3>
+<table>
+	<thead>
+			<tr>
+					<th>类型</th>
+					<th>来源</th>
+					<th>安装/发现方式</th>
+					<th>信任级别</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>bundled skills</td>
+					<td>Hermes 仓库 <code>skills/</code></td>
+					<td>安装和 update 同步到 <code>~/.hermes/skills/</code></td>
+					<td>builtin</td>
+			</tr>
+			<tr>
+					<td>optional skills</td>
+					<td>Hermes 仓库 <code>optional-skills/</code></td>
+					<td><code>hermes skills install official/...</code></td>
+					<td>official</td>
+			</tr>
+			<tr>
+					<td>hub skills</td>
+					<td>skills.sh、GitHub、well-known、ClawHub、LobeHub、browse.sh 等</td>
+					<td><code>hermes skills install ...</code></td>
+					<td>trusted/community</td>
+			</tr>
+			<tr>
+					<td>plugin skills</td>
+					<td>Hermes 插件提供</td>
+					<td><code>plugin:skill</code> 形式加载</td>
+					<td>取决于插件</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="5-标准-skill-包结构">5. 标准 Skill 包结构<a hidden class="anchor" aria-hidden="true" href="#5-标准-skill-包结构">#</a></h2>
+<p>推荐结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;skill-name&gt;/
+</span></span><span style="display:flex;"><span>├── SKILL.md                 # 必需：主说明文件
+</span></span><span style="display:flex;"><span>├── README.md                # 可选：给人看的安装/交接说明
+</span></span><span style="display:flex;"><span>├── references/              # 可选：长参考资料、API 文档、经验库
+</span></span><span style="display:flex;"><span>│   ├── api.md
+</span></span><span style="display:flex;"><span>│   └── edge-cases.md
+</span></span><span style="display:flex;"><span>├── templates/               # 可选：输出模板、配置模板、提示模板
+</span></span><span style="display:flex;"><span>│   ├── report.md
+</span></span><span style="display:flex;"><span>│   └── config.yaml
+</span></span><span style="display:flex;"><span>├── scripts/                 # 可选：辅助脚本
+</span></span><span style="display:flex;"><span>│   ├── analyze.py
+</span></span><span style="display:flex;"><span>│   └── export.sh
+</span></span><span style="display:flex;"><span>└── assets/                  # 可选：资产文件、示例图片、静态资源
+</span></span><span style="display:flex;"><span>    └── example.json
+</span></span></code></pre></div><p>目录含义：</p>
+<table>
+	<thead>
+			<tr>
+					<th>目录</th>
+					<th>作用</th>
+					<th>加载方式</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>SKILL.md</code></td>
+					<td>主流程和核心指令</td>
+					<td><code>skill_view(name)</code></td>
+			</tr>
+			<tr>
+					<td><code>references/</code></td>
+					<td>长文档、细节、API、背景知识</td>
+					<td><code>skill_view(name, &quot;references/x.md&quot;)</code></td>
+			</tr>
+			<tr>
+					<td><code>templates/</code></td>
+					<td>输出格式、配置文件、prompt 模板</td>
+					<td><code>skill_view(name, &quot;templates/x.md&quot;)</code></td>
+			</tr>
+			<tr>
+					<td><code>scripts/</code></td>
+					<td>可直接执行的辅助脚本</td>
+					<td>通过 skill 注入的绝对路径运行</td>
+			</tr>
+			<tr>
+					<td><code>assets/</code></td>
+					<td>资产、示例、非文档材料</td>
+					<td>按路径引用或读取</td>
+			</tr>
+	</tbody>
+</table>
+<p>注意：</p>
+<ul>
+<li>支持目录中的 <code>SKILL.md</code> 不会被当作独立 skill 扫描。</li>
+<li>扫描器会跳过 <code>.git</code>、<code>.github</code>、<code>.hub</code>、<code>.archive</code>、<code>.venv</code>、<code>node_modules</code>、<code>__pycache__</code> 等目录。</li>
+<li>支持文件建议保持职责清晰，避免把所有内容塞进主 <code>SKILL.md</code>。</li>
+</ul>
+<hr>
+<h2 id="6-skillmd-文件格式规范">6. SKILL.md 文件格式规范<a hidden class="anchor" aria-hidden="true" href="#6-skillmd-文件格式规范">#</a></h2>
+<h3 id="61-最小合法格式">6.1 最小合法格式<a hidden class="anchor" aria-hidden="true" href="#61-最小合法格式">#</a></h3>
+<p><code>SKILL.md</code> 必须从 YAML frontmatter 开始，不能有前导空行或 BOM。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>name: my-skill
+</span></span><span style="display:flex;"><span>description: Brief description of what this skill does
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># My Skill
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to Use
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Use when ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Procedure
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> Do ...
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> Verify ...
+</span></span></code></pre></div><p>硬性校验规则：</p>
+<table>
+	<thead>
+			<tr>
+					<th>规则</th>
+					<th>要求</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>开头</td>
+					<td>文件必须以 <code>---</code> 开头</td>
+			</tr>
+			<tr>
+					<td>frontmatter 结束</td>
+					<td>必须有独立 closing <code>---</code> 行</td>
+			</tr>
+			<tr>
+					<td>YAML</td>
+					<td>frontmatter 必须能解析为 YAML mapping</td>
+			</tr>
+			<tr>
+					<td><code>name</code></td>
+					<td>必须存在</td>
+			</tr>
+			<tr>
+					<td><code>description</code></td>
+					<td>必须存在，最长 1024 字符</td>
+			</tr>
+			<tr>
+					<td>body</td>
+					<td>frontmatter 后必须有非空正文</td>
+			</tr>
+			<tr>
+					<td>总长度</td>
+					<td>agent 写入的 <code>SKILL.md</code> 不超过 100,000 字符</td>
+			</tr>
+			<tr>
+					<td>支持文件大小</td>
+					<td>agent 写入的单个支持文件不超过 1 MiB</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="62-推荐-frontmatter">6.2 推荐 frontmatter<a hidden class="anchor" aria-hidden="true" href="#62-推荐-frontmatter">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">my-skill-name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#ae81ff">Use when &lt;trigger&gt;. &lt;one-line behavior and outcome&gt;.</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">version</span>: <span style="color:#ae81ff">1.0.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">author</span>: <span style="color:#ae81ff">Hermes Agent</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">license</span>: <span style="color:#ae81ff">MIT</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">platforms</span>: [<span style="color:#ae81ff">linux, macos]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tags</span>: [<span style="color:#ae81ff">automation, research, cli]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">related_skills</span>: [<span style="color:#ae81ff">other-skill]</span>
+</span></span><span style="display:flex;"><span>---
+</span></span></code></pre></div><p>字段说明：</p>
+<table>
+	<thead>
+			<tr>
+					<th>字段</th>
+					<th style="text-align: right">必需</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>name</code></td>
+					<td style="text-align: right">是</td>
+					<td>skill 逻辑名称；建议小写、数字、连字符/下划线/点</td>
+			</tr>
+			<tr>
+					<td><code>description</code></td>
+					<td style="text-align: right">是</td>
+					<td>展示在索引和搜索结果中；应写触发条件和用途</td>
+			</tr>
+			<tr>
+					<td><code>version</code></td>
+					<td style="text-align: right">否</td>
+					<td>版本号；建议保留</td>
+			</tr>
+			<tr>
+					<td><code>author</code></td>
+					<td style="text-align: right">否</td>
+					<td>作者；建议保留</td>
+			</tr>
+			<tr>
+					<td><code>license</code></td>
+					<td style="text-align: right">否</td>
+					<td>许可证；建议保留</td>
+			</tr>
+			<tr>
+					<td><code>platforms</code></td>
+					<td style="text-align: right">否</td>
+					<td>限制平台：<code>macos</code>、<code>linux</code>、<code>windows</code></td>
+			</tr>
+			<tr>
+					<td><code>metadata.hermes.tags</code></td>
+					<td style="text-align: right">否</td>
+					<td>分类/关键词</td>
+			</tr>
+			<tr>
+					<td><code>metadata.hermes.related_skills</code></td>
+					<td style="text-align: right">否</td>
+					<td>相关 skills</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="63-name-规范">6.3 name 规范<a hidden class="anchor" aria-hidden="true" href="#63-name-规范">#</a></h3>
+<p><code>skill_manage</code> 创建 skill 时，名称必须符合：</p>
+<pre tabindex="0"><code class="language-regex" data-lang="regex">^[a-z0-9][a-z0-9._-]*$
+</code></pre><p>并且最长 64 字符。</p>
+<p>推荐：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>github-workflows
+</span></span><span style="display:flex;"><span>test-driven-development
+</span></span><span style="display:flex;"><span>ocr-and-documents
+</span></span><span style="display:flex;"><span>sn-da-excel-workflow
+</span></span></code></pre></div><p>不推荐：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>GitHub Workflow      # 有空格和大写
+</span></span><span style="display:flex;"><span>/my-skill            # 绝对路径感
+</span></span><span style="display:flex;"><span>../my-skill          # 路径穿越
+</span></span><span style="display:flex;"><span>my skill!            # 特殊字符
+</span></span></code></pre></div><h3 id="64-description-写法">6.4 description 写法<a hidden class="anchor" aria-hidden="true" href="#64-description-写法">#</a></h3>
+<p>description 是模型决定是否加载 skill 的主要依据之一，应当：</p>
+<ul>
+<li>开头写触发条件：<code>Use when ...</code></li>
+<li>描述任务类型，而不是单次任务。</li>
+<li>包含关键工具/领域词。</li>
+<li>不超过 1024 字符。</li>
+</ul>
+<p>好例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">description: Use when operating GitHub end-to-end</span>: <span style="color:#ae81ff">authentication, repositories, pull requests, code reviews, issues, and CI/CD with gh CLI and git via terminal.</span>
+</span></span></code></pre></div><p>差例子：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#ae81ff">GitHub stuff.</span>
+</span></span></code></pre></div><h3 id="65-platforms-平台限制">6.5 platforms 平台限制<a hidden class="anchor" aria-hidden="true" href="#65-platforms-平台限制">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">platforms</span>: [<span style="color:#ae81ff">macos]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">platforms</span>: [<span style="color:#ae81ff">linux, macos]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">platforms</span>: [<span style="color:#ae81ff">windows]</span>
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li>不匹配当前 OS 时，该 skill 不显示在系统 prompt、<code>skills_list</code>、slash commands 中。</li>
+<li>显式 <code>skill_view</code> 加载时也会返回 unsupported。</li>
+<li>不写或为空代表所有平台可用。</li>
+</ul>
+<hr>
+<h2 id="7-hermes-专属-metadata-规范">7. Hermes 专属 metadata 规范<a hidden class="anchor" aria-hidden="true" href="#7-hermes-专属-metadata-规范">#</a></h2>
+<p>Hermes 主要读取 <code>metadata.hermes</code> 下的字段。</p>
+<p>完整示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tags</span>: [<span style="color:#ae81ff">web, automation, scraping]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">category</span>: <span style="color:#ae81ff">research</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">related_skills</span>: [<span style="color:#ae81ff">web-access, research-intelligence-workflows]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requires_toolsets</span>: [<span style="color:#ae81ff">web]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requires_tools</span>: [<span style="color:#ae81ff">web_search]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fallback_for_toolsets</span>: [<span style="color:#ae81ff">browser]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fallback_for_tools</span>: [<span style="color:#ae81ff">browser_navigate]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">config</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">myplugin.path</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">description</span>: <span style="color:#ae81ff">Path to the plugin data directory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">default</span>: <span style="color:#ae81ff">~/myplugin-data</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">prompt</span>: <span style="color:#ae81ff">Plugin data directory path</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">blueprint</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">schedule</span>: <span style="color:#e6db74">&#34;0 9 * * *&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">deliver</span>: <span style="color:#ae81ff">origin</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">prompt</span>: <span style="color:#e6db74">&#34;Run the daily workflow.&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">no_agent</span>: <span style="color:#66d9ef">false</span>
+</span></span></code></pre></div><h3 id="71-tags--related_skills">7.1 tags / related_skills<a hidden class="anchor" aria-hidden="true" href="#71-tags--related_skills">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tags</span>: [<span style="color:#ae81ff">python, automation]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">related_skills</span>: [<span style="color:#ae81ff">github-workflows, test-driven-development]</span>
+</span></span></code></pre></div><p>用途：</p>
+<ul>
+<li><code>tags</code> 帮助检索、目录展示、人工理解。</li>
+<li><code>related_skills</code> 帮助 agent 或用户发现配套 skill。</li>
+</ul>
+<h3 id="72-条件激活-requires--fallback">7.2 条件激活 requires / fallback<a hidden class="anchor" aria-hidden="true" href="#72-条件激活-requires--fallback">#</a></h3>
+<p>条件激活控制 skill 是否出现在当前会话的 skill index 中。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requires_toolsets</span>: [<span style="color:#ae81ff">web]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requires_tools</span>: [<span style="color:#ae81ff">web_search]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fallback_for_toolsets</span>: [<span style="color:#ae81ff">browser]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fallback_for_tools</span>: [<span style="color:#ae81ff">browser_navigate]</span>
+</span></span></code></pre></div><p>语义：</p>
+<table>
+	<thead>
+			<tr>
+					<th>字段</th>
+					<th>行为</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>requires_toolsets</code></td>
+					<td>列出的任一 toolset 不可用时隐藏</td>
+			</tr>
+			<tr>
+					<td><code>requires_tools</code></td>
+					<td>列出的任一 tool 不可用时隐藏</td>
+			</tr>
+			<tr>
+					<td><code>fallback_for_toolsets</code></td>
+					<td>列出的任一 toolset 可用时隐藏；不可用时显示</td>
+			</tr>
+			<tr>
+					<td><code>fallback_for_tools</code></td>
+					<td>列出的任一 tool 可用时隐藏；不可用时显示</td>
+			</tr>
+	</tbody>
+</table>
+<p>典型用法：</p>
+<ul>
+<li><code>requires_toolsets: [web]</code>：只有联网工具可用时才显示。</li>
+<li><code>fallback_for_tools: [web_search]</code>：没有 <code>web_search</code> 工具时才显示替代搜索 skill。</li>
+</ul>
+<h3 id="73-config非敏感设置">7.3 config：非敏感设置<a hidden class="anchor" aria-hidden="true" href="#73-config非敏感设置">#</a></h3>
+<p>Skill 可以声明需要的非敏感配置，存入 <code>config.yaml</code> 的 <code>skills.config</code> 下。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">config</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">myplugin.path</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">description</span>: <span style="color:#ae81ff">Path to the plugin data directory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">default</span>: <span style="color:#ae81ff">~/myplugin-data</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">prompt</span>: <span style="color:#ae81ff">Plugin data directory path</span>
+</span></span></code></pre></div><p>存储后类似：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">config</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">myplugin</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">path</span>: <span style="color:#ae81ff">~/myplugin-data</span>
+</span></span></code></pre></div><p>运行时行为：</p>
+<ul>
+<li><code>hermes config migrate</code> 可发现并提示补齐未配置项。</li>
+<li>skill 被 slash command 加载时，Hermes 会把解析后的配置值注入 skill 消息：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>[Skill config (from ~/.hermes/config.yaml):
+</span></span><span style="display:flex;"><span>  myplugin.path = /home/user/myplugin-data
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>注意：</p>
+<ul>
+<li><code>config</code> 用于路径、偏好、开关等非敏感值。</li>
+<li>API key、token 这类秘密不要放 config，应放 required environment variables。</li>
+</ul>
+<h3 id="74-blueprintskill-兼作自动化蓝图">7.4 blueprint：skill 兼作自动化蓝图<a hidden class="anchor" aria-hidden="true" href="#74-blueprintskill-兼作自动化蓝图">#</a></h3>
+<p>Skill 可以声明 <code>metadata.hermes.blueprint</code>，作为可安装的自动化建议。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hermes</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tags</span>: [<span style="color:#ae81ff">blueprint, email]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">blueprint</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">schedule</span>: <span style="color:#e6db74">&#34;0 8 * * *&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">deliver</span>: <span style="color:#ae81ff">telegram</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">prompt</span>: <span style="color:#e6db74">&#34;Summarize unread email and today&#39;s calendar.&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">no_agent</span>: <span style="color:#66d9ef">false</span>
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li>安装带 blueprint 的 skill 不会自动创建 cron job。</li>
+<li>Hermes 会生成 suggested cron job。</li>
+<li>用户通过 <code>/suggestions</code> 显式接受后才创建定时任务。</li>
+</ul>
+<hr>
+<h2 id="8-环境变量与凭证文件规范">8. 环境变量与凭证文件规范<a hidden class="anchor" aria-hidden="true" href="#8-环境变量与凭证文件规范">#</a></h2>
+<h3 id="81-required_environment_variables">8.1 required_environment_variables<a hidden class="anchor" aria-hidden="true" href="#81-required_environment_variables">#</a></h3>
+<p>用于声明 API key、token 等秘密。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">required_environment_variables</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TENOR_API_KEY</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">prompt</span>: <span style="color:#ae81ff">Tenor API key</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">help</span>: <span style="color:#ae81ff">Get a key from https://developers.google.com/tenor</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">required_for</span>: <span style="color:#ae81ff">GIF search functionality</span>
+</span></span></code></pre></div><p>字段：</p>
+<table>
+	<thead>
+			<tr>
+					<th>字段</th>
+					<th style="text-align: right">必需</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>name</code></td>
+					<td style="text-align: right">是</td>
+					<td>环境变量名，如 <code>TENOR_API_KEY</code></td>
+			</tr>
+			<tr>
+					<td><code>prompt</code></td>
+					<td style="text-align: right">否</td>
+					<td>本地 CLI 安全输入时展示</td>
+			</tr>
+			<tr>
+					<td><code>help</code></td>
+					<td style="text-align: right">否</td>
+					<td>获取 key 的说明或 URL</td>
+			</tr>
+			<tr>
+					<td><code>required_for</code></td>
+					<td style="text-align: right">否</td>
+					<td>哪个功能需要它</td>
+			</tr>
+	</tbody>
+</table>
+<p>运行时行为：</p>
+<ol>
+<li><code>skill_view</code> 加载 skill 时读取该声明。</li>
+<li>Hermes 检查 <code>~/.hermes/.env</code> 中是否已有对应变量。</li>
+<li>本地 CLI 可安全提示输入；用户可跳过。</li>
+<li>Gateway/消息平台不会在聊天中收集 secret，只给本地配置提示。</li>
+<li>已存在的变量会自动注册为 terminal / execute_code sandbox passthrough。</li>
+</ol>
+<p>也就是说，skill 的脚本可以直接访问：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span>$TENOR_API_KEY<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>或 Python：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;TENOR_API_KEY&#34;</span>]
+</span></span></code></pre></div><h3 id="82-legacy-prerequisitesenv_vars">8.2 legacy prerequisites.env_vars<a hidden class="anchor" aria-hidden="true" href="#82-legacy-prerequisitesenv_vars">#</a></h3>
+<p>旧格式仍兼容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">prerequisites</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">env_vars</span>: [<span style="color:#ae81ff">API_KEY]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">commands</span>: [<span style="color:#ae81ff">curl, jq]</span>
+</span></span></code></pre></div><p>但新 skill 推荐使用 <code>required_environment_variables</code>。</p>
+<h3 id="83-required_credential_files">8.3 required_credential_files<a hidden class="anchor" aria-hidden="true" href="#83-required_credential_files">#</a></h3>
+<p>用于 OAuth token、service account JSON、证书等文件型凭证。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">required_credential_files</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">google_token.json</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">description</span>: <span style="color:#ae81ff">Google OAuth2 token created by setup script</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">google_client_secret.json</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">description</span>: <span style="color:#ae81ff">Google OAuth client secret</span>
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li><code>path</code> 相对 <code>~/.hermes/</code>。</li>
+<li>加载 skill 时检查文件是否存在。</li>
+<li>文件存在时可注册给 Docker/Modal 等远程 backend 挂载/同步。</li>
+<li>缺失时返回 setup_needed 信息。</li>
+</ul>
+<hr>
+<h2 id="9-skillmd-正文结构规范">9. SKILL.md 正文结构规范<a hidden class="anchor" aria-hidden="true" href="#9-skillmd-正文结构规范">#</a></h2>
+<p>推荐结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Skill Title
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Overview
+</span></span></span><span style="display:flex;"><span>一句话说明 skill 解决什么问题，以及它为什么存在。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to Use
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 触发条件 1
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> 触发条件 2
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Don&#39;t use for: 不适用边界
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Quick Reference
+</span></span></span><span style="display:flex;"><span>| 场景 | 命令/做法 |
+</span></span><span style="display:flex;"><span>|---|---|
+</span></span><span style="display:flex;"><span>| ... | ... |
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Procedure
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> 第一步：检查前置条件。
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> 第二步：执行核心流程。
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">3.</span> 第三步：处理失败分支。
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">4.</span> 第四步：验证结果。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Common Pitfalls
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> 坑点：原因；修复方式。
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> 坑点：原因；修复方式。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Verification Checklist
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> 结果文件存在
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> 测试通过
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> 用户要求全部满足
+</span></span></code></pre></div><p>写作原则：</p>
+<ol>
+<li>先写最常用流程，再写边缘情况。</li>
+<li>用明确步骤，不写抽象口号。</li>
+<li>命令要可复制运行。</li>
+<li>坑点要写“怎么识别 + 怎么修”。</li>
+<li>验证标准要可执行、可观察。</li>
+<li>对危险操作明确要求确认。</li>
+<li>不要把一次任务的临时细节写进 skill。</li>
+<li>大段参考资料放 <code>references/</code>，主文只保留路由和关键流程。</li>
+</ol>
+<hr>
+<h2 id="10-支持文件的加载机制">10. 支持文件的加载机制<a hidden class="anchor" aria-hidden="true" href="#10-支持文件的加载机制">#</a></h2>
+<p>当 <code>skill_view(name)</code> 加载主 skill 时，返回结果里会包含 <code>linked_files</code>。</p>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;success&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;example-skill&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;content&#34;</span>: <span style="color:#e6db74">&#34;...SKILL.md...&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;skill_dir&#34;</span>: <span style="color:#e6db74">&#34;/root/.hermes/skills/category/example-skill&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;linked_files&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;references&#34;</span>: [<span style="color:#e6db74">&#34;references/api.md&#34;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;templates&#34;</span>: [<span style="color:#e6db74">&#34;templates/report.md&#34;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;scripts&#34;</span>: [<span style="color:#e6db74">&#34;scripts/analyze.py&#34;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;assets&#34;</span>: [<span style="color:#e6db74">&#34;assets/schema.json&#34;</span>]
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;usage_hint&#34;</span>: <span style="color:#e6db74">&#34;To view linked files, call skill_view(name, file_path) ...&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>加载支持文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_view(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;example-skill&#34;</span>, file_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;references/api.md&#34;</span>)
+</span></span></code></pre></div><p>安全限制：</p>
+<ul>
+<li><code>file_path</code> 不能包含 <code>..</code>。</li>
+<li>解析后必须仍在 skill 目录内。</li>
+<li>支持文件不存在时，Hermes 会列出可用文件。</li>
+<li>二进制文件不能作为文本读取时，会返回 binary 信息。</li>
+</ul>
+<hr>
+<h2 id="11-skill-调用机制">11. Skill 调用机制<a hidden class="anchor" aria-hidden="true" href="#11-skill-调用机制">#</a></h2>
+<h3 id="111-自然语言调用">11.1 自然语言调用<a hidden class="anchor" aria-hidden="true" href="#111-自然语言调用">#</a></h3>
+<p>用户可以直接说：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>用 github-workflows 帮我创建 PR
+</span></span></code></pre></div><p>模型会：</p>
+<ol>
+<li>从系统 prompt 的 skill index 看到 <code>github-workflows</code>。</li>
+<li>判断它相关。</li>
+<li>调用 <code>skill_view(name=&quot;github-workflows&quot;)</code>。</li>
+<li>按加载出的指令执行。</li>
+</ol>
+<h3 id="112-tools-调用">11.2 tools 调用<a hidden class="anchor" aria-hidden="true" href="#112-tools-调用">#</a></h3>
+<p>可用工具：</p>
+<table>
+	<thead>
+			<tr>
+					<th>工具</th>
+					<th>作用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>skills_list(category?)</code></td>
+					<td>列出可用 skill 的 name/description/category</td>
+			</tr>
+			<tr>
+					<td><code>skill_view(name, file_path?)</code></td>
+					<td>加载完整 skill 或支持文件</td>
+			</tr>
+			<tr>
+					<td><code>skill_manage(...)</code></td>
+					<td>创建、修改、删除 skill</td>
+			</tr>
+	</tbody>
+</table>
+<p><code>skills_list</code> 返回精简信息；<code>skill_view</code> 才返回完整正文。</p>
+<h3 id="113-slash-command-调用">11.3 slash command 调用<a hidden class="anchor" aria-hidden="true" href="#113-slash-command-调用">#</a></h3>
+<p>每个安装的 skill 会自动生成一个 slash command。</p>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/github-workflows create a PR for the auth refactor
+</span></span><span style="display:flex;"><span>/excalidraw draw the architecture
+</span></span><span style="display:flex;"><span>/axolotl help me fine-tune a Llama model
+</span></span></code></pre></div><p>调用过程：</p>
+<ol>
+<li>Hermes 扫描 skill 目录，生成 <code>/skill-name</code> 命令映射。</li>
+<li>用户输入 slash command。</li>
+<li>Hermes 加载 skill 全文。</li>
+<li>构造一条模型可读消息，包含：
+<ul>
+<li>skill 被调用的说明。</li>
+<li>完整 skill 内容。</li>
+<li>skill 绝对目录。</li>
+<li>支持文件列表。</li>
+<li>用户在 slash command 后附带的指令。</li>
+<li>setup/config/runtime note。</li>
+</ul>
+</li>
+<li>agent 根据这条消息继续执行。</li>
+</ol>
+<p>slash command 名称规范化：</p>
+<ul>
+<li>转小写。</li>
+<li>空格和下划线转连字符。</li>
+<li>移除非 <code>a-z0-9-</code> 字符。</li>
+<li>多个连字符压缩成一个。</li>
+</ul>
+<h3 id="114-skill-command-消息骨架">11.4 skill command 消息骨架<a hidden class="anchor" aria-hidden="true" href="#114-skill-command-消息骨架">#</a></h3>
+<p>slash command 加载后，Hermes 会生成类似内容：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>[IMPORTANT: The user has invoked the &lt;skill-name&gt; skill. The full skill content is loaded below.]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;SKILL.md content&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[Skill directory: /abs/path/to/skill]
+</span></span><span style="display:flex;"><span>Resolve any relative paths in this skill ... against that directory ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[This skill has supporting files:]
+</span></span><span style="display:flex;"><span>- references/api.md -&gt; /abs/path/references/api.md
+</span></span><span style="display:flex;"><span>- scripts/foo.js -&gt; /abs/path/scripts/foo.js
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Load any of these with skill_view(...), or run scripts directly by absolute path ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>The user has provided the following instruction alongside the skill invocation: &lt;user instruction&gt;
+</span></span></code></pre></div><p>这个设计的关键点：</p>
+<ul>
+<li>Skill 内容作为用户消息进入 agent loop，而不是永久修改 system prompt。</li>
+<li>这样不会破坏 prompt cache。</li>
+<li>Memory provider 会尝试只提取用户原始 instruction，避免把整篇 skill 误存进记忆。</li>
+</ul>
+<h3 id="115-预加载-skill">11.5 预加载 skill<a hidden class="anchor" aria-hidden="true" href="#115-预加载-skill">#</a></h3>
+<p>CLI 支持：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes --skills github-workflows
+</span></span><span style="display:flex;"><span>hermes -s github-workflows,test-driven-development
+</span></span></code></pre></div><p>会话内支持：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/skill github-workflows
+</span></span></code></pre></div><hr>
+<h2 id="12-系统提示中的-skill-index-机制">12. 系统提示中的 Skill Index 机制<a hidden class="anchor" aria-hidden="true" href="#12-系统提示中的-skill-index-机制">#</a></h2>
+<p>Hermes 会在系统提示中加入一个 compact skill index。</p>
+<p>大致结构：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>## Skills (mandatory)
+</span></span><span style="display:flex;"><span>Before replying, scan the skills below. If a skill matches ... MUST load it ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;available_skills&gt;
+</span></span><span style="display:flex;"><span>  github:
+</span></span><span style="display:flex;"><span>    - github-workflows: Use when operating GitHub end-to-end...
+</span></span><span style="display:flex;"><span>  software-development:
+</span></span><span style="display:flex;"><span>    - test-driven-development: Use when implementing any feature...
+</span></span><span style="display:flex;"><span>&lt;/available_skills&gt;
+</span></span></code></pre></div><p>构建流程：</p>
+<ol>
+<li>扫描 <code>~/.hermes/skills/</code>。</li>
+<li>扫描 <code>skills.external_dirs</code>。</li>
+<li>读取每个 <code>SKILL.md</code> 的 frontmatter 和 description。</li>
+<li>过滤不匹配平台的 skill。</li>
+<li>过滤当前环境不相关的 skill。</li>
+<li>过滤 disabled skill。</li>
+<li>应用 requires/fallback 条件。</li>
+<li>按 category 分组。</li>
+<li>写入系统提示。</li>
+</ol>
+<p>缓存机制：</p>
+<ul>
+<li>进程内 LRU cache。</li>
+<li>磁盘 snapshot <code>.skills_prompt_snapshot.json</code>。</li>
+<li>cache key 包含：skills dir、external dirs、可用工具、可用 toolsets、平台、disabled 列表、压缩类别等。</li>
+</ul>
+<p>这意味着：</p>
+<ul>
+<li>新增/删除 skill 后，当前会话未必立刻刷新系统 prompt。</li>
+<li>slash command 可以 reload skill map，但不一定重建系统 prompt cache。</li>
+<li>新会话通常能看到最新 index。</li>
+</ul>
+<hr>
+<h2 id="13-skill-发现与查找规则">13. Skill 发现与查找规则<a hidden class="anchor" aria-hidden="true" href="#13-skill-发现与查找规则">#</a></h2>
+<p><code>skill_view(name)</code> 的查找策略包括：</p>
+<ol>
+<li>插件 qualified name：<code>plugin:skill</code>。</li>
+<li>分类 fall-through：<code>category:skill</code> 可尝试映射为 <code>category/skill</code>。</li>
+<li>直接路径：<code>skills_dir/name/SKILL.md</code>。</li>
+<li>递归按目录名查找。</li>
+<li>递归按 frontmatter <code>name</code> 查找。</li>
+<li>legacy 平铺 Markdown：<code>name.md</code>。</li>
+</ol>
+<p>安全限制：</p>
+<ul>
+<li><code>name</code> 不能是绝对路径。</li>
+<li>不能包含 <code>..</code> 路径穿越。</li>
+<li>Windows drive path 也会拒绝，避免误识别为 plugin namespace。</li>
+<li>多个候选匹配时，Hermes 拒绝猜测并要求用完整相对路径。</li>
+</ul>
+<hr>
+<h2 id="14-skill-启用禁用平台过滤">14. Skill 启用、禁用、平台过滤<a hidden class="anchor" aria-hidden="true" href="#14-skill-启用禁用平台过滤">#</a></h2>
+<p>Skill 可能因为以下原因不显示：</p>
+<ol>
+<li><code>platforms</code> 不匹配当前系统。</li>
+<li><code>metadata.hermes.requires_*</code> 条件不满足。</li>
+<li><code>metadata.hermes.fallback_for_*</code> 对应工具已可用。</li>
+<li>用户在 skills config 中禁用。</li>
+<li>当前运行环境不匹配 environment tags。</li>
+<li>所在目录被排除扫描。</li>
+</ol>
+<p>常用管理命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes skills list
+</span></span><span style="display:flex;"><span>hermes skills config
+</span></span><span style="display:flex;"><span>hermes tools list
+</span></span><span style="display:flex;"><span>hermes tools enable &lt;toolset&gt;
+</span></span><span style="display:flex;"><span>hermes tools disable &lt;toolset&gt;
+</span></span></code></pre></div><p>如果启用/禁用后不生效：</p>
+<ul>
+<li>在 CLI 中开新会话或 <code>/reset</code>。</li>
+<li>gateway 中重启或 <code>/restart</code>。</li>
+<li>新 skill 当前 session 看不到时，通常是 loader/cache 行为，不一定是 bug。</li>
+</ul>
+<hr>
+<h2 id="15-skill_manage-写入机制">15. skill_manage 写入机制<a hidden class="anchor" aria-hidden="true" href="#15-skill_manage-写入机制">#</a></h2>
+<p><code>skill_manage</code> 是 agent 维护 skill 的工具。</p>
+<p>Actions：</p>
+<table>
+	<thead>
+			<tr>
+					<th>action</th>
+					<th>用途</th>
+					<th>关键参数</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>create</code></td>
+					<td>新建 skill</td>
+					<td><code>name</code>, <code>content</code>, optional <code>category</code></td>
+			</tr>
+			<tr>
+					<td><code>patch</code></td>
+					<td>局部替换，推荐</td>
+					<td><code>name</code>, <code>old_string</code>, <code>new_string</code>, optional <code>file_path</code></td>
+			</tr>
+			<tr>
+					<td><code>edit</code></td>
+					<td>整体重写 <code>SKILL.md</code></td>
+					<td><code>name</code>, <code>content</code></td>
+			</tr>
+			<tr>
+					<td><code>delete</code></td>
+					<td>删除 skill</td>
+					<td><code>name</code>, optional <code>absorbed_into</code></td>
+			</tr>
+			<tr>
+					<td><code>write_file</code></td>
+					<td>写支持文件</td>
+					<td><code>name</code>, <code>file_path</code>, <code>file_content</code></td>
+			</tr>
+			<tr>
+					<td><code>remove_file</code></td>
+					<td>删除支持文件</td>
+					<td><code>name</code>, <code>file_path</code></td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="151-create">15.1 create<a hidden class="anchor" aria-hidden="true" href="#151-create">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(
+</span></span><span style="display:flex;"><span>  action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>,
+</span></span><span style="display:flex;"><span>  name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;my-skill&#34;</span>,
+</span></span><span style="display:flex;"><span>  category<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;software-development&#34;</span>,
+</span></span><span style="display:flex;"><span>  content<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;&#34;---
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">name: my-skill
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">description: Use when ...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">version: 1.0.0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">author: Hermes Agent
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">license: MIT
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">---
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># My Skill
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>行为：</p>
+<ol>
+<li>校验 name。</li>
+<li>校验 category。</li>
+<li>校验 frontmatter。</li>
+<li>校验内容大小。</li>
+<li>检查是否已有同名 skill。</li>
+<li>创建目录。</li>
+<li>原子写入 <code>SKILL.md</code>。</li>
+<li>如开启 <code>skills.guard_agent_created</code>，执行安全扫描；若阻止则回滚。</li>
+</ol>
+<h3 id="152-patch">15.2 patch<a hidden class="anchor" aria-hidden="true" href="#152-patch">#</a></h3>
+<p>适合小修小补。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(
+</span></span><span style="display:flex;"><span>  action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;patch&#34;</span>,
+</span></span><span style="display:flex;"><span>  name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;my-skill&#34;</span>,
+</span></span><span style="display:flex;"><span>  old_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;旧内容&#34;</span>,
+</span></span><span style="display:flex;"><span>  new_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;新内容&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>也可以 patch 支持文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(
+</span></span><span style="display:flex;"><span>  action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;patch&#34;</span>,
+</span></span><span style="display:flex;"><span>  name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;my-skill&#34;</span>,
+</span></span><span style="display:flex;"><span>  file_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;references/api.md&#34;</span>,
+</span></span><span style="display:flex;"><span>  old_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;旧内容&#34;</span>,
+</span></span><span style="display:flex;"><span>  new_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;新内容&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>推荐优先用 patch，因为：</p>
+<ul>
+<li>token 少。</li>
+<li>不容易误删大段内容。</li>
+<li>更适合维护已有 skill。</li>
+</ul>
+<h3 id="153-edit">15.3 edit<a hidden class="anchor" aria-hidden="true" href="#153-edit">#</a></h3>
+<p>用于大改，需要提供完整新的 <code>SKILL.md</code>。</p>
+<p>风险：</p>
+<ul>
+<li>容易丢失原内容。</li>
+<li>更消耗 token。</li>
+<li>应先读取旧 skill 再完整重写。</li>
+</ul>
+<h3 id="154-write_file--remove_file">15.4 write_file / remove_file<a hidden class="anchor" aria-hidden="true" href="#154-write_file--remove_file">#</a></h3>
+<p><code>write_file</code> 只能写以下位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>references/
+</span></span><span style="display:flex;"><span>templates/
+</span></span><span style="display:flex;"><span>scripts/
+</span></span><span style="display:flex;"><span>assets/
+</span></span><span style="display:flex;"><span>SKILL.md
+</span></span></code></pre></div><p>路径限制：</p>
+<ul>
+<li>不允许 <code>..</code>。</li>
+<li>必须在 skill 目录内。</li>
+<li>支持文件大小限制 1 MiB。</li>
+</ul>
+<h3 id="155-delete">15.5 delete<a hidden class="anchor" aria-hidden="true" href="#155-delete">#</a></h3>
+<p>删除有防护：</p>
+<ul>
+<li>不能删除 pinned skill。</li>
+<li>不能删除 skills root 本身。</li>
+<li>不能删除不在已知 skill root 内的路径。</li>
+<li>拒绝删除 symlink/junction 指向的目录。</li>
+</ul>
+<p>删除时建议传 <code>absorbed_into</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;delete&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;old-skill&#34;</span>, absorbed_into<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;new-skill&#34;</span>)
+</span></span></code></pre></div><p>如果只是清理，无合并目标：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;delete&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;old-skill&#34;</span>, absorbed_into<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+</span></span></code></pre></div><hr>
+<h2 id="16-安全机制">16. 安全机制<a hidden class="anchor" aria-hidden="true" href="#16-安全机制">#</a></h2>
+<h3 id="161-路径安全">16.1 路径安全<a hidden class="anchor" aria-hidden="true" href="#161-路径安全">#</a></h3>
+<p>Hermes 对 skill name 和 file_path 做路径限制：</p>
+<ul>
+<li>禁止绝对路径。</li>
+<li>禁止 <code>..</code>。</li>
+<li>支持文件必须解析在 skill 目录内。</li>
+<li>删除操作必须在已知 skills root 内。</li>
+</ul>
+<h3 id="162-prompt-injection-提示">16.2 Prompt injection 提示<a hidden class="anchor" aria-hidden="true" href="#162-prompt-injection-提示">#</a></h3>
+<p>加载 skill 时，Hermes 会扫描一些常见 prompt injection 字符串，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>ignore previous instructions
+</span></span><span style="display:flex;"><span>you are now
+</span></span><span style="display:flex;"><span>system prompt:
+</span></span><span style="display:flex;"><span>&lt;system&gt;
+</span></span></code></pre></div><p>发现后会记录 warning，但本地 skill 一般仍会加载。第三方 hub 安装会经过更完整的安全扫描。</p>
+<h3 id="163-hub-安装安全扫描">16.3 Hub 安装安全扫描<a hidden class="anchor" aria-hidden="true" href="#163-hub-安装安全扫描">#</a></h3>
+<p>Hub 安装的第三方 skills 会扫描：</p>
+<ul>
+<li>数据外传模式。</li>
+<li>prompt injection。</li>
+<li>破坏性命令。</li>
+<li>shell injection。</li>
+<li>供应链风险。</li>
+</ul>
+<p>trust level：</p>
+<table>
+	<thead>
+			<tr>
+					<th>level</th>
+					<th>来源</th>
+					<th>策略</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>builtin</td>
+					<td>Hermes bundled skills</td>
+					<td>默认可信</td>
+			</tr>
+			<tr>
+					<td>official</td>
+					<td>Hermes optional skills</td>
+					<td>默认可信</td>
+			</tr>
+			<tr>
+					<td>trusted</td>
+					<td>可信 registry/repo</td>
+					<td>较宽松</td>
+			</tr>
+			<tr>
+					<td>community</td>
+					<td>第三方来源</td>
+					<td>非 dangerous 可 force；dangerous 不允许</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="164-agent-created-skill-guard">16.4 agent-created skill guard<a hidden class="anchor" aria-hidden="true" href="#164-agent-created-skill-guard">#</a></h3>
+<p>配置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">guard_agent_created</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><p>默认关闭。开启后，agent 通过 <code>skill_manage</code> 创建/修改的 skill 会经过 security scan；阻止时会回滚写入。</p>
+<h3 id="165-write-approval">16.5 write approval<a hidden class="anchor" aria-hidden="true" href="#165-write-approval">#</a></h3>
+<p>配置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">write_approval</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><p>开启后，<code>skill_manage</code> 的写操作会先 staged 到：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/pending/skills/
+</span></span></code></pre></div><p>用户通过命令审批：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/skills pending
+</span></span><span style="display:flex;"><span>/skills diff &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills approve &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills reject &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills approval on|off
+</span></span></code></pre></div><hr>
+<h2 id="17-模板变量与-inline-shell">17. 模板变量与 inline shell<a hidden class="anchor" aria-hidden="true" href="#17-模板变量与-inline-shell">#</a></h2>
+<h3 id="171-模板变量">17.1 模板变量<a hidden class="anchor" aria-hidden="true" href="#171-模板变量">#</a></h3>
+<p>Skill 正文中可使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>${HERMES_SKILL_DIR}
+</span></span><span style="display:flex;"><span>${HERMES_SESSION_ID}
+</span></span></code></pre></div><p>加载时替换：</p>
+<table>
+	<thead>
+			<tr>
+					<th>变量</th>
+					<th>替换为</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>${HERMES_SKILL_DIR}</code></td>
+					<td>当前 skill 目录绝对路径</td>
+			</tr>
+			<tr>
+					<td><code>${HERMES_SESSION_ID}</code></td>
+					<td>当前 session id；没有则保留原样</td>
+			</tr>
+	</tbody>
+</table>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Run:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>```bash
+</span></span><span style="display:flex;"><span>python ${HERMES_SKILL_DIR}/scripts/analyze.py input.json
+</span></span></code></pre></div><pre tabindex="0"><code>
+关闭方式：
+
+```yaml
+skills:
+  template_vars: false
+</code></pre><h3 id="172-inline-shell">17.2 inline shell<a hidden class="anchor" aria-hidden="true" href="#172-inline-shell">#</a></h3>
+<p>Skill 可以写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Current date: !<span style="color:#e6db74">`date -u +%Y-%m-%d`</span>
+</span></span><span style="display:flex;"><span>Git branch: !<span style="color:#e6db74">`git rev-parse --abbrev-ref HEAD`</span>
+</span></span></code></pre></div><p>但默认关闭。</p>
+<p>开启：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">inline_shell</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">inline_shell_timeout</span>: <span style="color:#ae81ff">10</span>
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li>每个 <code>!</code>cmd`` 用 bash 执行。</li>
+<li>cwd 是 skill 目录。</li>
+<li>stdout 被内联到 skill 内容中。</li>
+<li>输出最多 4000 字符。</li>
+<li>超时/失败会插入 <code>[inline-shell error: ...]</code>。</li>
+</ul>
+<p>安全注意：</p>
+<ul>
+<li>inline shell 会在 host 上执行，且加载 skill 时执行。</li>
+<li>只应对可信 skill 源开启。</li>
+</ul>
+<hr>
+<h2 id="18-skill-bundles">18. Skill Bundles<a hidden class="anchor" aria-hidden="true" href="#18-skill-bundles">#</a></h2>
+<p>Skill bundle 是一份 YAML，把多个 skill 绑定成一个 slash command。</p>
+<p>位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skill-bundles/&lt;slug&gt;.yaml
+</span></span></code></pre></div><p>格式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">backend-dev</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#ae81ff">Backend feature work — review, test, PR workflow.</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">skills</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">github-workflows</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">test-driven-development</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">requesting-code-review</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">instruction</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  Always start by writing failing tests, then implement.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  Open the PR through the standard workflow.</span>
+</span></span></code></pre></div><p>调用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/backend-dev refactor the auth middleware
+</span></span></code></pre></div><p>行为：</p>
+<ul>
+<li>加载 listed skills。</li>
+<li>附加 bundle instruction。</li>
+<li>slash command 名称与单 skill 冲突时，bundle 优先。</li>
+<li>缺失 skill 会跳过，不导致整个 bundle 失败。</li>
+<li>不修改 system prompt，作为一次用户消息注入。</li>
+</ul>
+<p>管理命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes bundles list
+</span></span><span style="display:flex;"><span>hermes bundles show backend-dev
+</span></span><span style="display:flex;"><span>hermes bundles create backend-dev --skill github-workflows --skill test-driven-development
+</span></span><span style="display:flex;"><span>hermes bundles delete backend-dev
+</span></span><span style="display:flex;"><span>hermes bundles reload
+</span></span></code></pre></div><hr>
+<h2 id="19-skills-hub-与发布机制">19. Skills Hub 与发布机制<a hidden class="anchor" aria-hidden="true" href="#19-skills-hub-与发布机制">#</a></h2>
+<p>常用命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes skills browse
+</span></span><span style="display:flex;"><span>hermes skills search kubernetes
+</span></span><span style="display:flex;"><span>hermes skills inspect openai/skills/k8s
+</span></span><span style="display:flex;"><span>hermes skills install openai/skills/k8s
+</span></span><span style="display:flex;"><span>hermes skills check
+</span></span><span style="display:flex;"><span>hermes skills update
+</span></span><span style="display:flex;"><span>hermes skills uninstall k8s
+</span></span><span style="display:flex;"><span>hermes skills publish skills/my-skill --to github --repo owner/repo
+</span></span><span style="display:flex;"><span>hermes skills tap add myorg/skills-repo
+</span></span></code></pre></div><p>支持来源：</p>
+<table>
+	<thead>
+			<tr>
+					<th>source</th>
+					<th>示例</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>official</td>
+					<td><code>official/security/1password</code></td>
+			</tr>
+			<tr>
+					<td>skills-sh</td>
+					<td><code>skills-sh/vercel-labs/json-render/json-render-react</code></td>
+			</tr>
+			<tr>
+					<td>well-known</td>
+					<td><code>well-known:https://mintlify.com/docs/.well-known/skills/mintlify</code></td>
+			</tr>
+			<tr>
+					<td>github</td>
+					<td><code>openai/skills/k8s</code></td>
+			</tr>
+			<tr>
+					<td>url</td>
+					<td><code>https://example.com/SKILL.md</code></td>
+			</tr>
+			<tr>
+					<td>clawhub</td>
+					<td>第三方 marketplace</td>
+			</tr>
+			<tr>
+					<td>lobehub</td>
+					<td>LobeHub agents</td>
+			</tr>
+			<tr>
+					<td>browse-sh</td>
+					<td>浏览器自动化 skill catalog</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="191-tap-仓库结构">19.1 Tap 仓库结构<a hidden class="anchor" aria-hidden="true" href="#191-tap-仓库结构">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>owner/repo
+</span></span><span style="display:flex;"><span>├── skills/
+</span></span><span style="display:flex;"><span>│   ├── my-workflow/
+</span></span><span style="display:flex;"><span>│   │   ├── SKILL.md
+</span></span><span style="display:flex;"><span>│   │   ├── references/
+</span></span><span style="display:flex;"><span>│   │   ├── templates/
+</span></span><span style="display:flex;"><span>│   │   └── scripts/
+</span></span><span style="display:flex;"><span>│   └── another-skill/
+</span></span><span style="display:flex;"><span>│       └── SKILL.md
+</span></span><span style="display:flex;"><span>└── README.md
+</span></span></code></pre></div><p>安装：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes skills tap add owner/repo
+</span></span><span style="display:flex;"><span>hermes skills search my-workflow
+</span></span><span style="display:flex;"><span>hermes skills install owner/repo/my-workflow
+</span></span></code></pre></div><hr>
+<h2 id="20-bundled-skill-更新机制">20. Bundled skill 更新机制<a hidden class="anchor" aria-hidden="true" href="#20-bundled-skill-更新机制">#</a></h2>
+<p>Hermes 安装和 update 会把仓库内置 skills 同步到 <code>~/.hermes/skills/</code>。</p>
+<p>同步状态记录在：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/.bundled_manifest
+</span></span></code></pre></div><p>逻辑：</p>
+<ul>
+<li>本地 skill 未修改：可自动更新为新的 bundled 版本。</li>
+<li>本地 skill 已修改：视为 user-modified，后续同步跳过，避免覆盖用户修改。</li>
+</ul>
+<p>重置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes skills reset google-workspace
+</span></span><span style="display:flex;"><span>hermes skills reset google-workspace --restore
+</span></span><span style="display:flex;"><span>hermes skills reset google-workspace --restore --yes
+</span></span></code></pre></div><p>区别：</p>
+<table>
+	<thead>
+			<tr>
+					<th>命令</th>
+					<th>行为</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>reset</code></td>
+					<td>清除 manifest entry，保留当前文件，重新 baseline</td>
+			</tr>
+			<tr>
+					<td><code>reset --restore</code></td>
+					<td>删除本地修改，恢复当前 bundled 版本</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="21-创建高质量-skill-的推荐模板">21. 创建高质量 Skill 的推荐模板<a hidden class="anchor" aria-hidden="true" href="#21-创建高质量-skill-的推荐模板">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>name: example-workflow
+</span></span><span style="display:flex;"><span>description: Use when performing &lt;task class&gt;. Provides &lt;main procedure&gt;, &lt;failure handling&gt;, and &lt;verification&gt;.
+</span></span><span style="display:flex;"><span>version: 1.0.0
+</span></span><span style="display:flex;"><span>author: Hermes Agent
+</span></span><span style="display:flex;"><span>license: MIT
+</span></span><span style="display:flex;"><span>platforms: [linux, macos]
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  hermes:
+</span></span><span style="display:flex;"><span>    tags: [example, workflow]
+</span></span><span style="display:flex;"><span>    related_skills: []
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Example Workflow
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Overview
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>This skill standardizes how to perform &lt;task class&gt;.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to Use
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Use this skill when:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Do not use this skill when:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Inputs
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Expected inputs:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> <span style="color:#e6db74">`&lt;input-a&gt;`</span>: ...
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> <span style="color:#e6db74">`&lt;input-b&gt;`</span>: ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>If required input is missing:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Try to infer from files/context only when safe.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Ask the user only if the ambiguity changes execution.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Procedure
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> Discover prerequisites.
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Check ...
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Read ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> Execute the core workflow.
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Run ...
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Write ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">3.</span> Handle failures.
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> If ..., then ...
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> If ..., then ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">4.</span> Verify.
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Run ...
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">-</span> Confirm ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Output Format
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Return:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Path(s) changed or created.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Verification command and result.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> Remaining blockers, if any.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Common Pitfalls
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> Pitfall: ...
+</span></span><span style="display:flex;"><span>   Fix: ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> Pitfall: ...
+</span></span><span style="display:flex;"><span>   Fix: ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Verification Checklist
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Required inputs resolved
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Main artifact produced
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Verification command run
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Failures or assumptions reported honestly
+</span></span></code></pre></div><hr>
+<h2 id="22-skill-编写检查清单">22. Skill 编写检查清单<a hidden class="anchor" aria-hidden="true" href="#22-skill-编写检查清单">#</a></h2>
+<p>创建前：</p>
+<ul>
+<li><input disabled="" type="checkbox"> 是否真的是可复用流程，而不是单次任务？</li>
+<li><input disabled="" type="checkbox"> 是否已有类似 skill 可 patch，而不是新建？</li>
+<li><input disabled="" type="checkbox"> 是否该放 <code>~/.hermes/skills/</code>、repo bundled、optional-skills，还是 hub？</li>
+</ul>
+<p>Frontmatter：</p>
+<ul>
+<li><input disabled="" type="checkbox"> 文件首字节就是 <code>---</code>。</li>
+<li><input disabled="" type="checkbox"> 有 closing <code>---</code>。</li>
+<li><input disabled="" type="checkbox"> YAML 可解析。</li>
+<li><input disabled="" type="checkbox"> <code>name</code> 存在，≤64 字符。</li>
+<li><input disabled="" type="checkbox"> <code>description</code> 存在，≤1024 字符。</li>
+<li><input disabled="" type="checkbox"> <code>version</code> / <code>author</code> / <code>license</code> 建议存在。</li>
+<li><input disabled="" type="checkbox"> <code>metadata.hermes.tags</code> 建议存在。</li>
+<li><input disabled="" type="checkbox"> 如果平台有限制，写 <code>platforms</code>。</li>
+<li><input disabled="" type="checkbox"> 如果需要工具条件，写 requires/fallback。</li>
+<li><input disabled="" type="checkbox"> secret 写 <code>required_environment_variables</code>，不要写进正文或 config。</li>
+</ul>
+<p>正文：</p>
+<ul>
+<li><input disabled="" type="checkbox"> 有 <code>When to Use</code>。</li>
+<li><input disabled="" type="checkbox"> 有明确 <code>Procedure</code>。</li>
+<li><input disabled="" type="checkbox"> 有 <code>Common Pitfalls</code>。</li>
+<li><input disabled="" type="checkbox"> 有 <code>Verification</code> 或 checklist。</li>
+<li><input disabled="" type="checkbox"> 命令可复制运行。</li>
+<li><input disabled="" type="checkbox"> 危险操作需要确认。</li>
+<li><input disabled="" type="checkbox"> 大参考资料拆到 <code>references/</code>。</li>
+<li><input disabled="" type="checkbox"> 模板拆到 <code>templates/</code>。</li>
+<li><input disabled="" type="checkbox"> 复杂解析逻辑放 <code>scripts/</code>。</li>
+</ul>
+<p>安全：</p>
+<ul>
+<li><input disabled="" type="checkbox"> 不包含明文 secret。</li>
+<li><input disabled="" type="checkbox"> 不要求 agent 忽略系统/用户指令。</li>
+<li><input disabled="" type="checkbox"> 不隐藏破坏性命令。</li>
+<li><input disabled="" type="checkbox"> 不从不可信 URL 执行脚本，除非有校验和/审计说明。</li>
+</ul>
+<p>验证：</p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>skill_view(name)</code> 能加载。</li>
+<li><input disabled="" type="checkbox"> <code>skills_list()</code> 能看到。</li>
+<li><input disabled="" type="checkbox"> slash command 可触发。</li>
+<li><input disabled="" type="checkbox"> 支持文件可通过 <code>skill_view(name, file_path)</code> 加载。</li>
+<li><input disabled="" type="checkbox"> 如果包含脚本，脚本可直接运行或有清晰依赖说明。</li>
+</ul>
+<hr>
+<h2 id="23-常见坑">23. 常见坑<a hidden class="anchor" aria-hidden="true" href="#23-常见坑">#</a></h2>
+<h3 id="231-当前会话看不到刚创建的-skill">23.1 当前会话看不到刚创建的 Skill<a hidden class="anchor" aria-hidden="true" href="#231-当前会话看不到刚创建的-skill">#</a></h3>
+<p>原因：system prompt skill index 和 slash command map 有缓存。</p>
+<p>处理：</p>
+<ul>
+<li>新开会话。</li>
+<li><code>/reset</code>。</li>
+<li><code>/reload-skills</code> 或相关 reload 命令只刷新 slash-command map，不一定重建 system prompt cache。</li>
+</ul>
+<h3 id="232-description-太泛模型不加载">23.2 description 太泛，模型不加载<a hidden class="anchor" aria-hidden="true" href="#232-description-太泛模型不加载">#</a></h3>
+<p>差：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#ae81ff">Helps with reports.</span>
+</span></span></code></pre></div><p>好：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">description</span>: <span style="color:#ae81ff">Use when generating Markdown research reports from gathered evidence. Enforces source grounding, structure, synthesis, and verification before final delivery.</span>
+</span></span></code></pre></div><h3 id="233-把知识库写成了任务日志">23.3 把知识库写成了任务日志<a hidden class="anchor" aria-hidden="true" href="#233-把知识库写成了任务日志">#</a></h3>
+<p>Skill 不应写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>2026-06-20 我完成了 X 项目第 3 阶段。
+</span></span></code></pre></div><p>应写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>When continuing a source-study project, first load the project map, then inspect current entry points, then update the knowledge index.
+</span></span></code></pre></div><h3 id="234-把-secret-写入-skillmd">23.4 把 secret 写入 SKILL.md<a hidden class="anchor" aria-hidden="true" href="#234-把-secret-写入-skillmd">#</a></h3>
+<p>不要：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">api_key</span>: <span style="color:#ae81ff">sk-xxxx</span>
+</span></span></code></pre></div><p>应该：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">required_environment_variables</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">SERVICE_API_KEY</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">prompt</span>: <span style="color:#ae81ff">Service API key</span>
+</span></span></code></pre></div><h3 id="235-支持文件路径写错">23.5 支持文件路径写错<a hidden class="anchor" aria-hidden="true" href="#235-支持文件路径写错">#</a></h3>
+<p>不要让 agent 猜相对路径。推荐在 skill 里写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Run:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>```bash
+</span></span><span style="display:flex;"><span>python ${HERMES_SKILL_DIR}/scripts/analyze.py &lt;input&gt;
+</span></span></code></pre></div><pre tabindex="0"><code>
+### 23.6 误用 skill_manage create 创建 repo 内置 skill
+
+`skill_manage(action=&#39;create&#39;)` 创建到当前 profile 的 `~/.hermes/skills/`。
+
+如果你在 Hermes 源码仓库里开发 bundled skill，应写入：
+
+```text
+&lt;repo&gt;/skills/&lt;category&gt;/&lt;skill-name&gt;/SKILL.md
+</code></pre><p>并提交 git。</p>
+<h3 id="237-过长-skillmd">23.7 过长 SKILL.md<a hidden class="anchor" aria-hidden="true" href="#237-过长-skillmd">#</a></h3>
+<p>超过 100,000 字符会被 agent 写入校验拒绝。即使没超，也不建议过长。</p>
+<p>拆分原则：</p>
+<ul>
+<li>主流程保留在 <code>SKILL.md</code>。</li>
+<li>大表格、API、长示例放 <code>references/</code>。</li>
+<li>输出格式放 <code>templates/</code>。</li>
+<li>可执行逻辑放 <code>scripts/</code>。</li>
+</ul>
+<hr>
+<h2 id="24-端到端示例创建一个-skill-包">24. 端到端示例：创建一个 Skill 包<a hidden class="anchor" aria-hidden="true" href="#24-端到端示例创建一个-skill-包">#</a></h2>
+<p>目标：创建一个“发布博客文章”的 skill。</p>
+<p>目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/writing/hugo-post-authoring/
+</span></span><span style="display:flex;"><span>├── SKILL.md
+</span></span><span style="display:flex;"><span>├── templates/
+</span></span><span style="display:flex;"><span>│   └── frontmatter.md
+</span></span><span style="display:flex;"><span>└── references/
+</span></span><span style="display:flex;"><span>    └── taxonomy.md
+</span></span></code></pre></div><p><code>SKILL.md</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>name: hugo-post-authoring
+</span></span><span style="display:flex;"><span>description: Use when creating or editing Hugo blog posts. Enforces front matter, target section routing, Markdown structure, and final path reporting.
+</span></span><span style="display:flex;"><span>version: 1.0.0
+</span></span><span style="display:flex;"><span>author: Hermes Agent
+</span></span><span style="display:flex;"><span>license: MIT
+</span></span><span style="display:flex;"><span>platforms: [linux, macos]
+</span></span><span style="display:flex;"><span>metadata:
+</span></span><span style="display:flex;"><span>  hermes:
+</span></span><span style="display:flex;"><span>    tags: [hugo, blog, markdown, writing]
+</span></span><span style="display:flex;"><span>    related_skills: [hugo-blog-authoring, writing-and-editing-workflows]
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Hugo Post Authoring
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When to Use
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Use when the user asks to create, edit, or structure a Hugo blog post.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Procedure
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">1.</span> Determine target section.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">2.</span> Read existing site conventions if available.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">3.</span> Draft Markdown with valid front matter.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">4.</span> Save under the correct content path.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">5.</span> Verify file exists and front matter parses.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Supporting Files
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> <span style="color:#e6db74">`templates/frontmatter.md`</span>: front matter template.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> <span style="color:#e6db74">`references/taxonomy.md`</span>: section/tag/category conventions.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Verification Checklist
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> File path is under the correct Hugo section
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Front matter includes title/date/tags/categories as needed
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Markdown headings are coherent
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">- [ ]</span> Final response includes file path only if creation succeeded
+</span></span></code></pre></div><p>创建：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hugo-post-authoring&#34;</span>, category<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;writing&#34;</span>, content<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>)
+</span></span><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;write_file&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hugo-post-authoring&#34;</span>, file_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;templates/frontmatter.md&#34;</span>, file_content<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>)
+</span></span><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;write_file&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hugo-post-authoring&#34;</span>, file_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;references/taxonomy.md&#34;</span>, file_content<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>)
+</span></span></code></pre></div><p>使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/hugo-post-authoring 写一篇关于 SQLite FTS5 的教程
+</span></span></code></pre></div><hr>
+<h2 id="25-快速命令参考">25. 快速命令参考<a hidden class="anchor" aria-hidden="true" href="#25-快速命令参考">#</a></h2>
+<h3 id="用户侧">用户侧<a hidden class="anchor" aria-hidden="true" href="#用户侧">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes skills list
+</span></span><span style="display:flex;"><span>hermes skills browse
+</span></span><span style="display:flex;"><span>hermes skills search &lt;query&gt;
+</span></span><span style="display:flex;"><span>hermes skills inspect &lt;id&gt;
+</span></span><span style="display:flex;"><span>hermes skills install &lt;id&gt;
+</span></span><span style="display:flex;"><span>hermes skills update
+</span></span><span style="display:flex;"><span>hermes skills check
+</span></span><span style="display:flex;"><span>hermes skills uninstall &lt;name&gt;
+</span></span><span style="display:flex;"><span>hermes skills config
+</span></span><span style="display:flex;"><span>hermes skills reset &lt;name&gt;
+</span></span></code></pre></div><h3 id="会话内">会话内<a hidden class="anchor" aria-hidden="true" href="#会话内">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/skill &lt;name&gt;
+</span></span><span style="display:flex;"><span>/&lt;skill-name&gt; &lt;instruction&gt;
+</span></span><span style="display:flex;"><span>/skills list
+</span></span><span style="display:flex;"><span>/skills search &lt;query&gt;
+</span></span><span style="display:flex;"><span>/skills install &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills pending
+</span></span><span style="display:flex;"><span>/skills diff &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills approve &lt;id&gt;
+</span></span><span style="display:flex;"><span>/skills reject &lt;id&gt;
+</span></span><span style="display:flex;"><span>/bundles
+</span></span></code></pre></div><h3 id="agent-工具">Agent 工具<a hidden class="anchor" aria-hidden="true" href="#agent-工具">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>skills_list()
+</span></span><span style="display:flex;"><span>skills_list(category<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;software-development&#34;</span>)
+</span></span><span style="display:flex;"><span>skill_view(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;github-workflows&#34;</span>)
+</span></span><span style="display:flex;"><span>skill_view(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;github-workflows&#34;</span>, file_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;references/api.md&#34;</span>)
+</span></span><span style="display:flex;"><span>skill_manage(action<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;patch&#34;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;github-workflows&#34;</span>, old_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>, new_string<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;...&#34;</span>)
+</span></span></code></pre></div><hr>
+<h2 id="26-最佳实践总结">26. 最佳实践总结<a hidden class="anchor" aria-hidden="true" href="#26-最佳实践总结">#</a></h2>
+<ol>
+<li>Skill 的 description 决定它是否会被正确召回，必须写清触发条件。</li>
+<li>主 <code>SKILL.md</code> 写流程，细节拆支持文件。</li>
+<li>优先用 <code>patch</code> 维护 skill，少用整体 <code>edit</code>。</li>
+<li>复杂逻辑写脚本，不让 LLM 每次临场重写解析器。</li>
+<li>所有 skill 都应有验证步骤。</li>
+<li>发现 skill 错误或遗漏时，立即 patch；否则 skill 会变成长期负债。</li>
+<li>不把临时进度、PR号、commit SHA、一次性日志写进 skill。</li>
+<li>secret 永远放 <code>required_environment_variables</code> / <code>.env</code>，不要进 Markdown 正文。</li>
+<li>新 skill 当前会话不可见时，优先考虑缓存/新会话问题。</li>
+<li>Skill 是 agent 能力增长的核心机制：把稳定、可复用、经过验证的做法沉淀进去。</li>
+</ol>
+<hr>
+<h2 id="27-参考入口">27. 参考入口<a hidden class="anchor" aria-hidden="true" href="#27-参考入口">#</a></h2>
+<p>官方文档：</p>
+<ul>
+<li><code>https://hermes-agent.nousresearch.com/docs/user-guide/features/skills</code></li>
+<li><code>https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills</code></li>
+</ul>
+<p>本机源码关键文件：</p>
+<ul>
+<li><code>/root/.hermes/hermes-agent/tools/skills_tool.py</code></li>
+<li><code>/root/.hermes/hermes-agent/tools/skill_manager_tool.py</code></li>
+<li><code>/root/.hermes/hermes-agent/agent/skill_utils.py</code></li>
+<li><code>/root/.hermes/hermes-agent/agent/skill_commands.py</code></li>
+<li><code>/root/.hermes/hermes-agent/agent/skill_preprocessing.py</code></li>
+<li><code>/root/.hermes/hermes-agent/agent/prompt_builder.py</code></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://blog.nuonian.top/tags/hermes-agent/">Hermes Agent</a></li>
+      <li><a href="https://blog.nuonian.top/tags/ai-agent/">AI Agent</a></li>
+      <li><a href="https://blog.nuonian.top/tags/skill/">Skill</a></li>
+      <li><a href="https://blog.nuonian.top/tags/agent-%E5%B7%A5%E7%A8%8B/">Agent 工程</a></li>
+      <li><a href="https://blog.nuonian.top/tags/prompt-engineering/">Prompt Engineering</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/">
+    <span class="title">下一页 »</span>
+    <span>AI Agent 开发学习路线：从 LLM API 到生产级 Agent 平台</span>
+  </a>
+</nav>
+
+  </footer>
+
+<div class="waline-container" data-path="/2026/06/hermes-agent-skill-system/"></div>
+<link href="https://unpkg.com/@waline/client@v3/dist/waline.css" rel="stylesheet" />
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        
+        const walineInit = () => {
+            import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
+                const walineContainers = document.querySelectorAll('.waline-container[data-path]');
+                walineContainers.forEach(container => {
+                    if (!container.__waline__) {
+                        const path = container.getAttribute('data-path');
+                        container.__waline__ = init({
+                            el: container,
+                            serverURL: 'https:\/\/waline.nuonian.top\/',
+                            lang: 'zh-cn',
+                            visitor: '匿名者',
+                            emoji: [
+                        'https:\/\/cdn.jsdelivr.net\/gh\/walinejs\/emojis\/weibo',
+                    ],
+                        requiredMeta: [
+                        'nick',
+                    ],
+                        locale: {
+                            admin: '作者本人',
+                                placeholder: '🍗所以我配有一条评论吗！',
+                        },
+                        path: path,
+                            dark: 'body.dark',
+
+                            
+                            commentSorting: 'hottest',  
+                            wordLimit: 500,             
+                            search: false,              
+                            reaction: false,            
+                            imageUploader: false,       
+                    });
+                    }
+                });
+            }).catch(error => {
+                console.error("Waline 初始化失败：", error);
+            });
+        };
+
+        walineInit();
+    });
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://blog.nuonian.top/">念念的博客</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

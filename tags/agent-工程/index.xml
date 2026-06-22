@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Agent 工程 on 念念的博客</title>
+    <link>https://blog.nuonian.top/tags/agent-%E5%B7%A5%E7%A8%8B/</link>
+    <description>Recent content in Agent 工程 on 念念的博客</description>
+    <image>
+      <title>念念的博客</title>
+      <url>https://blog.nuonian.top/images/author.jpg</url>
+      <link>https://blog.nuonian.top/images/author.jpg</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 22 Jun 2026 11:14:30 +0800</lastBuildDate>
+    <atom:link href="https://blog.nuonian.top/tags/agent-%E5%B7%A5%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hermes Agent Skill 系统说明文档</title>
+      <link>https://blog.nuonian.top/2026/06/hermes-agent-skill-system/</link>
+      <pubDate>Mon, 22 Jun 2026 10:37:59 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/06/hermes-agent-skill-system/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。&lt;/p&gt;
+&lt;p&gt;依据来源：Hermes 官方文档 &lt;code&gt;Skills System&lt;/code&gt;、&lt;code&gt;Creating Skills&lt;/code&gt;，以及本机 Hermes 源码中的 &lt;code&gt;tools/skills_tool.py&lt;/code&gt;、&lt;code&gt;tools/skill_manager_tool.py&lt;/code&gt;、&lt;code&gt;agent/skill_commands.py&lt;/code&gt;、&lt;code&gt;agent/prompt_builder.py&lt;/code&gt;、&lt;code&gt;agent/skill_utils.py&lt;/code&gt;、&lt;code&gt;agent/skill_preprocessing.py&lt;/code&gt;。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

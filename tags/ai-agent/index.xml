@@ -11,8 +11,17 @@
     </image>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 22 Jun 2026 11:05:53 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2026 11:14:30 +0800</lastBuildDate>
     <atom:link href="https://blog.nuonian.top/tags/ai-agent/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hermes Agent Skill 系统说明文档</title>
+      <link>https://blog.nuonian.top/2026/06/hermes-agent-skill-system/</link>
+      <pubDate>Mon, 22 Jun 2026 10:37:59 +0800</pubDate>
+      <guid>https://blog.nuonian.top/2026/06/hermes-agent-skill-system/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;适用对象：想理解、编写、安装、调用、维护 Hermes Agent Skills 的用户或开发者。&lt;/p&gt;
+&lt;p&gt;依据来源：Hermes 官方文档 &lt;code&gt;Skills System&lt;/code&gt;、&lt;code&gt;Creating Skills&lt;/code&gt;，以及本机 Hermes 源码中的 &lt;code&gt;tools/skills_tool.py&lt;/code&gt;、&lt;code&gt;tools/skill_manager_tool.py&lt;/code&gt;、&lt;code&gt;agent/skill_commands.py&lt;/code&gt;、&lt;code&gt;agent/prompt_builder.py&lt;/code&gt;、&lt;code&gt;agent/skill_utils.py&lt;/code&gt;、&lt;code&gt;agent/skill_preprocessing.py&lt;/code&gt;。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>AI Agent 开发学习路线：从 LLM API 到生产级 Agent 平台</title>
       <link>https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/</link>
