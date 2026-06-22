@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>AI Agent 开发 on 念念的博客</title>
-    <link>https://blog.nuonian.top/series/ai-agent-%E5%BC%80%E5%8F%91/</link>
-    <description>Recent content in AI Agent 开发 on 念念的博客</description>
+    <title>AI Agent on 念念的博客</title>
+    <link>https://blog.nuonian.top/series/ai-agent/</link>
+    <description>Recent content in AI Agent on 念念的博客</description>
     <image>
       <title>念念的博客</title>
       <url>https://blog.nuonian.top/images/author.jpg</url>
@@ -11,8 +11,8 @@
     </image>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 18 Jun 2026 10:09:14 +0800</lastBuildDate>
-    <atom:link href="https://blog.nuonian.top/series/ai-agent-%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 Jun 2026 11:05:53 +0800</lastBuildDate>
+    <atom:link href="https://blog.nuonian.top/series/ai-agent/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AI Agent 开发学习路线：从 LLM API 到生产级 Agent 平台</title>
       <link>https://blog.nuonian.top/2026/06/ai-agent-development-roadmap/</link>

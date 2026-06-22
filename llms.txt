@@ -68,7 +68,7 @@ print(&#39;hello world&#39;) {{&lt; details summary=&#34;查看详情&#34; &gt;}
 
 ## 专栏
 - [Hugo 博客搭建笔记](https://blog.nuonian.top/series/hugo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%AC%94%E8%AE%B0/)：4 篇
-- [AI Agent 开发](https://blog.nuonian.top/series/ai-agent-%E5%BC%80%E5%8F%91/)：2 篇
+- [AI Agent](https://blog.nuonian.top/series/ai-agent/)：2 篇
 - [常用配置文件](https://blog.nuonian.top/series/%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/)：1 篇
 - [环境配置](https://blog.nuonian.top/series/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/)：1 篇
 
